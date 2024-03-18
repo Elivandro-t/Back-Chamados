@@ -1,0 +1,41 @@
+package br.com.Initialiizr.Informatica116.sistem.DTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ChamadoDTO {
+
+    private long id;
+    private String chamadoid;
+    private String titulo;
+    private String setor;
+    private String patrimonio;
+    private String equipamento;
+    private Status status ;
+    private boolean aceito;
+    private boolean client_feito;
+    private boolean done;
+    private String data_chamdo_feito;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    String data;
+    private boolean ativo;
+    private String descricao ;
+    private List<ImgensDto> image ;
+    private long usuario_id;
+    private String usuario;
+    private long tecnicoid ;
+    private String tecnico_responsavel ;
+    int total;
+
+}
