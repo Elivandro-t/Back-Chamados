@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
+import br.com.Initialiizr.Informatica116.sistem.DTO.ImgensDto;
 import br.com.Initialiizr.Informatica116.sistem.DTO.UpdateChamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.Hardware;
 import br.com.Initialiizr.Informatica116.sistem.Models.HardwareDTO;
@@ -24,8 +25,9 @@ public class ControlerChamado {
     @Autowired
     private ChamadoService service;
     @RequestMapping(method = RequestMethod.POST,value = "chamado")
-    public ResponseEntity<HardwareDTO> chamadoDT(@RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
+    public ResponseEntity<HardwareDTO> chamadoDT( @RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
         var response = service.registrar(data,file);
+        System.out.println(data);
         return ResponseEntity.ok().body(response);
     }
     @GetMapping("/lista")

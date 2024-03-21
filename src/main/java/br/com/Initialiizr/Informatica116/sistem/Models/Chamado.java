@@ -43,10 +43,6 @@ public class Chamado {
     private String data;
     @NotBlank
     private String descricao ;
-    @OneToMany(mappedBy = "imagens")
-    private List<Imagens> image = new LinkedList<>();
-    @NotNull
-    private long usuario_id;
     @NotBlank
     private String usuario;
     private long tecnicoid ;

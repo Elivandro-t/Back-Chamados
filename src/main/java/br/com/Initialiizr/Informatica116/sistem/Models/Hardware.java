@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -22,10 +23,14 @@ public class Hardware {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NotNull
+    private long usuarioid;
     @NotBlank
     private String servico;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "hardware")
     private List<Chamado> itens;
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE},mappedBy = "path")
+    private List<Imagens> image;
 
     public String gerarCode(){
         int codigobase = 4000;

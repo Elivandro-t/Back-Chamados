@@ -1,12 +1,12 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
-import br.com.Initialiizr.Informatica116.sistem.DTO.Status;
-import br.com.Initialiizr.Informatica116.sistem.DTO.StatusDTO;
-import br.com.Initialiizr.Informatica116.sistem.DTO.UpdateChamado;
+import br.com.Initialiizr.Informatica116.sistem.DTO.*;
+import br.com.Initialiizr.Informatica116.sistem.Models.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.Hardware;
 import br.com.Initialiizr.Informatica116.sistem.Models.HardwareDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.Imagens;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.repository.HardwareResposoty;
+import br.com.Initialiizr.Informatica116.sistem.repository.ImagensRepostory;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoInterface;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -27,9 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ChamadoService implements ChamadoInterface {
@@ -39,61 +38,56 @@ public class ChamadoService implements ChamadoInterface {
     private HardwareResposoty hardwareRepository;
     @Autowired
     private ConvertJson convertJson;
+    @Autowired
+    ImagensRepostory imagensRepostory;
+    @Autowired
+    ServiceHardware serviceHardware;
     //servico de registo de chamado
     @Override
     public HardwareDTO registrar(String DTO, MultipartFile[] files) {
-        try {
+        try{;
             HardwareDTO hardwareDTO = convertJson.convertJson(DTO,HardwareDTO.class);
-            Hardware chamado = modelMapper.map(hardwareDTO, Hardware.class);
-            chamado.getItens().forEach(e->e.setHardware(chamado));
-            chamado.getItens().forEach(e->e.Datas(LocalDateTime.now()));
-            chamado.getItens().forEach(e->e.setAtivo(true));
-            chamado.getItens().forEach(e->e.setStatus(String.valueOf(Status.EM_ANDAMENTO)));
-            chamado.getItens().forEach(e->e.setChamadoid("CARD-"+chamado.gerarCode()));
-            chamado.setServico("hardware");
+            Hardware chamado = modelMapper.map(hardwareDTO,Hardware.class);
+            chamado.getItens().forEach(e->{
+            e.setStatus(String.valueOf(Status.AGUADANDO_TECNICO));
+            e.setHardware(chamado);
+            e.Datas(LocalDateTime.now());
+            e.setAtivo(true);
+            e.setChamadoid("CARD-"+chamado.gerarCode());
+        });
+        chamado.setServico("hardware");
             List<Imagens> imagens = new ArrayList<>();
-
-            for(MultipartFile file:files){
-                if(file!=null){
-
-                    String nameFile ="http://localhost:8080/imagens"+"/"+ file.getOriginalFilename();
-                    Imagens imagens1 = new Imagens(nameFile);
-                    imagens.add(imagens1);
-                    byte[] bytes = file.getBytes();
-                    String pathName = "Img";
-                    File path = new File(pathName);
-                    String name =pathName+"/"+ file.getOriginalFilename();
-
-                    chamado.getItens().forEach(e->e.setImage(imagens));
-                    System.out.println(imagens1.getImagens());
-                    if(!path.exists()){
-                        path.mkdir();
+            if(files!=null){
+                for(MultipartFile file:files){
+                    if(file!=null){
+                        String nameFile ="http://localhost:8080/imagens"+"/"+ file.getOriginalFilename();
+                        ImgensDto imagens1 = new ImgensDto(nameFile);
+                        byte[] bytes = file.getBytes();
+                        String pathName = "Img";
+                        File path = new File(pathName);
+                        String name =pathName+"/"+ file.getOriginalFilename();
+                        if(!path.exists()){
+                            path.mkdir();
+                        }
+                        Files.write(Paths.get(name), bytes);
                     }
-                    Files.write(Paths.get(name), bytes);
-
                 }
             }
-            var res = hardwareRepository.findOneById(hardwareDTO.getId());
-            if (hardwareDTO == null) {
-                throw new RuntimeException("dados em nulo");
-            }
-            if (res == null) {
-                hardwareRepository.save(chamado);
+            var chamadoItens = hardwareRepository.findOneById(hardwareDTO.getId());
+            if(chamadoItens!=null) {
+                chamadoItens.getItens().addAll(chamado.getItens());
+                hardwareRepository.save(chamadoItens);
                 return modelMapper.map(chamado, HardwareDTO.class);
             } else {
-                res.getItens().addAll(chamado.getItens());
-                hardwareRepository.save(res);
-                return modelMapper.map(chamado, HardwareDTO.class);
-            }
-
-
-        }catch (IOException e) {
-            throw new RuntimeException(e);
+                Hardware hardwareSalvo = hardwareRepository.save(chamado);
+                return modelMapper.map(hardwareSalvo, HardwareDTO.class);
+            } }catch (IOException e){
+            throw  new RuntimeException(e);
         }
     }
     // pegando chamado por id;
     public HardwareDTO ChamadoId(long id){
-        Hardware chamadoid = hardwareRepository.findOneById(id);
+        Hardware chamadoid = hardwareRepository.findOneByIds(id);
         if(chamadoid==null){throw new RuntimeException("nada encontrado");}
         HardwareDTO chamado = modelMapper.map(chamadoid,HardwareDTO.class);
         return  chamado;
@@ -142,10 +136,12 @@ public class ChamadoService implements ChamadoInterface {
             throw  new RuntimeException("nada encontrado");
         }
         lista.atualiza(updateChamado);
+        lista.getItens().forEach(e->e.setStatus(String.valueOf(Status.EM_ANDAMENTO)));
         HardwareDTO hardwareDTO = modelMapper.map(lista,HardwareDTO.class);
         System.out.println("update" +updateChamado);
         System.out.println("update banco" +hardwareDTO);
         return hardwareDTO;
     }
+
 
 }
