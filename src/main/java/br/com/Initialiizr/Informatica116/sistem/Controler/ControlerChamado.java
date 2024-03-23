@@ -1,8 +1,5 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.ImgensDto;
-import br.com.Initialiizr.Informatica116.sistem.DTO.UpdateChamado;
-import br.com.Initialiizr.Informatica116.sistem.Models.Hardware;
 import br.com.Initialiizr.Informatica116.sistem.Models.HardwareDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -61,5 +55,24 @@ public class ControlerChamado {
     public ResponseEntity<?> pegarChmadoAtivo(@PathVariable long id,@RequestBody String data){
         var result = service.update(id,data);
         return ResponseEntity.ok(result);
+    }
+    @PutMapping("chamado/concluido/{id}/chamadoid/{idchamado}")
+    @Transactional
+    public  ResponseEntity StatusFeito(@PathVariable long id,@PathVariable("idchamado") long idchamado){
+        return  service.validaChamado(id,idchamado);
+    }
+    @PutMapping("chamado/validacao/{id}/chamadoid/{idchamado}")
+    @Transactional
+    public  ResponseEntity<HardwareDTO>StatusValidacao(@PathVariable long id,@PathVariable("idchamado") long idchamado){
+        HardwareDTO hardwareDTO = service.validaChamadoUSer(id,idchamado);
+        return  ResponseEntity.ok(hardwareDTO);
+
+    }
+    @PutMapping("chamado/validacao/{id}/chamadoid/{idchamado}/fechado")
+    @Transactional
+    public  ResponseEntity<HardwareDTO>StatusFechado(@PathVariable long id,@PathVariable("idchamado") long idchamado){
+        HardwareDTO hardwareDTO = service.validaChamadoFechado(id,idchamado);
+        return  ResponseEntity.ok(hardwareDTO);
+
     }
 }

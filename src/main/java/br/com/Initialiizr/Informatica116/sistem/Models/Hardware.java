@@ -29,8 +29,6 @@ public class Hardware {
     private String servico;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "hardware")
     private List<Chamado> itens;
-    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE},mappedBy = "path")
-    private List<Imagens> image;
 
     public String gerarCode(){
         int codigobase = 4000;
@@ -49,6 +47,6 @@ public class Hardware {
     public void atualiza(UpdateChamado updateChamado) {
         this.getItens().forEach(e->e.setTecnicoid(updateChamado.tecnicoid()));
         this.getItens().forEach(e->e.setTecnico_responsavel(updateChamado.tecnico_responsavel()));
-        this.getItens().forEach(e->e.setAceito(true));
     }
+
 }

@@ -1,12 +1,13 @@
 package br.com.Initialiizr.Informatica116.sistem.repository;
 
 import br.com.Initialiizr.Informatica116.sistem.Models.Hardware;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
+import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,7 +22,8 @@ public interface HardwareResposoty extends JpaRepository<Hardware,Long> {
  Hardware findOneByCard(String card, @Param("id") long id);
 
  @Query("select p from Hardware p join fetch p.itens s where p.id=:id and s.id=:idItens and s.ativo=true")
- Hardware findOneByUsuarioidByIdAtivoTrue(@Param("id")  long id,  long idItens);
+ Hardware findOneByUsuarioidByIdAtivoTrue(@Param("id") long id, long idItens);
+
  @Query("SELECT h FROM Hardware h WHERE h.usuarioid = :usuarioid")
  Hardware findOneByUsuarioid(long usuarioid);
 
@@ -31,4 +33,7 @@ public interface HardwareResposoty extends JpaRepository<Hardware,Long> {
 //    @Query("update Hardware p set p.id=:id where p.itens=:lista")
 //    void atualiza(long id, List<Chamado> itens);
 //}
+
+ @Query("select p from Hardware p left join fetch  p.itens s where p.usuarioid = :id and s.id = :idchamado")
+ Hardware findOneByIdChamado(long id, long idchamado);
 }

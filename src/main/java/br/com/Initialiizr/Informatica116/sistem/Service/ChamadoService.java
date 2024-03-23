@@ -1,13 +1,10 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 import br.com.Initialiizr.Informatica116.sistem.DTO.*;
-import br.com.Initialiizr.Informatica116.sistem.Models.Chamado;
-import br.com.Initialiizr.Informatica116.sistem.Models.Hardware;
-import br.com.Initialiizr.Informatica116.sistem.Models.HardwareDTO;
-import br.com.Initialiizr.Informatica116.sistem.Models.Imagens;
+import br.com.Initialiizr.Informatica116.sistem.Models.*;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.repository.HardwareResposoty;
-import br.com.Initialiizr.Informatica116.sistem.repository.ImagensRepostory;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoInterface;
+import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -18,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -39,30 +35,31 @@ public class ChamadoService implements ChamadoInterface {
     @Autowired
     private ConvertJson convertJson;
     @Autowired
-    ImagensRepostory imagensRepostory;
-    @Autowired
     ServiceHardware serviceHardware;
+    @Autowired
+    ValidationsTec validationsTec;
     //servico de registo de chamado
     @Override
     public HardwareDTO registrar(String DTO, MultipartFile[] files) {
         try{;
+            List<String> itens = new ArrayList<>();
             HardwareDTO hardwareDTO = convertJson.convertJson(DTO,HardwareDTO.class);
             Hardware chamado = modelMapper.map(hardwareDTO,Hardware.class);
             chamado.getItens().forEach(e->{
-            e.setStatus(String.valueOf(Status.AGUADANDO_TECNICO));
-            e.setHardware(chamado);
-            e.Datas(LocalDateTime.now());
-            e.setAtivo(true);
-            e.setChamadoid("CARD-"+chamado.gerarCode());
-        });
-        chamado.setServico("hardware");
-            List<Imagens> imagens = new ArrayList<>();
+                e.setStatus(Status.AGUARDANDO_TECNICO);
+                e.setHardware(chamado);
+                e.Datas(LocalDateTime.now());
+                e.setAtivo(true);
+                e.setChamadoid("CARD-"+chamado.gerarCode());
+            });
+            chamado.setServico("hardware");
             if(files!=null){
                 for(MultipartFile file:files){
                     if(file!=null){
-                        String nameFile ="http://localhost:8080/imagens"+"/"+ file.getOriginalFilename();
-                        ImgensDto imagens1 = new ImgensDto(nameFile);
+                        String nameFile = "http://localhost:8080/imagens"+"/"+  file.getOriginalFilename();
                         byte[] bytes = file.getBytes();
+                        chamado.getItens().forEach(e->e.setImagens(itens));
+                       itens.add(nameFile);
                         String pathName = "Img";
                         File path = new File(pathName);
                         String name =pathName+"/"+ file.getOriginalFilename();
@@ -73,6 +70,8 @@ public class ChamadoService implements ChamadoInterface {
                     }
                 }
             }
+
+
             var chamadoItens = hardwareRepository.findOneById(hardwareDTO.getId());
             if(chamadoItens!=null) {
                 chamadoItens.getItens().addAll(chamado.getItens());
@@ -136,12 +135,49 @@ public class ChamadoService implements ChamadoInterface {
             throw  new RuntimeException("nada encontrado");
         }
         lista.atualiza(updateChamado);
-        lista.getItens().forEach(e->e.setStatus(String.valueOf(Status.EM_ANDAMENTO)));
+        lista.getItens().forEach(e->e.setStatus(Status.EM_ANDAMENTO));
         HardwareDTO hardwareDTO = modelMapper.map(lista,HardwareDTO.class);
         System.out.println("update" +updateChamado);
         System.out.println("update banco" +hardwareDTO);
         return hardwareDTO;
     }
-
-
+    public ResponseEntity validaChamado(long id,long idchamado){
+        Hardware hardware = hardwareRepository.findOneByIdChamado(id,idchamado);
+       validationsTec.Valid(hardware);
+        validationsTec.Status(hardware);
+        hardware.getItens().forEach(e->e.setStatus(Status.AGUARDANO_VALIDACAO));
+        hardware.getItens().forEach(e->e.setAceito(true));
+        hardwareRepository.save(hardware);
+        if(hardware==null){
+            throw new RuntimeException("nada encontrado");
+        }
+        return ResponseEntity.ok().body("status atualizado");
+    }
+    public HardwareDTO validaChamadoUSer(long id,long idchamado){
+        Hardware hardware = hardwareRepository.findOneByIdChamado(id,idchamado);
+        // validacão de tecnico
+        validationsTec.Valid(hardware);
+        validationsTec.Status(hardware);
+        hardware.getItens().forEach(e->e.setStatus(Status.FECHADO));
+        hardware.getItens().forEach(e->e.setAtivo(false));
+        hardware.getItens().forEach(e->e.setAceito(false));
+        hardwareRepository.save(hardware);
+        if(hardware==null){
+            throw new RuntimeException("nada encontrado");
+        }
+        return  modelMapper.map(hardware,HardwareDTO.class);
+    }
+    public HardwareDTO validaChamadoFechado(long id,long idchamado){
+        Hardware hardware = hardwareRepository.findOneByIdChamado(id,idchamado);
+        // validacão de tecnico
+        validationsTec.Valid(hardware);
+        validationsTec.Status(hardware);
+        hardware.getItens().forEach(e->e.setStatus(Status.RE_ABERTO));
+        hardware.getItens().forEach(e->e.setAceito(false));
+        hardwareRepository.save(hardware);
+        if(hardware==null){
+            throw new RuntimeException("nada encontrado");
+        }
+        return  modelMapper.map(hardware,HardwareDTO.class);
+    }
 }

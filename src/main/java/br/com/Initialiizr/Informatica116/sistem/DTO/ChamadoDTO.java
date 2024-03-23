@@ -1,4 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.DTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.ImagensDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +28,7 @@ public class ChamadoDTO {
     private Status status ;
     private boolean aceito;
     private boolean client_feito;
+    List<String> imagens;
     private boolean done;
     private String data_chamdo_feito;
     @JsonFormat(pattern = "dd-MM-yyyy")

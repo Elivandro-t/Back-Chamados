@@ -1,6 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Models;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.Status;
+import br.com.Initialiizr.Informatica116.sistem.repository.Imagens;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,11 +33,12 @@ public class Chamado {
     @NotBlank
     private String patrimonio;
     private String equipamento;
-    @NotBlank
-    private String status ;
+    @Enumerated(EnumType.STRING)
+    private Status status ;
     private boolean ativo;
     private boolean aceito;
     private boolean client_feito;
+    private List<String> imagens;
     private boolean done;
     private String data_chamdo_feito;
     private String data;

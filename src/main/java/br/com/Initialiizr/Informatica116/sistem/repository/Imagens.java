@@ -1,5 +1,6 @@
-package br.com.Initialiizr.Informatica116.sistem.Models;
+package br.com.Initialiizr.Informatica116.sistem.repository;
 
+import br.com.Initialiizr.Informatica116.sistem.Models.Chamado;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "imagem")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,10 +16,9 @@ public class Imagens {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String name;
+    String name;
     @ManyToOne(optional = false)
-    @JoinColumn(nullable = true)
-    private Hardware path;
+    private Chamado chamado;
 
     public Imagens(String nameFile) {
         this.name = nameFile;
