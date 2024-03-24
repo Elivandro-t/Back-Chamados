@@ -5,7 +5,7 @@ public enum Status {
     EM_ANDAMENTO,
     FEITO,
     RE_ABERTO,
-    AGUARDANO_VALIDACAO,
+    AGUARDANDO_VALIDACAO,
     FECHADO;
 
 }

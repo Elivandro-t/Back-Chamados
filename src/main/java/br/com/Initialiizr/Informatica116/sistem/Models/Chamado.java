@@ -55,5 +55,10 @@ public class Chamado {
         String dataFormat = data.format(pattern);
       return this.data = dataFormat;
     }
+    public  String DataFeito(LocalDateTime data){
+        DateTimeFormatter  pattern= DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+        String dataFormat = data.format(pattern);
+        return this.data_chamdo_feito = dataFormat;
+    }
 
 }

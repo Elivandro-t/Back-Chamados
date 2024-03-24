@@ -56,23 +56,23 @@ public class ControlerChamado {
         var result = service.update(id,data);
         return ResponseEntity.ok(result);
     }
-    @PutMapping("chamado/concluido/{id}/chamadoid/{idchamado}")
+    @PutMapping("chamado/concluido/{id}/chamadoCard/{chamadoCard}")
     @Transactional
-    public  ResponseEntity StatusFeito(@PathVariable long id,@PathVariable("idchamado") long idchamado){
-        return  service.validaChamado(id,idchamado);
+    public  ResponseEntity StatusFeito(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard){
+        return  service.validaChamado(id,chamadoCard);
     }
-    @PutMapping("chamado/validacao/{id}/chamadoid/{idchamado}")
+    @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/fechado")
     @Transactional
-    public  ResponseEntity<HardwareDTO>StatusValidacao(@PathVariable long id,@PathVariable("idchamado") long idchamado){
-        HardwareDTO hardwareDTO = service.validaChamadoUSer(id,idchamado);
-        return  ResponseEntity.ok(hardwareDTO);
+    public  ResponseEntity StatusValidacao(@PathVariable long id,@PathVariable("chamadoCard") String idchamado){
+
+        return service.validaChamadoUSer(id,idchamado);
 
     }
-    @PutMapping("chamado/validacao/{id}/chamadoid/{idchamado}/fechado")
+    @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aberto")
     @Transactional
-    public  ResponseEntity<HardwareDTO>StatusFechado(@PathVariable long id,@PathVariable("idchamado") long idchamado){
-        HardwareDTO hardwareDTO = service.validaChamadoFechado(id,idchamado);
-        return  ResponseEntity.ok(hardwareDTO);
+    public  ResponseEntity StatusFechado(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard){
+
+        return service.validaChamadoReaberto(id,chamadoCard);
 
     }
 }

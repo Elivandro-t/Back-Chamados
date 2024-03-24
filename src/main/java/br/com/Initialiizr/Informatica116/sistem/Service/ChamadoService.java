@@ -4,6 +4,8 @@ import br.com.Initialiizr.Informatica116.sistem.Models.*;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.repository.HardwareResposoty;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoInterface;
+import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
+import br.com.Initialiizr.Informatica116.sistem.validators.Msg;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,9 +102,10 @@ public class ChamadoService implements ChamadoInterface {
         return  chamado;
     }
     public Page<HardwareDTO> Listar(Pageable page) {
-                var dados = hardwareRepository.findAll(page)
-                .map(e->modelMapper.map(e,HardwareDTO.class));
-             return  dados;
+        var dados = hardwareRepository.findAllByAtivoTrue(page)
+                        .map(e->modelMapper.map(e,HardwareDTO.class));
+
+        return  dados;
     }
     public ResponseEntity<Resource> ListaImagensId(String name){
         Path path = Paths.get("Img").resolve(name);
@@ -129,11 +132,9 @@ public class ChamadoService implements ChamadoInterface {
     public HardwareDTO update(long id,String data){
         UpdateChamado updateChamado = convertJson.convertJson(data,UpdateChamado.class);
         Hardware lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.id());
+        validationsTec.existeTecnico(lista,updateChamado.tecnicoid());
         System.out.println(updateChamado);
         System.out.println(id);
-        if(lista==null){
-            throw  new RuntimeException("nada encontrado");
-        }
         lista.atualiza(updateChamado);
         lista.getItens().forEach(e->e.setStatus(Status.EM_ANDAMENTO));
         HardwareDTO hardwareDTO = modelMapper.map(lista,HardwareDTO.class);
@@ -141,43 +142,47 @@ public class ChamadoService implements ChamadoInterface {
         System.out.println("update banco" +hardwareDTO);
         return hardwareDTO;
     }
-    public ResponseEntity validaChamado(long id,long idchamado){
-        Hardware hardware = hardwareRepository.findOneByIdChamado(id,idchamado);
-       validationsTec.Valid(hardware);
-        validationsTec.Status(hardware);
-        hardware.getItens().forEach(e->e.setStatus(Status.AGUARDANO_VALIDACAO));
-        hardware.getItens().forEach(e->e.setAceito(true));
-        hardwareRepository.save(hardware);
+    public ResponseEntity validaChamado(long id,String cardChamado){
+        Hardware hardware = hardwareRepository.findOneByIdChamado(id,cardChamado);
         if(hardware==null){
             throw new RuntimeException("nada encontrado");
         }
-        return ResponseEntity.ok().body("status atualizado");
+       validationsTec.Valid(hardware);
+        validationsTec.Status(hardware);
+        hardware.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
+        hardware.getItens().forEach(e->e.setAceito(true));
+        hardwareRepository.save(hardware);
+        return ResponseEntity.ok().body(new MSG("status atualizado"));
     }
-    public HardwareDTO validaChamadoUSer(long id,long idchamado){
-        Hardware hardware = hardwareRepository.findOneByIdChamado(id,idchamado);
+    // precisa ser feito validacao para o chamado nao ser aberto
+    public ResponseEntity validaChamadoUSer(long id, String cardChamado){
+        Hardware hardware = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        if(hardware==null){
+            throw new RuntimeException("nada encontrado");
+        }
         // validacão de tecnico
         validationsTec.Valid(hardware);
-        validationsTec.Status(hardware);
+        validationsTec.StatusvalidFechado(hardware);
         hardware.getItens().forEach(e->e.setStatus(Status.FECHADO));
         hardware.getItens().forEach(e->e.setAtivo(false));
         hardware.getItens().forEach(e->e.setAceito(false));
+        hardware.getItens().forEach(e->e.setClient_feito(true));
+        hardware.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
         hardwareRepository.save(hardware);
+        return  ResponseEntity.ok().body(new MSG("status fechado"));
+    }
+    public ResponseEntity validaChamadoReaberto(long id,String cardChamado){
+        Hardware hardware = hardwareRepository.findOneByIdChamado(id,cardChamado);
         if(hardware==null){
             throw new RuntimeException("nada encontrado");
         }
-        return  modelMapper.map(hardware,HardwareDTO.class);
-    }
-    public HardwareDTO validaChamadoFechado(long id,long idchamado){
-        Hardware hardware = hardwareRepository.findOneByIdChamado(id,idchamado);
-        // validacão de tecnico
         validationsTec.Valid(hardware);
-        validationsTec.Status(hardware);
+        // validacão de tecnico
+        validationsTec.StatusvalidFechado(hardware);
         hardware.getItens().forEach(e->e.setStatus(Status.RE_ABERTO));
         hardware.getItens().forEach(e->e.setAceito(false));
         hardwareRepository.save(hardware);
-        if(hardware==null){
-            throw new RuntimeException("nada encontrado");
-        }
-        return  modelMapper.map(hardware,HardwareDTO.class);
+        return  ResponseEntity.ok().body(new MSG("chamado reaberto"));
     }
+
 }
