@@ -5,5 +5,4 @@ CREATE TABLE chamado(
   issue_id bigint not null,
   primary key(id),
   foreign KEY (issue_id) references issue(id)
-
 )
