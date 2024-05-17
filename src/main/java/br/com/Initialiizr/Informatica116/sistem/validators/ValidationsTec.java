@@ -1,7 +1,9 @@
 package br.com.Initialiizr.Informatica116.sistem.validators;
 
 import br.com.Initialiizr.Informatica116.sistem.Models.*;
-import br.com.Initialiizr.Informatica116.sistem.repository.HardwareResposoty;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
+import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +18,12 @@ public class ValidationsTec {
     @Autowired
     ModelMapper modelMapper;
     @Autowired
-    HardwareResposoty hardwareResposoty;
+    IssueResposoty issueResposoty;
     @Autowired
     UserRepository userRepository;
-    public  void Valid(Hardware hardwareDTO,long usuariolog){
+    public  void Valid(Issue issueDTO, long usuariolog){
          Instant horaInicio = Instant.now();
-        for (Chamado c:hardwareDTO.getItens()){
+        for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getTecnicoid()!=usuariolog){
                 throw new RuntimeException("erro ao mudar status, voce não e o tecnico responsavel");
@@ -32,8 +34,8 @@ public class ValidationsTec {
             break;
         }
     }
-    public  void reaberto(Hardware hardwareDTO,long usuariolog){
-        for (Chamado c:hardwareDTO.getItens()){
+    public  void reaberto(Issue issueDTO, long usuariolog){
+        for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()==Status.AGUARDANDO_TECNICO){
                 throw new RuntimeException("erro ao mudar status, Status: aguardando tecnico");
@@ -41,10 +43,10 @@ public class ValidationsTec {
             break;
         }
     }
-    public  void Status(Hardware hardwareDTO){
-        var user = userRepository.getReferenceById(hardwareDTO.getUsuarioid());
+    public  void Status(Issue issueDTO){
+        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
         System.out.println(user.getId());
-        for (Chamado c:hardwareDTO.getItens()){
+        for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getStatus()==Status.FEITO){
                 throw new RuntimeException("erro ao atualizar status");
@@ -55,9 +57,9 @@ public class ValidationsTec {
             break;
         }
     }
-    public  void StatusvalidFechado(Hardware hardwareDTO){
-        var user = userRepository.getReferenceById(hardwareDTO.getUsuarioid());
-        for (Chamado c:hardwareDTO.getItens()){
+    public  void StatusvalidFechado(Issue issueDTO){
+        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
+        for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             System.out.println(user.getId());
                 if(chamado.getStatus()==Status.FECHADO){
@@ -69,20 +71,19 @@ public class ValidationsTec {
                 else if(chamado.getStatus()==Status.EM_ANDAMENTO){
                     throw new RuntimeException(" chamado ja está aberto");
                 }
-
             break;
         }
     }
-    public  void existeTecnico(Hardware hardwareDTO,long id){
-        for (Chamado c:hardwareDTO.getItens()){
+    public  void existeTecnico(Issue issueDTO, long id){
+        for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
-            if(hardwareDTO==null){
+            if(issueDTO ==null){
                 throw new RuntimeException("chamado fechado");
             }
            if(chamado.getTecnicoid()==id){
                 throw new RuntimeException("voce ja está de posse desse chamado");
             }
-            else if(hardwareDTO.getUsuarioid()==id){
+            else if(issueDTO.getUsuarioid()==id){
                throw new RuntimeException("voce não pode aceitar seu propio chamado");
            }
 
@@ -100,15 +101,15 @@ public class ValidationsTec {
         Instant agora = Instant.now();
         return agora.isAfter(dataExpired());
     }
-    private void atualizarStatus(Hardware hardware) {
+    private void atualizarStatus(Issue issue) {
         System.out.println("h " +Expired());
         if (Expired()) {
-            hardware.getItens().forEach(e->e.setStatus(Status.FECHADO));
-            hardware.getItens().forEach(e->e.setAtivo(false));
-            hardware.getItens().forEach(e->e.setAceito(false));
-            hardware.getItens().forEach(e->e.setClient_feito(true));
-            hardware.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
-            hardwareResposoty.save(hardware);
+            issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
+            issue.getItens().forEach(e->e.setAtivo(false));
+            issue.getItens().forEach(e->e.setAceito(false));
+            issue.getItens().forEach(e->e.setClient_feito(true));
+            issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
+            issueResposoty.save(issue);
             System.out.println("Status atualizado para 'feito'.");
         }
     }

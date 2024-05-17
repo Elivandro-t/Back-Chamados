@@ -1,8 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.OptionDTO;
-import br.com.Initialiizr.Informatica116.sistem.Models.HardwareDTO;
-import br.com.Initialiizr.Informatica116.sistem.repository.HardwareResposoty;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
+import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,12 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChamadoService2 {
     @Autowired
-    private HardwareResposoty hardwareResposoty;
+    private IssueResposoty issueResposoty;
     @Autowired
     private ModelMapper modelMapper;
-    public Page<HardwareDTO> listaValidados(Pageable page,long idUsuario){
-        var name = hardwareResposoty.FindAllByHardwareByStatusValidacao(page,idUsuario)
-                .map(e->modelMapper.map(e,HardwareDTO.class));
+    public Page<IssueDTO> listaValidados(Pageable page, long idUsuario){
+        var name = issueResposoty.FindAllByHardwareByStatusValidacao(page,idUsuario)
+                .map(e->modelMapper.map(e, IssueDTO.class));
         return name;
     }
 }

@@ -1,0 +1,22 @@
+package br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserDTO {
+    private long id;
+    private String name;
+    private  String lastname;
+    private String setor;
+    private int filial;
+    private String codigo;
+    private String email;
+    private String password;
+    private boolean accountLocked;
+}

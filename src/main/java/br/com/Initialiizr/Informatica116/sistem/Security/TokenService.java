@@ -1,7 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Security;
 
-import br.com.Initialiizr.Informatica116.sistem.Models.Perfil;
-import br.com.Initialiizr.Informatica116.sistem.Models.User;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Perfil;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

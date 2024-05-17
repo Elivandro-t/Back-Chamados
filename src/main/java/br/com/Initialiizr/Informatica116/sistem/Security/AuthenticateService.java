@@ -19,6 +19,6 @@ public class AuthenticateService implements UserDetailsService {
         if(user!=null) {
             return user;
         }
-        return  null;
+        throw new RuntimeException("e-mail não encontrado!");
     }
 }

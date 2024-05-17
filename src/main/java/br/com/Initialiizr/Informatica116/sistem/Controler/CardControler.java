@@ -1,14 +1,10 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.CardDt;
-import br.com.Initialiizr.Informatica116.sistem.DTO.UpdateChamado;
-import br.com.Initialiizr.Informatica116.sistem.Models.CardDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.OPTIONS_DTO.CardDTO;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.Service.CardService;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 @RestController

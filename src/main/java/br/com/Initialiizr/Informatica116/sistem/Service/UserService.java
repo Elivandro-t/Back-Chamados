@@ -1,29 +1,42 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 
 import br.com.Initialiizr.Informatica116.sistem.Controler.ControlerEmail;
-import br.com.Initialiizr.Informatica116.sistem.DTO.*;
+import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.*;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.Delete;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.MsgToken;
+import br.com.Initialiizr.Informatica116.sistem.DTO.MESAGENS.Mensagem;
+import br.com.Initialiizr.Informatica116.sistem.DTO.MESAGENS.MensagemPd;
 import br.com.Initialiizr.Informatica116.sistem.Models.*;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Perfil;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.RefreshToken;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.UserVerify;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.Security.TokenService;
+import br.com.Initialiizr.Informatica116.sistem.repository.PerfilRespository;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidatorEmail;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidatorPassword;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,10 +49,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class UserService {
+    @Autowired
+    PerfilRespository perfilRespository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
     @Autowired
     private ControlerEmail emailSend;
     @Autowired
@@ -60,6 +76,9 @@ public class UserService {
    private  AuthenticationManager authenticationManager;
     @Autowired
     private RefeshTokenService refeshTokenService;
+
+    @Value("${endpoint}")
+    private String endpoint;
     public UserDTO registro(UserDTO userDTO){
         validatorEmail.validator(userDTO.getEmail());
         var user = userRepository.pegandoUsuarioExistente(userDTO.getEmail());
@@ -71,7 +90,7 @@ public class UserService {
         }
         List<Perfil> perfis = new ArrayList<>();
         password.validator(userDTO.getPassword());
-        var usuario = modelMapper.map(userDTO,User.class);
+        var usuario = modelMapper.map(userDTO, User.class);
         Perfil perfil = new Perfil();
         perfil.setName("user");
         perfil.setUser(usuario);
@@ -83,12 +102,12 @@ public class UserService {
         return modelMapper.map(registrado,UserDTO.class);
     }
     public MsgToken Login(LoginDTo loginDTo){
-        var token = new UsernamePasswordAuthenticationToken(loginDTo.email(),loginDTo.password());
-        var user = authenticationManager.authenticate(token);
-        User user1 = (User) user.getPrincipal();
-        RefreshToken refreshToken = refeshTokenService.registrarToken(user1.getId());
-        var tokenString = tokenservice.geratoken((User) user.getPrincipal(),user.getAuthorities());
-        return new MsgToken(tokenString,refreshToken.getRefreshtoken());
+            var token = new UsernamePasswordAuthenticationToken(loginDTo.email(),loginDTo.password());
+            var user = authenticationManager.authenticate(token);
+            User user1 = (User) user.getPrincipal();
+            RefreshToken refreshToken = refeshTokenService.registrarToken(user1.getId());
+            var tokenString = tokenservice.geratoken((User) user.getPrincipal(),user.getAuthorities());
+            return new MsgToken(tokenString,refreshToken.getRefreshtoken());
     }
     @Transactional
     public MSG image(MultipartFile image, long id) throws IOException {
@@ -96,7 +115,7 @@ public class UserService {
         String imagensUsuario = "Logos";
         File file = new File(imagensUsuario);
         String names =imagensUsuario+"/"+image.getOriginalFilename();
-        String imagem ="http://localhost:8080/"+imagensUsuario+"/"+image.getOriginalFilename();
+        String imagem =endpoint+imagensUsuario+"/"+image.getOriginalFilename();
         if(!file.exists()){
             file.mkdir();
         }
@@ -118,6 +137,9 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         PerfilDTo perfilDTo = convertJson.convertJson(perfil,PerfilDTo.class);
         Perfil perfil1 = modelMapper.map(perfilDTo,Perfil.class);
+        if(perfil1==null){
+           throw new RuntimeException("adicione um perfil");
+        }
         for (Perfil perfils:user.getItens()){
             if(perfils.getName().equals(perfil1.getName())){
                 return new MSG("perfil já adicionado");
@@ -163,7 +185,6 @@ public class UserService {
             return ResponseEntity.ok(new MensagemPd("senha alterada com sucesso!"));
         }
         return null;
-
     }
     // salvando codigo no banco e enviando para o email de usuario
     public ResponseEntity alterCode(String email) throws MessagingException {
@@ -193,7 +214,6 @@ public class UserService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensagem("Código de verificação inválido."));
         }
         user.resetVerificationAttempts();
-
         return ResponseEntity.ok(new Mensagem("Código de verificação válido."));
     }
     // alterando senha do endpoint
@@ -202,10 +222,55 @@ public class UserService {
         User user = userRepository.findByEmail(alterPassword.email());
         if(user!=null){
             user.criptografar(alterPassword.newPassword());
+            user.setAccountLocked(true);
             user.setCodigo(null);
             userRepository.save(user);
             return ResponseEntity.ok(new MensagemPd("senha alterada com sucesso!"));
         }
         return null;
+    }
+    @Transactional
+    public void bloqueio(String email,String pass){
+        var user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("Usuário não encontrado");
+        }
+        if (!passwordEncoder.matches(pass, user.getPassword())) {
+            user.incrementCount();
+            if (user.getCounts() >= 3) {
+                user.setPassword(null);
+                user.setAccountLocked(true); // Adicione um campo para indicar se o usuário está bloqueado
+                userRepository.save(user);
+                throw new RuntimeException("Usuário bloqueado!");
+            }
+            userRepository.save(user);
+            throw new RuntimeException("Email e senha inválidos");
+        }
+
+        user.setCounts(0); // Resetar o contador de tentativas de login
+        userRepository.save(user);
+    }
+    public UserComment pegarUsuarioEmail(String email){
+        var user =  userRepository.findByEmail(email);
+        return modelMapper.map(user,UserComment.class);
+    }
+    public MSG removerPerfil(Delete email, long id){
+        var user = userRepository.findByEmail(email.getEmail());
+        if (user != null) {
+            var perfil = user.getItens().stream()
+                    .filter(p -> p.getId() == id)
+                    .findFirst();
+
+            perfil.ifPresent(p -> {
+                user.getItens().remove(p);
+                perfilRespository.delete(p); // Remove o perfil da base de dados
+                userRepository.save(user); // Salva as alterações no usuário
+            });
+
+            return perfil.isPresent() ? new MSG("Perfil removido com sucesso") : new MSG("Perfil não encontrado");
+        } else {
+            throw new EntityNotFoundException("Usuário não encontrado");
+        }
+
     }
 }

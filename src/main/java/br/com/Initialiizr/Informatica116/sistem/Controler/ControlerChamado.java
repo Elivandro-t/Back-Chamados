@@ -1,9 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.Setores;
-import br.com.Initialiizr.Informatica116.sistem.Models.Chamado;
-import br.com.Initialiizr.Informatica116.sistem.Models.Hardware;
-import br.com.Initialiizr.Informatica116.sistem.Models.HardwareDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -31,22 +26,22 @@ public class ControlerChamado {
     private ChamadoService2 service2;
 
     @RequestMapping(method = RequestMethod.POST,value = "chamado")
-    public ResponseEntity<HardwareDTO> chamadoDT( @RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
+    public ResponseEntity<IssueDTO> chamadoDT(@RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
         var response = service.registrar(data,file);
         System.out.println(data);
         return ResponseEntity.ok().body(response);
     }
     @GetMapping("/lista/{filial}")
-    public Page<HardwareDTO> lista(Pageable page, @RequestParam(name = "setor",required = false) String Setor,
-                                   @RequestParam(name = "dataAntes",required = false) String dataAntes,
-                                   @RequestParam(name = "dataDepois",required = false)
-                                   String dataDepois,  @PathVariable int filial){
+    public Page<IssueDTO> lista(Pageable page, @RequestParam(name = "setor",required = false) String Setor,
+                                @RequestParam(name = "dataAntes",required = false) String dataAntes,
+                                @RequestParam(name = "dataDepois",required = false)
+                                   String dataDepois, @PathVariable int filial){
 
         System.out.println("data "+Setor);
         return service.Listar(page,Setor,dataAntes,dataDepois,filial);
     }
     @GetMapping("/lista/aguardando/{id}")
-    public Page<HardwareDTO> listaValidando(@PageableDefault Pageable pageable,@PathVariable long id){
+    public Page<IssueDTO> listaValidando(@PageableDefault Pageable pageable, @PathVariable long id){
         System.out.println(id);
         return service2.listaValidados(pageable,id);
     }
@@ -57,18 +52,18 @@ public class ControlerChamado {
         return  response;
     }
     @GetMapping("/chamado/{id}")
-    public Page<HardwareDTO> pegarChamdoID(@PathVariable long id,@PageableDefault(size = 10) Pageable page){
+    public Page<IssueDTO> pegarChamdoID(@PathVariable long id, @PageableDefault(size = 10) Pageable page){
         var response = service.pegarChamadoId(id,page);
 
         return response;
     }
     @GetMapping("/chamado/unit/{id}")
-    public HardwareDTO exibiChamado(@PathVariable long id){
+    public IssueDTO exibiChamado(@PathVariable long id){
         var response = service.ChamadoId(id);
         return response;
     }
     @GetMapping("/chamado/card/{card}/{id}")
-    public HardwareDTO exibiChamado(@PathVariable("card") String card,@PathVariable long id){
+    public IssueDTO exibiChamado(@PathVariable("card") String card, @PathVariable long id){
         var response = service.Card(card,id);
         return response;
     }
@@ -98,7 +93,7 @@ public class ControlerChamado {
 
     }
     @GetMapping("/setor/lista")
-    public  ResponseEntity<List<Hardware>> setores(){
+    public  ResponseEntity<List<Issue>> setores(){
           var result =  service.pegaStor();
        return ResponseEntity.ok(result);
     }

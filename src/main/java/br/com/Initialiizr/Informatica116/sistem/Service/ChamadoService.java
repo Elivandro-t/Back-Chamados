@@ -1,16 +1,22 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 import br.com.Initialiizr.Informatica116.sistem.Controler.ControlerEmail;
 import br.com.Initialiizr.Informatica116.sistem.Controler.UsuarioControler;
-import br.com.Initialiizr.Informatica116.sistem.DTO.*;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.ImagensDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.UpdateChamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.*;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Imagens;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
-import br.com.Initialiizr.Informatica116.sistem.repository.HardwareResposoty;
+import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoInterface;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -40,7 +46,7 @@ public class ChamadoService implements ChamadoInterface {
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private HardwareResposoty hardwareRepository;
+    private IssueResposoty hardwareRepository;
     @Autowired
     private ConvertJson convertJson;
     @Autowired
@@ -49,26 +55,27 @@ public class ChamadoService implements ChamadoInterface {
     ServiceHardware serviceHardware;
     @Autowired
     ValidationsTec validationsTec;
+    @Value("${endpoint}")
+    private String endpoint;
     //servico de registo de chamado
     @Override
-    public HardwareDTO registrar(String DTO, MultipartFile[] files) {
+    public IssueDTO registrar(String DTO, MultipartFile[] files) {
         try{;
             List<Imagens> itens = new ArrayList<>();
-            HardwareDTO hardwareDTO = convertJson.convertJson(DTO,HardwareDTO.class);
-            System.out.println("meu dados convertidos "+hardwareDTO.getFilial());
-            Hardware chamado = modelMapper.map(hardwareDTO,Hardware.class);
+            IssueDTO issueDTO = convertJson.convertJson(DTO, IssueDTO.class);
+            Issue chamado = modelMapper.map(issueDTO, Issue.class);
             chamado.getItens().forEach(e->{
                 e.setStatus(Status.AGUARDANDO_TECNICO);
-                e.setHardware(chamado);
+                e.setIssue(chamado);
                 e.Datas(LocalDateTime.now());
                 e.setAtivo(true);
-                e.setChamadoid("CARD-"+chamado.gerarCode());
+                e.setCardId("CARD-"+chamado.gerarCode());
             });
             chamado.setServico("hardware");
             if(files!=null){
                 for(MultipartFile file:files){
                     if(file!=null){
-                        String nameFile = "http://localhost:8080/imagens"+"/"+ file.getOriginalFilename();
+                        String nameFile =endpoint+"imagens"+"/"+ file.getOriginalFilename();
                         byte[] bytes = file.getBytes();
                         ImagensDTO imagensDTO = new ImagensDTO(nameFile);
                         Imagens imagens = modelMapper.map(imagensDTO,Imagens.class);
@@ -88,49 +95,49 @@ public class ChamadoService implements ChamadoInterface {
                     }
                 }
             }
-            var chamadoItens = hardwareRepository.findOneById(hardwareDTO.getId());
+            var chamadoItens = hardwareRepository.findOneById(issueDTO.getId());
             if(chamadoItens!=null) {
                 chamadoItens.getItens().addAll(chamado.getItens());
                 hardwareRepository.save(chamadoItens);
-                return modelMapper.map(chamado, HardwareDTO.class);
+                return modelMapper.map(chamado, IssueDTO.class);
             } else {
-                Hardware hardwareSalvo = hardwareRepository.save(chamado);
-                var hf = modelMapper.map(hardwareSalvo, HardwareDTO.class);
-                return modelMapper.map(hardwareSalvo, HardwareDTO.class);
+                Issue issueSalvo = hardwareRepository.save(chamado);
+                var hf = modelMapper.map(issueSalvo, IssueDTO.class);
+                return modelMapper.map(issueSalvo, IssueDTO.class);
             } }catch (IOException e){
             throw  new RuntimeException(e);
         }
     }
     // pegando chamado por id;
-    public HardwareDTO ChamadoId(long id){
-        Hardware chamadoid = hardwareRepository.findOneByIds(id);
+    public IssueDTO ChamadoId(long id){
+        Issue chamadoid = hardwareRepository.findOneByIds(id);
         if(chamadoid==null){throw new RuntimeException("nada encontrado");}
-        HardwareDTO chamado = modelMapper.map(chamadoid,HardwareDTO.class);
+        IssueDTO chamado = modelMapper.map(chamadoid, IssueDTO.class);
         return  chamado;
     }
     // pegando chamado chamado por card
     @Override
-    public HardwareDTO Card(String card,long id) {
-        Hardware chamadoid = hardwareRepository.findOneByCard(card,id);
+    public IssueDTO Card(String card, long id) {
+        Issue chamadoid = hardwareRepository.findOneByCard(card,id);
         if(chamadoid==null){throw new RuntimeException("nada encontrado no banco");}
-        HardwareDTO chamado = modelMapper.map(chamadoid,HardwareDTO.class);
+        IssueDTO chamado = modelMapper.map(chamadoid, IssueDTO.class);
         return  chamado;
     }
-    public Page<HardwareDTO> Listar(Pageable page,  String setor,String dataAntes, String dataDepois,int filial) {
+    public Page<IssueDTO> Listar(Pageable page, String setor, String dataAntes, String dataDepois, int filial) {
         if(dataAntes!=null&&dataDepois!=null){
             return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrue(page,dataAntes,dataDepois,filial)
-                    .map(e->modelMapper.map(e,HardwareDTO.class));
+                    .map(e->modelMapper.map(e, IssueDTO.class));
         }
 //        if(setor!=null){
 //            return hardwareRepository.findAllBySetor(page,setor)
-//                    .map(e->modelMapper.map(e,HardwareDTO.class));
+//                    .map(e->modelMapper.map(e,IssueDTO.class));
 //        }
         if(setor!=null){
             return hardwareRepository.findAllBySetorContainingIgnoreCase(page,setor,filial)
-                    .map(e->modelMapper.map(e,HardwareDTO.class));
+                    .map(e->modelMapper.map(e, IssueDTO.class));
         }
         var dados = hardwareRepository.findAllByAtivoTrue(page,filial)
-                        .map(e->modelMapper.map(e,HardwareDTO.class));
+                        .map(e->modelMapper.map(e, IssueDTO.class));
 
         return  dados;
     }
@@ -147,73 +154,73 @@ public class ChamadoService implements ChamadoInterface {
             return ResponseEntity.status(500).build();
         }
     }
-    public Page<HardwareDTO> pegarChamadoId(long id,Pageable pageable){
-        List<Hardware> lista = hardwareRepository.findAllByUsuarioidById(id,pageable );
-        List<HardwareDTO> lis = new ArrayList<>();
-        for (Hardware d:lista){
-            var map = modelMapper.map(d,HardwareDTO.class);
+    public Page<IssueDTO> pegarChamadoId(long id, Pageable pageable){
+        List<Issue> lista = hardwareRepository.findAllByUsuarioidById(id,pageable );
+        List<IssueDTO> lis = new ArrayList<>();
+        for (Issue d:lista){
+            var map = modelMapper.map(d, IssueDTO.class);
            lis.add(map);
         }
         return new PageImpl<>( lis);
     }
     public ResponseEntity update(long id,String data){
         UpdateChamado updateChamado = convertJson.convertJson(data,UpdateChamado.class);
-        Hardware lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.id());
+        Issue lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.id());
         validationsTec.existeTecnico(lista,updateChamado.tecnicoid());
         lista.atualiza(updateChamado);
         lista.getItens().forEach(e->e.setStatus(Status.EM_ANDAMENTO));
-         modelMapper.map(lista,HardwareDTO.class);
+         modelMapper.map(lista, IssueDTO.class);
         return ResponseEntity.ok(new MSG("tecnico adicionado ao chamado!"));
     }
     public ResponseEntity validaChamado(long id,String cardChamado,long UsuarioLogado){
         var user =userRepository.getReferenceById(UsuarioLogado);
         System.out.println("meu id de usuario "+UsuarioLogado);
-        Hardware hardware = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        if(hardware==null){
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }
-       validationsTec.Valid(hardware,UsuarioLogado);
-        validationsTec.Status(hardware);
+       validationsTec.Valid(issue,UsuarioLogado);
+        validationsTec.Status(issue);
 
-            hardware.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
-            hardware.getItens().forEach(e->e.setAceito(true));
-            hardware.getItens().forEach(e->e.setAceito(true));
+            issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
+            issue.getItens().forEach(e->e.setAceito(true));
+            issue.getItens().forEach(e->e.setAceito(true));
         return ResponseEntity.ok(new MSG("status atualizado"));
     }
     // precisa ser feito validacao para o chamado nao ser aberto
     public ResponseEntity validaChamadoUSer(long id, String cardChamado,long UsuarioLogado){
-        Hardware hardware = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         System.out.println("meu id de usuario "+UsuarioLogado);
         Instant hora = Instant.now();
         System.out.println(id);
-        if(hardware==null){
+        if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }
         // validacão de tecnico
-        validationsTec.StatusvalidFechado(hardware);
-        hardware.getItens().forEach(e->e.setStatus(Status.FECHADO));
-        hardware.getItens().forEach(e->e.setAtivo(false));
-        hardware.getItens().forEach(e->e.setAceito(false));
-        hardware.getItens().forEach(e->e.setClient_feito(true));
-        hardware.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
-        hardwareRepository.save(hardware);
+        validationsTec.StatusvalidFechado(issue);
+        issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
+        issue.getItens().forEach(e->e.setAtivo(false));
+        issue.getItens().forEach(e->e.setAceito(false));
+        issue.getItens().forEach(e->e.setClient_feito(true));
+        issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
+        hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("status fechado"));
     }
     public ResponseEntity validaChamadoReaberto(long id,String cardChamado,long UsuarioLogado){
-        Hardware hardware = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         System.out.println("meu id de usuario "+UsuarioLogado);
-        if(hardware==null){
+        if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }
-        validationsTec.reaberto(hardware, UsuarioLogado);
+        validationsTec.reaberto(issue, UsuarioLogado);
         // validacão de tecnico
-        validationsTec.StatusvalidFechado(hardware);
-        hardware.getItens().forEach(e->e.setStatus(Status.RE_ABERTO));
-        hardware.getItens().forEach(e->e.setAceito(false));
-        hardwareRepository.save(hardware);
+        validationsTec.StatusvalidFechado(issue);
+        issue.getItens().forEach(e->e.setStatus(Status.RE_ABERTO));
+        issue.getItens().forEach(e->e.setAceito(false));
+        hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("chamado reaberto"));
     }
-    public List<Hardware> pegaStor(){
+    public List<Issue> pegaStor(){
         var dados = hardwareRepository.findAll();
 
         return  dados;

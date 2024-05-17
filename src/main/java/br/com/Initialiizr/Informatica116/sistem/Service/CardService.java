@@ -1,7 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
-import br.com.Initialiizr.Informatica116.sistem.DTO.ChamadoDTO;
-import br.com.Initialiizr.Informatica116.sistem.Models.Card;
-import br.com.Initialiizr.Informatica116.sistem.Models.CardDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Card;
+import br.com.Initialiizr.Informatica116.sistem.DTO.OPTIONS_DTO.CardDTO;
 import br.com.Initialiizr.Informatica116.sistem.repository.CardRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
-import br.com.Initialiizr.Informatica116.sistem.DTO.OptionDTO;
-import br.com.Initialiizr.Informatica116.sistem.DTO.SetorDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.OPTIONS_DTO.OptionDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.OPTIONS_DTO.SetorDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.OptionsService;
 import br.com.Initialiizr.Informatica116.sistem.Service.SetorService;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
@@ -21,7 +21,7 @@ public class OptionsController {
     private OptionsService optionsService;
     @PostMapping("setor")
     @Transactional
-    public ResponseEntity<SetorDTO> Resgistrar(@RequestBody SetorDTO setor){
+    public ResponseEntity<MSG> Resgistrar(@RequestBody SetorDTO setor){
         var response = service.registrar(setor);
         return  ResponseEntity.ok().body(response);
     }

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,21 +35,22 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST,"/varificacao/code").permitAll()
                         .requestMatchers(HttpMethod.PUT,"/alterar/passwd").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/user/*").permitAll()
-                        .requestMatchers("/refreshToken").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/refreshToken").permitAll()
                         .requestMatchers(HttpMethod.GET,"/imagens/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/lista/setor").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/send/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/registrar").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .formLogin(e->e.disable())
                 .addFilterBefore(filterValidation, UsernamePasswordAuthenticationFilter.class)
         ;
         return httpSecurity.build();
     };
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return  configuration.getAuthenticationManager();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder(){

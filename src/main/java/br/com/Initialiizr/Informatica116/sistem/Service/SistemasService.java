@@ -1,12 +1,14 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
-import br.com.Initialiizr.Informatica116.sistem.Controler.ControlerEmail;
-import br.com.Initialiizr.Informatica116.sistem.Controler.UsuarioControler;
-import br.com.Initialiizr.Informatica116.sistem.DTO.SistemasDTO;
-import br.com.Initialiizr.Informatica116.sistem.Models.Sistemas;
+import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.OptionsSystemaDTo;
+import br.com.Initialiizr.Informatica116.sistem.DTO.OPTIONS_DTO.SistemasDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Select;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Sistemas;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.repository.SistemasRepository;
+import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -31,11 +33,13 @@ public class SistemasService {
     private ConvertJson convertJson;
     @Autowired
     private ModelMapper modelMapper;
+    @Value("${endpoint}")
+    private String endpoint;
     public SistemasDTO RegistobotesChamados(String data, MultipartFile file) throws IOException {
         byte[] bytes = file.getBytes();
         SistemasDTO optionsSystemaDTo = convertJson.convertJson(data,SistemasDTO.class);
         if(optionsSystemaDTo!=null){
-            Sistemas sistemas = modelMapper.map(optionsSystemaDTo,Sistemas.class);
+            Sistemas sistemas = modelMapper.map(optionsSystemaDTo, Sistemas.class);
             sistemas.getOptions().forEach(e-> {
                         e.setSistema(sistemas);
                     }
@@ -45,7 +49,7 @@ public class SistemasService {
                 throw new RuntimeException("ja contem um Registro");
             };
             var path = "sistemBotao";
-            String name = "http://localhost:8080/sistemBotao/"+file.getOriginalFilename();
+            String name = endpoint+"sistemBotao/"+file.getOriginalFilename();
             String imagem = path+"/"+file.getOriginalFilename();
             File pathName = new File(path);
             if(!pathName.exists()){
@@ -87,5 +91,29 @@ public class SistemasService {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
+    }
+    public  SistemasDTO atualizarBotoes(String name){
+        var result = repository.findByNameContainingIgnoreCase(name);
+        if(result!=null){
+            return modelMapper.map(result,SistemasDTO.class);
+
+        }
+       throw new RuntimeException("nada encontrado!");
+    }
+    public MSG AddBtn(long id,OptionsSystemaDTo data){
+        var result = repository.getReferenceById(id);
+        var p = modelMapper.map(data,Select.class);
+          for(Select opt:result.getOptions()){
+              if(opt.getName().equals(p.getName())){
+                  throw new RuntimeException("ja existe um card");
+              }
+          }
+        if(data!=null){
+            result.getOptions().add(p);
+            result.getOptions().forEach(e->e.setSistema(result));
+            repository.save(result);
+            return new MSG("criado com sucesso");
+        }
+      return  null;
     }
 }

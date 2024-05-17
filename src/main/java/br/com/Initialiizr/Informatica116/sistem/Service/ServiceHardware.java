@@ -1,11 +1,12 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 
-import br.com.Initialiizr.Informatica116.sistem.Models.Hardware;
-import br.com.Initialiizr.Informatica116.sistem.Models.HardwareDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 
 import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,19 +20,21 @@ import java.util.List;
 
 @Service
 public class ServiceHardware {
+    @Value("${endpoint}")
+    private String endpoint;
     @Autowired
    ModelMapper modelMapper;
-    public Hardware Registro(HardwareDTO hardwareDTO){
-        Hardware hardware = modelMapper.map(hardwareDTO,Hardware.class);
-        hardware.getItens().forEach(e->{
+    public Issue Registro(IssueDTO issueDTO){
+        Issue issue = modelMapper.map(issueDTO, Issue.class);
+        issue.getItens().forEach(e->{
             e.setStatus((Status.AGUARDANDO_TECNICO));
-            e.setHardware(hardware);
+            e.setIssue(issue);
             e.Datas(LocalDateTime.now());
             e.setAtivo(true);
-            e.setChamadoid("CARD-"+hardware.gerarCode());
+            e.setCardId("CARD-"+ issue.gerarCode());
         });
-        hardware.setServico("hardware");
-        return hardware;
+        issue.setServico("issue");
+        return issue;
     }
 
     public List<String> multiPart(MultipartFile[] multipartFile) {
@@ -40,7 +43,7 @@ public class ServiceHardware {
            if(multipartFile!=null){
                for(MultipartFile file:multipartFile){
                    if(file!=null){
-                       String nameFile ="http://localhost:8080/imagens"+"/"+ file.getOriginalFilename();
+                       String nameFile =endpoint+"imagens"+"/"+ file.getOriginalFilename();
                        byte[] bytes = file.getBytes();
                        String pathName = "Img";
 

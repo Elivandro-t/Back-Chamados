@@ -1,8 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.CommentsDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.COMENTARIOS_DTO.CommentsDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.CommetService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,6 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.repository;
 
-import br.com.Initialiizr.Informatica116.sistem.Models.User;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     User findByEmail(String email);
     @Query("select s from User s where s.id = :id")
     User getReferenceById(long id);
+
+    User findOneById(long id);
 }

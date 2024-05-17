@@ -1,9 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.OptionDTO;
-import br.com.Initialiizr.Informatica116.sistem.DTO.PerfilDTo;
-import br.com.Initialiizr.Informatica116.sistem.Models.OptionsPerfil;
-import br.com.Initialiizr.Informatica116.sistem.Models.Perfil;
+import br.com.Initialiizr.Informatica116.sistem.DTO.OPTIONS_DTO.OptionDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.OptionsPerfil;
 import br.com.Initialiizr.Informatica116.sistem.repository.OptionsRepository;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import org.modelmapper.ModelMapper;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class OptionsService {

@@ -1,16 +1,14 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.CommentsDTO;
-import br.com.Initialiizr.Informatica116.sistem.DTO.ListaComentdDTO;
-import br.com.Initialiizr.Informatica116.sistem.Models.Comments;
-import br.com.Initialiizr.Informatica116.sistem.Models.ListaComments;
+import br.com.Initialiizr.Informatica116.sistem.DTO.COMENTARIOS_DTO.CommentsDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.COMENTARIOS.Comments;
 import br.com.Initialiizr.Informatica116.sistem.repository.CommentsRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 public class CommetService {
@@ -18,10 +16,16 @@ public class CommetService {
     private ModelMapper  modelMapper;
     @Autowired
     private CommentsRepository commentsRepository;
+    @Value("${endpoint}")
+    private String endpoint;
     public CommentsDTO comments(CommentsDTO commentsDTO){
 
+
         Comments comment  = modelMapper.map(commentsDTO,Comments.class);
-          comment.getItens().forEach(e->e.setComment(comment));
+          comment.getItens().forEach(e->{
+                  e.setComment(comment);
+                  e.Datas(LocalDateTime.now());
+          });
            var comments = commentsRepository.getReferenceByChamadoid(comment.getChamadoid());
 
            if(comments!=null){

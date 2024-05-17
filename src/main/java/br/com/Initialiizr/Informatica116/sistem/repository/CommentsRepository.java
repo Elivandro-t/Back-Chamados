@@ -1,6 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.repository;
 
-import br.com.Initialiizr.Informatica116.sistem.Models.Comments;
+import br.com.Initialiizr.Informatica116.sistem.Models.COMENTARIOS.Comments;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

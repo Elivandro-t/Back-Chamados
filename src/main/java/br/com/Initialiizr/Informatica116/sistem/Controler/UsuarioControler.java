@@ -1,9 +1,11 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.*;
+import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.*;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.Delete;
+import br.com.Initialiizr.Informatica116.sistem.DTO.MESAGENS.Mensagem;
 import br.com.Initialiizr.Informatica116.sistem.Models.LoginDTo;
-import br.com.Initialiizr.Informatica116.sistem.Models.RefreshToken;
-import br.com.Initialiizr.Informatica116.sistem.Models.UserVerify;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.RefreshToken;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.UserVerify;
 import br.com.Initialiizr.Informatica116.sistem.Security.TokenService;
 import br.com.Initialiizr.Informatica116.sistem.Service.RefeshTokenService;
 import br.com.Initialiizr.Informatica116.sistem.Service.UserService;
@@ -13,7 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,10 @@ public class UsuarioControler {
     public ResponseEntity<Mensagem> registrar(@RequestBody UserDTO userDTO){
         var response = userService.registro(userDTO);
         return ResponseEntity.ok().body(new Mensagem("cadastrado com sucesso"));
+    }
+    @GetMapping("/user/{email}")
+    public UserComment findOneByEmal(@PathVariable  String email){
+        return userService.pegarUsuarioEmail(email);
     }
     @PostMapping("login")
     @Transactional
@@ -81,7 +86,7 @@ public class UsuarioControler {
     }
     @PutMapping("/alterar/password")
     @Transactional
-    public ResponseEntity alterPassword(@RequestBody  AlterPassword password){
+    public ResponseEntity alterPassword(@RequestBody AlterPassword password){
         return userService.alterPassword(password);
     }
     @PutMapping("/alterar/cod/{email}")
@@ -100,6 +105,10 @@ public class UsuarioControler {
     public ResponseEntity alter(@RequestBody AlterPassword alterPassword ){
 
         return userService.AlterByCode(alterPassword);
+    }
+    @DeleteMapping("/delete/{id}")
+    public  MSG perfilDTo(@RequestBody Delete email, @PathVariable  long id){
+        return userService.removerPerfil(email,id);
     }
 }
 

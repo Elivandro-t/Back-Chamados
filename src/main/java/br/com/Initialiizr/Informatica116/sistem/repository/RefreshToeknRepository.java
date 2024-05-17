@@ -1,7 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.repository;
 
-import br.com.Initialiizr.Informatica116.sistem.Models.RefreshToken;
-import br.com.Initialiizr.Informatica116.sistem.Models.User;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.RefreshToken;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

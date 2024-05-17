@@ -15,7 +15,6 @@ public class ValidatorEmail {
         }
 
     }
-
     private static boolean isEmail(String email){
         String regex =  "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern patten = Pattern.compile(regex);

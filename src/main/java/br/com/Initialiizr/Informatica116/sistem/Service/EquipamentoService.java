@@ -1,7 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.EquipamentoDTO;
-import br.com.Initialiizr.Informatica116.sistem.Models.Equipamento;
+import br.com.Initialiizr.Informatica116.sistem.DTO.OPTIONS_DTO.EquipamentoDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Equipamento;
 import br.com.Initialiizr.Informatica116.sistem.repository.EquipamentoRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.validators;
-import br.com.Initialiizr.Informatica116.sistem.DTO.AlterPassword;
-import br.com.Initialiizr.Informatica116.sistem.Models.User;
+import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.AlterPassword;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +33,7 @@ public class ValidatorPassword {
     public User AlterarPassword(AlterPassword alterPassword) {
         var usuario = usuarioRepository.getReferenceById(alterPassword.id());
         if(!passwordEncoder.matches(alterPassword.password(),usuario.getPassword())){
-            throw  new RuntimeException("senha invalida");
+            throw  new RuntimeException("senha atual invalida!");
         } if(!passwordEncoder.matches(alterPassword.newPassword(),usuario.getPassword())){
             return usuario;
         }

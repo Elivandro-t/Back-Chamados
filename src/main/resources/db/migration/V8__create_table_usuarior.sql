@@ -8,6 +8,8 @@ create table usuario(
   filial bigint not null,
   password varchar(255) default null,
   codigo varchar(50) default null,
+  accountLocked tinyint,
   exp bigint not null,
+  counts bigint not null,
   primary key(id)
 )

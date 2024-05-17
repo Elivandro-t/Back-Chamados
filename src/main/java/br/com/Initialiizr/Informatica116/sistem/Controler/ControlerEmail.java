@@ -1,7 +1,5 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
-import br.com.Initialiizr.Informatica116.sistem.DTO.ChamadoDTO;
-import br.com.Initialiizr.Informatica116.sistem.DTO.Mensagem;
-import br.com.Initialiizr.Informatica116.sistem.Models.HardwareDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.MESAGENS.Mensagem;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -26,7 +24,7 @@ public class ControlerEmail {
     private ResponseEntity<Mensagem> send(@PathVariable String email){
      String code = gerarCode();
      try {
-         SendEmil(email,code);
+         Send(email,code);
          return ResponseEntity.ok(new Mensagem("seu codigo de verificação foi  enviado para o email registrado"));
      }catch (Exception e){
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Mensagem("erro ao enviar email "+e.getMessage()));
@@ -45,17 +43,16 @@ public class ControlerEmail {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(email);
-        helper.setSubject("codigo de verificação");
+        helper.setSubject("Redefinição de senha");
         helper.setText("Seu codigo de verificação e "+cod,true);
         javaMailSender.send(message);
     }
     @Async
-    public void Send(String email,HardwareDTO hardwareDTO){
-        var usuario = hardwareDTO.getItens().stream().map(ChamadoDTO::getChamadoid).toList();
+    public void Send(String email,String cod){
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(email);
         msg.setSubject("chamado foi criado com sucesso");
-        msg.setText("numero do seu chamdo "+usuario);
+        msg.setText("numero do seu chamdo "+cod);
         javaMailSender.send(msg);
     }
 }

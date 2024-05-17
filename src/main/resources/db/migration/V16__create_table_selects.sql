@@ -1,0 +1,8 @@
+create table options(
+ id bigint not null auto_increment,
+ name varchar(255) default null,
+ titulo varchar(255) default null,
+ sistema_id bigint not null,
+ primary key(id),
+ foreign key(sistema_id) references sistemas(id)
+)
