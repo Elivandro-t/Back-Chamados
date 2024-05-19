@@ -1,5 +1,5 @@
 create table imagens(
- id bigint not null auto_increment,
+ id serial primary key,
  name varchar(1000) default null,
  chamado_id bigint not null,
  primary key(id),

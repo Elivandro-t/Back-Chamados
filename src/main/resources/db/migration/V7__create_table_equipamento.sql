@@ -1,5 +1,5 @@
 create table equipamento(
-id bigint not null auto_increment,
+id serial primary key,
 name varchar(50) default null,
 primary key(id)
 )

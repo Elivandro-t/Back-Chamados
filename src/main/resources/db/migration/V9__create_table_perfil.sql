@@ -1,5 +1,5 @@
 create table perfil(
-id bigint not null auto_increment,
+id serial primary key,
 name varchar(50) default null,
 ativo tinyint,
 user_id bigint not null,

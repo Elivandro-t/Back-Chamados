@@ -1,5 +1,5 @@
 CREATE TABLE chamado(
-  id bigint not null auto_increment,
+  id serial primary key,
   patrimonio varchar(50) default null,
   equipamento varchar(50) default null,
   issue_id bigint not null,
