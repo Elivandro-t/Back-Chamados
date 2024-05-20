@@ -222,7 +222,7 @@ public class UserService {
         User user = userRepository.findByEmail(alterPassword.email());
         if(user!=null){
             user.criptografar(alterPassword.newPassword());
-            user.setAccountLocked(true);
+            user.setAccount_locked(true);
             user.setCodigo(null);
             userRepository.save(user);
             return ResponseEntity.ok(new MensagemPd("senha alterada com sucesso!"));
@@ -239,7 +239,7 @@ public class UserService {
             user.incrementCount();
             if (user.getCounts() >= 3) {
                 user.setPassword(null);
-                user.setAccountLocked(true); // Adicione um campo para indicar se o usuário está bloqueado
+                user.setAccount_locked(true); // Adicione um campo para indicar se o usuário está bloqueado
                 userRepository.save(user);
                 throw new RuntimeException("Usuário bloqueado!");
             }

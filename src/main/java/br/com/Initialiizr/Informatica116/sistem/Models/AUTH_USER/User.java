@@ -45,7 +45,7 @@ public class User implements UserDetails {
     private String refreshToken;
     @JoinColumn(nullable = true)
     private String imagem;
-    private boolean accountLocked;
+    private boolean account_locked =false;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.EAGER)
     private List<Perfil> itens;
     public User(UserDTO user) {

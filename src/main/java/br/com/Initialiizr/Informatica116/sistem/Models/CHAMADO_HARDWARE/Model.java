@@ -35,7 +35,7 @@ public class Model {
     private String data_chamdo_feito;
     private String data;
     @NotBlank
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String descricao ;
     @NotBlank
     private String usuario;

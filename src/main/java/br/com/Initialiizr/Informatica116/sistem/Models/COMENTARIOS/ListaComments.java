@@ -19,7 +19,7 @@ public class ListaComments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "TEXT")
     private String comments;
     private String usuario;
     private String  email ;

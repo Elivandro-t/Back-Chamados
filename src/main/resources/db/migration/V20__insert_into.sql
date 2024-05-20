@@ -1,2 +1,2 @@
 insert into options(name,titulo,sistema_id)
-VALUES ("Hardware","instalação de impressora, manutenção preventiva,apagar grupo de impressão,formatação...",1),("Sistema","Erro Gmcore, instalação de pacote office,criação de email...",1)
+VALUES ('Hardware','instalação de impressora, manutenção preventiva,apagar grupo de impressão,formatação...',1),('Sistema','Erro Gmcore, instalação de pacote office,criação de email...',1)

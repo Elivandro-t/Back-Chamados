@@ -1,5 +1,4 @@
 create table setor(
  id serial primary key,
- name varchar(50) default null,
- primary key (id)
+ name varchar(50) default null
 );

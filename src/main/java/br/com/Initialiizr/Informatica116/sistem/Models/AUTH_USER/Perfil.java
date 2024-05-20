@@ -22,6 +22,7 @@ public class Perfil implements GrantedAuthority {
     private String name;
     private boolean ativo;
     @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
     @Override
     public String getAuthority() {
