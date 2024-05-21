@@ -14,7 +14,7 @@ EXPOSE 8080
 
 COPY --from=build /apt/target/Informatica-0.0.1-SNAPSHOT.jar /apt/app.jar
 
-ENTRYPOINT ["java", "-jar", "/apt/app.jar"]
+ENTRYPOINT ["java", "-Duser.timezone=America/Sao_Paulo", "-jar", "/app.jar"]
 
 
 
