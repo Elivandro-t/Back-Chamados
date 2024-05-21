@@ -1,8 +1,8 @@
 FROM ubuntu:latest as build
-RUN apk add --no-cache tzdata && \
+RUN apk add --no-cache apk-tools && \
     cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && \
     echo "America/Sao_Paulo" > /etc/timezone && \
-    apk del tzdata
+    apk del apk-tools
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
     maven
