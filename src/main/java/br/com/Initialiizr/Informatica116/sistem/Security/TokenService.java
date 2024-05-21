@@ -31,6 +31,7 @@ public class TokenService {
                     .withClaim("id",user.getId())
                     .withClaim("filial",user.getFilial())
                     .withClaim("perfil",perfil)
+                    .withClaim("imagem",user.getImagem())
                     .withExpiresAt(DataExpired())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
