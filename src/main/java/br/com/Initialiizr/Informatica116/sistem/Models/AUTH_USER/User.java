@@ -58,9 +58,6 @@ public class User implements UserDetails {
       return this.password = new BCryptPasswordEncoder().encode(user);
    }
     @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//      return itens;
-//    }
 public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
