@@ -3,6 +3,7 @@ import br.com.Initialiizr.Informatica116.sistem.Controler.ControlerEmail;
 import br.com.Initialiizr.Informatica116.sistem.Controler.UsuarioControler;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.ImagensDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.StatusOneDTO;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.UpdateChamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.*;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
@@ -226,5 +227,13 @@ public class ChamadoService implements ChamadoInterface {
         return  dados;
     }
 
+    public StatusOneDTO OneStatus(long id, String card) {
+        Issue chamadoid = hardwareRepository.findOneByCard(card,id);
+        if(chamadoid!=null){
+            StatusOneDTO chamado = modelMapper.map(chamadoid, StatusOneDTO.class);
+            return  chamado;
+        }
+        throw new RuntimeException("nada encontrado no banco");
 
+    }
 }

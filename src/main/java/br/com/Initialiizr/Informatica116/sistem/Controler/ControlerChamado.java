@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.StatusOneDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService;
@@ -96,5 +97,10 @@ public class ControlerChamado {
     public  ResponseEntity<List<Issue>> setores(){
           var result =  service.pegaStor();
        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/lista/status/service/{id}/{chamadoCard}")
+    public  ResponseEntity<StatusOneDTO> OneStatus(@PathVariable long id, @PathVariable("chamadoCard") String card){
+        var result =  service.OneStatus(id,card);
+        return ResponseEntity.ok(result);
     }
 }
