@@ -20,6 +20,8 @@ public class Chamado extends Model {
     private long id;
     private String patrimonio;
     private String equipamento;
+    private String sistem_erro;
+    private String erro;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "chamado")
     private List<Imagens> imagens;
     @ManyToOne(optional = false)

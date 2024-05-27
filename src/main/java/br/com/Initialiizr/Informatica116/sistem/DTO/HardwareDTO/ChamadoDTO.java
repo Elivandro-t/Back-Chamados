@@ -22,6 +22,8 @@ public class ChamadoDTO {
     private String setor;
     private String patrimonio;
     private String equipamento;
+    private String erro;
+    private String sistem_erro;
     private Status status ;
     private boolean aceito;
     private boolean client_feito;
