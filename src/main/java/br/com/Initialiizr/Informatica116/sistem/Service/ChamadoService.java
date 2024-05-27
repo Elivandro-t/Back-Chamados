@@ -72,7 +72,6 @@ public class ChamadoService implements ChamadoInterface {
                 e.setAtivo(true);
                 e.setCardId("CARD-"+chamado.gerarCode());
             });
-            chamado.setServico("hardware");
             if(files!=null){
                 for(MultipartFile file:files){
                     if(file!=null){
