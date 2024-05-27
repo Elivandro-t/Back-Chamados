@@ -40,7 +40,7 @@ public class TokenService {
     }
 
     private Instant DataExpired() {
-        return LocalDateTime.now().minusHours(2)
+        return LocalDateTime.now().minusMinutes(1)
                 .toInstant(ZoneOffset.of("-03:00"));
 
     }
