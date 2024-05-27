@@ -1,4 +1,3 @@
-alter table chamado add(
- sistem_erro varchar(100) default null,
- erro varchar(100) default null
-)
+ALTER TABLE chamado
+ADD COLUMN sistem_erro VARCHAR(100) DEFAULT NULL,
+ADD COLUMN erro VARCHAR(100) DEFAULT NULL;
