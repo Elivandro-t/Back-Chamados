@@ -28,7 +28,6 @@ public class RefeshTokenService {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         RefreshToken existingToken = repository.findByUser(user);
         if (existingToken != null) {
-            findByToken(existingToken.getRefreshtoken());
             return existingToken;
         }
         RefreshToken refreshToken = new RefreshToken();
