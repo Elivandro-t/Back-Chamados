@@ -74,6 +74,7 @@ public class UsuarioControler {
         return  response;
     }
     @PostMapping("/refreshToken")
+    @Transactional
     public  ResponseEntity<?> refreshtoken(@RequestBody RefreshtokenDTO request){
          return refeshTokenService.findByToken(request.getRefreshtoken())
                  .map(refeshTokenService::verifyExpiration)
