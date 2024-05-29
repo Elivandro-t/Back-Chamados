@@ -14,6 +14,7 @@ import jakarta.mail.MessagingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +76,7 @@ public class UsuarioControler {
     }
     @PostMapping("/refreshToken")
     public  ResponseEntity<?> refreshtoken(@RequestBody RefreshtokenDTO request){
+        try {
          return refeshTokenService.findByToken(request.getRefreshtoken())
                  .map(refeshTokenService::verifyExpiration)
                  .map(RefreshToken::getUser)
@@ -83,6 +85,9 @@ public class UsuarioControler {
                      return ResponseEntity.ok(new RefreshtokenDTO(token,request.getRefreshtoken()));
                  })
                  .orElseThrow(()->new CredentialsExpiredException("erro ao validar token"));
+        } catch (CredentialsExpiredException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erro ao validar token");
+        }
     }
     @PutMapping("/alterar/password")
     @Transactional
