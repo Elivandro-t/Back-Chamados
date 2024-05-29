@@ -23,10 +23,10 @@ public class RefeshTokenService {
     @Autowired
     private UserRepository userRepository;
     @Transactional
-
     public RefreshToken registrarToken(long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         RefreshToken existingToken = repository.findByUser(user);
+
         if (existingToken != null) {
             return existingToken;
         }
@@ -45,17 +45,23 @@ public class RefeshTokenService {
     public Optional<RefreshToken> findByToken(String token){
         return repository.findByRefreshtoken(token);
     }
+    public RefreshToken verifyExpirationtoken(RefreshToken token){
+        if(token.getExpirationtime().compareTo(Date.from(Instant.now()))<0){
+            repository.delete(token);
+        };
+        return token;
+    }
     public RefreshToken verifyExpiration(RefreshToken token){
         if(token.getExpirationtime().compareTo(Date.from(Instant.now()))<0){
             repository.delete(token);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         };
-       return token;
+        return token;
     }
     @Transactional
-    public int deletetoken(long id){
+    public void deletetoken(long id){
         var usuario = userRepository.findById(id).get();
-        return repository.deleteRefreshtokenByUser(usuario);
+         repository.deleteRefreshtokenByUser(usuario);
 
     }
 }
