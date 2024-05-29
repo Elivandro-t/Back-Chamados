@@ -32,14 +32,14 @@ public class RefeshTokenService {
         }
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
-        refreshToken.setExpirationtime(new Date(System.currentTimeMillis() + 1000 * 60 * 2));
+        refreshToken.setExpirationtime(new Date(System.currentTimeMillis() + 1000 * 60 * 60));
         refreshToken.setRefreshtoken(UUID.randomUUID().toString());
 
         return repository.save(refreshToken);
     }
     public String generateTokenFromUsername(String username) {
         return Jwts.builder().setSubject(username).setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60*2)).signWith(SignatureAlgorithm.HS256, "123456")
+                .setExpiration(new Date(System.currentTimeMillis() + 2000 * 60*60)).signWith(SignatureAlgorithm.HS256, "123456")
                 .compact();
     }
     public Optional<RefreshToken> findByToken(String token){
