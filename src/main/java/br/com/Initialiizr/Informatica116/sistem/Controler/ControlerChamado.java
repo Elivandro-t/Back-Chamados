@@ -53,6 +53,7 @@ public class ControlerChamado {
         var response = service.ListaImagensId(img);
         return  response;
     }
+    // pegando chamado por id
     @GetMapping("/chamado/{id}")
     public Page<IssueDTO> pegarChamdoID(@PathVariable long id, @PageableDefault(size = 10) Pageable page){
         var response = service.pegarChamadoId(id,page);
