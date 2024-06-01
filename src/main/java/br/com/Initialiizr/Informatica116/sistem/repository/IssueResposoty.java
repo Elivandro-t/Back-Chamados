@@ -1,6 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.repository;
 
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
+import io.micrometer.core.instrument.binder.db.MetricsDSLContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -48,7 +49,9 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
 
  Page findAllBySetorContainingIgnoreCase(Pageable page, String setor, int filial);
 
-     @Query("select p from Issue p left join fetch p.itens s where p.usuarioid =:idusuario and s.status = 'AGUARDANDO_VALIDACAO' Order by s.id DESC")
-    Page FindAllByHardwareByStatusValidacao(Pageable page,long idusuario);
+ @Query("select p from Issue p left join fetch p.itens s where p.usuarioid =:idusuario and s.status = 'AGUARDANDO_VALIDACAO' Order by s.id DESC")
+ Page FindAllByHardwareByStatusValidacao(Pageable page,long idusuario);
 
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by s.id DESC")
+ Page findAllByAtivo(Pageable page, int filial,boolean ativo);
 }

@@ -119,27 +119,26 @@ public class ChamadoService implements ChamadoInterface {
     @Override
     public IssueDTO Card(String card, long id) {
         Issue chamadoid = hardwareRepository.findOneByCard(card,id);
-        if(chamadoid==null){throw new RuntimeException("nada encontrado no banco");}
-        IssueDTO chamado = modelMapper.map(chamadoid, IssueDTO.class);
-        return  chamado;
+        if(chamadoid!=null){
+            IssueDTO chamado = modelMapper.map(chamadoid, IssueDTO.class);
+            return  chamado;
+        }
+        throw new RuntimeException("nada encontrado no banco");
     }
-    public Page<IssueDTO> Listar(Pageable page, String setor, String dataAntes, String dataDepois, int filial) {
+    public Page<IssueDTO> Listar(Pageable page, String setor,
+                                 String dataAntes, String dataDepois,
+                                 int filial,boolean ativo) {
         if(dataAntes!=null&&dataDepois!=null){
             return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrue(page,dataAntes,dataDepois,filial)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-//        if(setor!=null){
-//            return hardwareRepository.findAllBySetor(page,setor)
-//                    .map(e->modelMapper.map(e,IssueDTO.class));
-//        }
         if(setor!=null){
             return hardwareRepository.findAllBySetorContainingIgnoreCase(page,setor,filial)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-        var dados = hardwareRepository.findAllByAtivoTrue(page,filial)
-                        .map(e->modelMapper.map(e, IssueDTO.class));
+            return hardwareRepository.findAllByAtivo(page,filial,ativo)
+                            .map(e->modelMapper.map(e, IssueDTO.class));
 
-        return  dados;
     }
     public ResponseEntity<Resource> ListaImagensId(String name){
         Path path = Paths.get("Img").resolve(name);

@@ -33,13 +33,14 @@ public class ControlerChamado {
         return ResponseEntity.ok().body(response);
     }
     @GetMapping("/lista/{filial}")
-    public Page<IssueDTO> lista(Pageable page, @RequestParam(name = "setor",required = false) String Setor,
+    public Page<IssueDTO> lista(Pageable page,
+                                @RequestParam(name = "setor",required = false) String Setor,
                                 @RequestParam(name = "dataAntes",required = false) String dataAntes,
-                                @RequestParam(name = "dataDepois",required = false)
-                                   String dataDepois, @PathVariable int filial){
+                                @RequestParam(name = "dataDepois",required = false) String dataDepois,
+                                @RequestParam(name = "ativo",required = false) boolean ativo,
+                                @PathVariable int filial){
 
-        System.out.println("data "+Setor);
-        return service.Listar(page,Setor,dataAntes,dataDepois,filial);
+        return service.Listar(page,Setor,dataAntes,dataDepois,filial,ativo);
     }
     @GetMapping("/lista/aguardando/{id}")
     public Page<IssueDTO> listaValidando(@PageableDefault Pageable pageable, @PathVariable long id){
