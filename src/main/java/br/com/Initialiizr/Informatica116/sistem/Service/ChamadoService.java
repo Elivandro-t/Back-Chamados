@@ -69,6 +69,7 @@ public class ChamadoService implements ChamadoInterface {
                 e.setStatus(Status.AGUARDANDO_TECNICO);
                 e.setIssue(chamado);
                 e.Datas(LocalDateTime.now());
+                e.DataCreate(LocalDateTime.now());
                 e.setAtivo(true);
                 e.setCardId("CARD-"+chamado.gerarCode());
             });
@@ -128,17 +129,16 @@ public class ChamadoService implements ChamadoInterface {
     public Page<IssueDTO> Listar(Pageable page, String setor,
                                  String dataAntes, String dataDepois,
                                  int filial,boolean ativo) {
-        if(dataAntes!=null&&dataDepois!=null){
+        if (dataAntes!=null&&dataDepois!=null){
             return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrue(page,dataAntes,dataDepois,filial)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-        if(setor!=null){
+
+      else if (setor!=null) {
             return hardwareRepository.findAllBySetorContainingIgnoreCase(page,setor,filial)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-            return hardwareRepository.findAllByAtivo(page,filial,ativo)
-                            .map(e->modelMapper.map(e, IssueDTO.class));
-
+      return hardwareRepository.findAllByAtivo(page,filial, ativo).map(e->modelMapper.map(e,IssueDTO.class));
     }
     public ResponseEntity<Resource> ListaImagensId(String name){
         Path path = Paths.get("Img").resolve(name);

@@ -1,7 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.repository;
 
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
-import io.micrometer.core.instrument.binder.db.MetricsDSLContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -41,17 +40,16 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
     Optional<Issue> getReferenceByIdFeito(long id, String chamadoid);
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = true AND  p.filial=:filial Order by s.id DESC")
  Page<Issue> findAllByAtivoTrue(Pageable page, int filial);
-@Query("select p from Issue p left join fetch p.itens s where s.data between :dataAntes and :dataDepois and s.ativo=true and p.filial=:filial Order by s.id DESC")
+@Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.filial=:filial Order by s.id DESC")
  Page findAllDataAntesAndDataDepoisByAtivoTrue(Pageable page, String dataAntes, String dataDepois, int filial);
  @Query("select p from Issue p left join fetch p.itens s where s.setor =:setor and s.ativo=true")
  Page findAllBySetor(Pageable page, String setor);
  @Query("select p from Issue p left join fetch p.itens s where lower(s.setor) like lower(concat('%', :setor, '%')) and s.ativo=true and p.filial=:filial Order by s.id DESC")
-
  Page findAllBySetorContainingIgnoreCase(Pageable page, String setor, int filial);
 
  @Query("select p from Issue p left join fetch p.itens s where p.usuarioid =:idusuario and s.status = 'AGUARDANDO_VALIDACAO' Order by s.id DESC")
  Page FindAllByHardwareByStatusValidacao(Pageable page,long idusuario);
 
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by s.id DESC")
- Page findAllByAtivo(Pageable page, int filial,boolean ativo);
+ Page findAllByAtivo(Pageable page, int filial, boolean ativo);
 }

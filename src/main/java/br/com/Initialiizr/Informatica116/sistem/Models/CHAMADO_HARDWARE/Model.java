@@ -34,6 +34,7 @@ public class Model {
     private Status status ;
     private String data_chamdo_feito;
     private String data;
+    private String datacreate;
     @NotBlank
     @Column(columnDefinition = "TEXT")
     private String descricao ;
@@ -54,6 +55,11 @@ public class Model {
         DateTimeFormatter  pattern= DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
         String dataFormat = data.format(pattern);
         return this.data_chamdo_feito = dataFormat;
+    }
+    public  String DataCreate(LocalDateTime data){
+        DateTimeFormatter  pattern= DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dataFormat = data.format(pattern);
+        return this.datacreate= dataFormat;
     }
 
 }

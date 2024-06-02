@@ -39,7 +39,7 @@ public class RefeshTokenService {
     }
     public String generateTokenFromUsername(String username) {
         return Jwts.builder().setSubject(username).setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 2000 * 60*60)).signWith(SignatureAlgorithm.HS256, "123456")
+                .setExpiration(new Date(System.currentTimeMillis() + 5000 * 60*60)).signWith(SignatureAlgorithm.HS256, "123456")
                 .compact();
     }
     public Optional<RefreshToken> findByToken(String token){
