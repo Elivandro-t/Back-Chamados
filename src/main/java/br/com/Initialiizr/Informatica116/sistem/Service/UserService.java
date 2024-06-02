@@ -79,6 +79,7 @@ public class UserService {
 
     @Value("${endpoint}")
     private String endpoint;
+    private String imgUser = "https://suporte-infor.onrender.com/Logos/perfil.png";
     public UserDTO registro(UserDTO userDTO){
         validatorEmail.validator(userDTO.getEmail());
         var user = userRepository.pegandoUsuarioExistente(userDTO.getEmail());
@@ -97,6 +98,7 @@ public class UserService {
         perfil.setAtivo(true);
         perfis.add(perfil);
         usuario.setItens(perfis);
+        usuario.setImagem(imgUser);
         usuario.criptografar(userDTO.getPassword());
         var registrado = userRepository.save(usuario);
         return modelMapper.map(registrado,UserDTO.class);
