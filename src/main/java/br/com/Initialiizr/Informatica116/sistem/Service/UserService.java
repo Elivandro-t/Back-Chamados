@@ -87,7 +87,7 @@ public class UserService {
             throw new RuntimeException("email e nulo");
         }
         if(user.isPresent()){
-            throw new RuntimeException("usuario ja registrado");
+            throw new RuntimeException(String.valueOf(new Erro("usuario já registrado!")));
         }
         List<Perfil> perfis = new ArrayList<>();
         password.validator(userDTO.getPassword());
