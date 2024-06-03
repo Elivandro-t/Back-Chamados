@@ -37,9 +37,9 @@ public class UsuarioControler {
     private RefeshTokenService refeshTokenService;
     @PostMapping("registrar")
     @Transactional
-    public ResponseEntity<Mensagem> registrar(@RequestBody UserDTO userDTO){
-        var response = userService.registro(userDTO);
-        return ResponseEntity.ok().body(new Mensagem("cadastrado com sucesso"));
+    public ResponseEntity<MsgRegiste> registrar(@RequestBody UserDTO userDTO){
+        userService.registro(userDTO);
+        return ResponseEntity.ok().body(new MsgRegiste("cadastrado com sucesso!"));
     }
     @GetMapping("/user/{email}")
     public UserComment findOneByEmal(@PathVariable  String email){
