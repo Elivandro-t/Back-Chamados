@@ -66,10 +66,10 @@ public class ValidationsTec {
                     throw new RuntimeException("chamado fechado");
                 }
                 else if(chamado.getStatus()==Status.RE_ABERTO){
-                    throw new RuntimeException(" chamado ja está aberto");
+                    throw new RuntimeException(" chamado  está aberto");
                 }
                 else if(chamado.getStatus()==Status.EM_ANDAMENTO){
-                    throw new RuntimeException(" chamado ja está aberto");
+                    throw new RuntimeException(" chamado está em andamento");
                 }
             break;
         }
@@ -81,7 +81,7 @@ public class ValidationsTec {
                 throw new RuntimeException("chamado fechado");
             }
            if(chamado.getTecnicoid()==id){
-                throw new RuntimeException("voce ja está de posse desse chamado");
+                throw new RuntimeException("chamado atrelado ao usuario!");
             }
             else if(issueDTO.getUsuarioid()==id){
                throw new RuntimeException("voce não pode aceitar seu propio chamado");
