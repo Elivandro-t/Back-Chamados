@@ -52,3 +52,4 @@ public class ValidatorPassword {
         throw  new RuntimeException("senha nao podem ser iguais");
     }
 }
+// fim
