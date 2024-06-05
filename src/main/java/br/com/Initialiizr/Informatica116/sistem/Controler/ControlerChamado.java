@@ -95,7 +95,7 @@ public class ControlerChamado {
         return service.StatusJira(id,idchamado,usuariologado);
 
     }
-    // api de chamado aberto
+    // api de chamado aberto //
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aberto/{usuariologado}")
     @Transactional
     public  ResponseEntity StatusFechado(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado){
