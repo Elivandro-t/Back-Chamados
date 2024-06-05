@@ -88,6 +88,13 @@ public class ControlerChamado {
         return service.validaChamadoUSer(id,idchamado,usuariologado);
 
     }
+    @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/jira/{usuariologado}")
+    @Transactional
+    public  ResponseEntity StatusJira(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
+
+        return service.StatusJira(id,idchamado,usuariologado);
+
+    }
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aberto/{usuariologado}")
     @Transactional
     public  ResponseEntity StatusFechado(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado){

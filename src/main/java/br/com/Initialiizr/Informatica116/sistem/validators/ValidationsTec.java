@@ -71,6 +71,9 @@ public class ValidationsTec {
                 else if(chamado.getStatus()==Status.EM_ANDAMENTO){
                     throw new RuntimeException(" chamado está em andamento");
                 }
+                else if(chamado.getStatus()==Status.AGUARDANDO_JIRA){
+                    throw new RuntimeException("aguardando suporte jira");
+                }
             break;
         }
     }

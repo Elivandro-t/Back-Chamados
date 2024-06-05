@@ -27,7 +27,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -216,6 +215,20 @@ public class ChamadoService implements ChamadoInterface {
         validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.RE_ABERTO));
         issue.getItens().forEach(e->e.setAceito(false));
+        hardwareRepository.save(issue);
+        return  ResponseEntity.ok().body(new MSG("chamado reaberto"));
+    }
+    // em produçao
+    public ResponseEntity StatusJira(long id,String cardChamado,long UsuarioLogado){
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        System.out.println("meu id de usuario "+UsuarioLogado);
+        if(issue ==null){
+            throw new RuntimeException("nada encontrado");
+        }
+        validationsTec.reaberto(issue, UsuarioLogado);
+        // validacão de tecnico
+        validationsTec.StatusvalidFechado(issue);
+        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("chamado reaberto"));
     }

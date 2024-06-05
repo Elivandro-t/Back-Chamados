@@ -2,6 +2,7 @@ package br.com.Initialiizr.Informatica116.sistem.Models;
 
 public enum Status {
     AGUARDANDO_TECNICO("aguardando tecnico"),
+    AGUARDANDO_JIRA("aguardando jira"),
     EM_ANDAMENTO("em andamento"),
     FEITO("feito"),
     RE_ABERTO("reaberto"),
