@@ -6,6 +6,7 @@ import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.ImagensDTO;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.StatusOneDTO;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.UpdateChamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.*;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Perfil;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Imagens;
@@ -188,12 +189,25 @@ public class ChamadoService implements ChamadoInterface {
     // precisa ser feito validacao para o chamado nao ser aberto
     public ResponseEntity validaChamadoUSer(long id, String cardChamado,long UsuarioLogado){
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        System.out.println("meu id de usuario "+UsuarioLogado);
+        var user = userRepository.getReferenceById(issue.getUsuarioid());
+
         Instant hora = Instant.now();
         System.out.println(id);
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }
+        for(Perfil perfil: user.getItens()){
+            if(perfil.equals("suporte")){
+                issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
+                issue.getItens().forEach(e->e.setAtivo(false));
+                issue.getItens().forEach(e->e.setAceito(false));
+                issue.getItens().forEach(e->e.setClient_feito(true));
+                issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
+                hardwareRepository.save(issue);
+                return  ResponseEntity.ok().body(new MSG("status fechado"));
+            }
+        }
+
         // validacão de tecnico
         validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
