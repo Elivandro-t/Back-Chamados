@@ -241,7 +241,6 @@ public class ChamadoService implements ChamadoInterface {
         }
         validationsTec.reaberto(issue, UsuarioLogado);
         // validacão de tecnico
-        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("chamado reaberto"));
