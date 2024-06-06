@@ -60,8 +60,7 @@ public class UsuarioControler {
     }
     @PutMapping("usuario/update")
     @Transactional
-
-    public ResponseEntity update(@RequestBody UpdateUserDto updateUserDto) throws IOException {
+    public ResponseEntity update(@RequestBody UpdateUserDto updateUserDto) {
          userService.updateUSer(updateUserDto);
         return ResponseEntity.ok("atualizado!");
     }
