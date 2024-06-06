@@ -238,9 +238,8 @@ public class ChamadoService implements ChamadoInterface {
         System.out.println("meu id de usuario "+UsuarioLogado);
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
-        }
-        validationsTec.reaberto(issue, UsuarioLogado);
-        // validacão de tecnico
+        }// validacão de tecnico
+        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("chamado reaberto"));
