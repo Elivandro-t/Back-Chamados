@@ -1,6 +1,8 @@
 package br.com.Initialiizr.Informatica116.sistem.repository;
 
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
+import io.micrometer.core.instrument.binder.db.MetricsDSLContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -52,4 +54,14 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
 
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by s.id DESC")
  Page findAllByAtivo(Pageable page, int filial, boolean ativo);
+
+ @Query("select p from Issue p join p.itens s " +
+         "where s.usuarioid = :id " +
+         "and s.datacreate between :dataAntes and :dataDepois " +
+         "and s.ativo = true " +
+         "order by s.id DESC")
+ Page<Issue> findAllDataByUserAtivoTrue(Pageable page, @Param("id") long id, @Param("dataAntes") String dataAntes, @Param("dataDepois") String dataDepois);
+ @Query("select p from Issue p left join fetch p.itens s where lower(s.descricao) like lower(concat('%', :descricao, '%')) and s.ativo=true and  s.usuarioid = :id Order by s.id DESC")
+
+ Page<IssueDTO>findAllByUserContainingIgnoreCase(Pageable pageable, String descricao, long id);
 }
