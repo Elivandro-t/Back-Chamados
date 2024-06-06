@@ -58,6 +58,14 @@ public class UsuarioControler {
         var response = userService.image(image,id);
         return ResponseEntity.ok(response);
     }
+    @PutMapping("usuario/update")
+    @Transactional
+
+    public ResponseEntity update(@RequestBody UpdateUserDto updateUserDto) throws IOException {
+         userService.updateUSer(updateUserDto);
+        return ResponseEntity.ok("atualizado!");
+    }
+
     @PutMapping("perfil/usuario/{email}")
     @Transactional
     public ResponseEntity<MSG> image(@PathVariable String email,@RequestBody String perfil){
