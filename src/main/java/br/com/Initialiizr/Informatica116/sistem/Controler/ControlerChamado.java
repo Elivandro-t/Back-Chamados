@@ -98,9 +98,7 @@ public class ControlerChamado {
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aprovador/{usuariologado}")
     @Transactional
     public  ResponseEntity StatusAprovador(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
-
         return service.StatusAtorizacao(id,idchamado,usuariologado);
-
     }
     // api de chamado aberto de validaçao //
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aberto/{usuariologado}")

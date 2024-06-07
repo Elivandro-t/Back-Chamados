@@ -248,6 +248,7 @@ public class ChamadoService implements ChamadoInterface {
             throw new RuntimeException("nada encontrado");
         }// validacão de tecnico
         validationsTec.reaberto(issue,id);
+        validationsTec.Valid(issue,UsuarioLogado);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando jira"));
@@ -258,6 +259,7 @@ public class ChamadoService implements ChamadoInterface {
             throw new RuntimeException("nada encontrado");
         }// validacão de tecnico
         validationsTec.reaberto(issue,id);
+        validationsTec.Valid(issue,UsuarioLogado);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
         hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando aprovação"));
