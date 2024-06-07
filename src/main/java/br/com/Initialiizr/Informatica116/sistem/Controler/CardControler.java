@@ -16,14 +16,12 @@ public class CardControler {
     @Autowired
     private CardService cardService;
     @RequestMapping(method = RequestMethod.POST,value = "/card")
-    //buscando card
+    
     public ResponseEntity res(String data, @RequestParam("file")MultipartFile file){
         CardDTO cardDTO = convertJson.convertJson(data,CardDTO.class);
         var result = cardService.cardRegistro(cardDTO,file);
         return ResponseEntity.ok(result);
     }
-
-    //api foto por id de usuario
     @GetMapping("/foto/{id}")
     public ResponseEntity<?> pegarImagensID(@PathVariable long id){
         var result = cardService.pegarFoto(id);
