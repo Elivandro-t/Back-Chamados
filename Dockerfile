@@ -5,9 +5,11 @@ RUN apt-get update && apt-get install -y \
     maven
 WORKDIR /apt
 COPY . .
-RUN mvn clean install
+RUN mvn clean package
 
 FROM openjdk:17-jdk-slim
+WORKDIR /apt
+RUN mkdir Logos Img sistemBotao
 VOLUME /apt
 VOLUME /apt/Logos
 VOLUME /apt/Img
