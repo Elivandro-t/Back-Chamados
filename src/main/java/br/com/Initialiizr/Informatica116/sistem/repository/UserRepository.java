@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 @Repository
-@EnableJpaRepositories
 public interface UserRepository extends JpaRepository<User,Long> {
     @Query("select s from User s where s.email = :email")
     Optional pegandoUsuarioExistente(String email);
@@ -17,5 +16,4 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("select s from User s where s.id = :id")
     User getReferenceById(long id);
 
-    User findOneById(long id);
 }

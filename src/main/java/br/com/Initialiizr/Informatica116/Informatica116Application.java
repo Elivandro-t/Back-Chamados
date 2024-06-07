@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
+@EnableJpaRepositories
 //@EnableDiscoveryClient
 public class Informatica116Application {
 	public static void main(String[] args) {
