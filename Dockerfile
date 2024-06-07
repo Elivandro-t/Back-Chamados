@@ -9,7 +9,9 @@ RUN mvn clean package
 
 FROM openjdk:17-jdk-slim
 WORKDIR /apt
-RUN mkdir Logos Img sistemBotao
+RUN mkdir Logos \
+RUN mkdir Img \
+RUN mkdir sistemBotao
 VOLUME /apt
 VOLUME /apt/Logos
 VOLUME /apt/Img
