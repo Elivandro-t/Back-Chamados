@@ -57,7 +57,7 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.usuarioid=:id Order by s.id DESC")
  Page findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
 
- @Query("select p from Issue p left join fetch p.itens s where lower(s.descricao) like lower(concat('%', :searchTerm, '%')) or lower(s.setor) like lower(concat('%', :searchTerm, '%')) or lower(s.usuario) like lower(concat('%', :searchTerm, '%')) or lower(s.status) like lower(concat('%', :searchTerm, '%')) or lower(s.patrimonio) like lower(concat('%', :searchTerm, '%'))  or lower(s.cardId) like lower(concat('%', :searchTerm, '%')) and s.ativo=true and p.usuarioid = :id Order by s.id DESC")
-
+ @Query("select p from Issue p left join fetch p.itens s on p.usuarioid = s.usuarioid where lower(s.descricao) like lower(concat('%', :searchTerm, '%')) or lower(s.setor) like lower(concat('%', :searchTerm, '%')) or lower(s.usuario) like lower(concat('%', :searchTerm, '%')) or lower(s.status) like lower(concat('%', :searchTerm, '%')) or lower(s.cardId) like lower(concat('%', :searchTerm, '%')) and p.usuarioid = :id Order by s.id DESC")
  Page findAllByUserContainingIgnoreCase(Pageable pageable, String searchTerm, long id);
+
 }
