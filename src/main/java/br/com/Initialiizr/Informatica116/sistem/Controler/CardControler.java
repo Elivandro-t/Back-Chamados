@@ -16,6 +16,7 @@ public class CardControler {
     @Autowired
     private CardService cardService;
     @RequestMapping(method = RequestMethod.POST,value = "/card")
+    //buscando card
     public ResponseEntity res(String data, @RequestParam("file")MultipartFile file){
         CardDTO cardDTO = convertJson.convertJson(data,CardDTO.class);
         var result = cardService.cardRegistro(cardDTO,file);
