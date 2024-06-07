@@ -50,12 +50,12 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  Page findAllBySetorContainingIgnoreCase(Pageable page, String setor, int filial);
 
  @Query("select p from Issue p left join fetch p.itens s where p.usuarioid =:idusuario and s.status = 'AGUARDANDO_VALIDACAO' Order by s.id DESC")
- Page FindAllByHardwareByStatusValidacao(Pageable page,long idusuario);
+ Page<Issue> FindAllByHardwareByStatusValidacao(Pageable page,long idusuario);
 
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by s.id DESC")
  Page findAllByAtivo(Pageable page, int filial, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.usuarioid=:id Order by s.id DESC")
- Page findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
+ Page<Issue> findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
 
  @Query("select p from Issue p left join fetch p.itens s where lower(s.descricao)"+
          " like lower(concat('%', :searchTerm, '%')) or lower(s.setor)"+
@@ -66,5 +66,5 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
          " like lower(concat('%', :searchTerm, '%'))"+
          " and s.ativo=true and p.usuarioid = :id Order by s.id DESC")
 
- Page findAllByUserContainingIgnoreCase(Pageable pageable, String searchTerm, long id);
+ Page<Issue> findAllByUserContainingIgnoreCase(Pageable pageable, String searchTerm, long id);
 }
