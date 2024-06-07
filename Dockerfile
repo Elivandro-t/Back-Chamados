@@ -3,12 +3,14 @@ FROM ubuntu:latest as build
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
     maven \
-RUN mkdir -p /apt/Logos
-RUN mkdir -p /apt/Img
-RUN mkdir -p /apt/sistemBotao
+ && mkdir -p /apt/Logos \
+ && mkdir -p /apt/Img \
+ && mkdir -p /apt/sistemBotao
+
 WORKDIR /apt
 COPY . .
 RUN mvn clean install
+
 FROM openjdk:17-jdk-slim
 VOLUME /apt
 VOLUME /apt/Logos
@@ -21,6 +23,3 @@ COPY --from=build /apt/Img /apt/Img
 COPY --from=build /apt/sistemBotao /apt/sistemBotao
 
 ENTRYPOINT ["java", "-jar", "/apt/app.jar"]
-
-
-
