@@ -21,6 +21,8 @@ public class CardControler {
         var result = cardService.cardRegistro(cardDTO,file);
         return ResponseEntity.ok(result);
     }
+
+    //api foto por id de usuario
     @GetMapping("/foto/{id}")
     public ResponseEntity<?> pegarImagensID(@PathVariable long id){
         var result = cardService.pegarFoto(id);
