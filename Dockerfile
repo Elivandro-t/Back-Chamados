@@ -2,11 +2,7 @@ FROM ubuntu:latest as build
 
 RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
-    maven \
- && mkdir -p /apt/Logos \
- && mkdir -p /apt/Img \
- && mkdir -p /apt/sistemBotao
-
+    maven
 WORKDIR /apt
 COPY . .
 RUN mvn clean install
