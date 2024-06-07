@@ -16,13 +16,13 @@ public class FilterValidation extends OncePerRequestFilter {
     @Autowired
     TokenService tokenservice;
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository repository;SSS
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
      String token = tokenValidate(request);
      if(token!=null){
          var authservice = tokenservice.validaToken(token);
-         var usuario = userRepository.findByEmail(authservice);
+         var usuario = repository.findByEmail(authservice);
          System.out.println("minhas roles "+usuario.getAuthorities().toString());
         var auth = new UsernamePasswordAuthenticationToken(authservice,null,usuario.getAuthorities());
          SecurityContextHolder.getContext().setAuthentication(auth);
