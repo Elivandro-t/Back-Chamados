@@ -226,7 +226,7 @@ public class ChamadoService implements ChamadoInterface {
             }
         }
 
-        // validacão de tecnico
+        // validacão de tecnico ao clicar no card
         validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
         issue.getItens().forEach(e->e.setAtivo(false));
