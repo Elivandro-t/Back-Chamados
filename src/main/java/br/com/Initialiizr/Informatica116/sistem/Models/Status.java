@@ -7,6 +7,10 @@ public enum Status {
     FEITO("feito"),
     RE_ABERTO("reaberto"),
     AGUARDANDO_VALIDACAO("aguardando validacao"),
+    AGUARDANDO_APROVACAO("aguardando aprovação"),
+    RECUSADO("recusado"),
+    AGUARDANDO_ORCAMENTO("aguardando orçamento"),
+    PERDA_TOTAL("perda total"),
     FECHADO("fechado");
 String name;
  Status(String name){

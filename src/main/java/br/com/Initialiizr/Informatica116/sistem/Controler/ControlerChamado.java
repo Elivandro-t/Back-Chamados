@@ -53,10 +53,10 @@ public class ControlerChamado {
         var response = service.ListaImagensId(img);
         return  response;
     }
-    // pegando chamado por id
+    // pegando chamado por id de usuario
     @GetMapping("/chamado/{id}")
     public Page<IssueDTO> pegarChamdoID(@PathVariable long id, @PageableDefault(size = 10) Pageable page,@RequestParam(value = "dataAntes",required = false) String dataAntes,
-                                        @RequestParam(value = "dataDepois",required = false) String dataDepois,@RequestParam(value = "requidescricao",required = false)  String descricao){
+                                        @RequestParam(value = "dataDepois",required = false) String dataDepois,@RequestParam(value = "descricao",required = false)  String descricao){
         var response = service.pegarChamadoId(id,page,dataAntes, dataDepois, descricao);
 
         return response;
@@ -94,6 +94,13 @@ public class ControlerChamado {
     public  ResponseEntity StatusJira(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
 
         return service.StatusJira(id,idchamado,usuariologado);
+
+    }
+    @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aprovador/{usuariologado}")
+    @Transactional
+    public  ResponseEntity StatusAprovador(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
+
+        return service.StatusAtorizacao(id,idchamado,usuariologado);
 
     }
     // api de chamado aberto //

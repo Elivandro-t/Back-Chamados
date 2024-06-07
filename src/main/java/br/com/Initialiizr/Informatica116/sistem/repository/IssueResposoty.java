@@ -54,14 +54,17 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
 
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by s.id DESC")
  Page findAllByAtivo(Pageable page, int filial, boolean ativo);
+ @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.usuarioid=:id Order by s.id DESC")
+ Page findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
 
- @Query("select p from Issue p join p.itens s " +
-         "where s.usuarioid = :id " +
-         "and s.datacreate between :dataAntes and :dataDepois " +
-         "and s.ativo = true " +
-         "order by s.id DESC")
- Page<Issue> findAllDataByUserAtivoTrue(Pageable page, @Param("id") long id, @Param("dataAntes") String dataAntes, @Param("dataDepois") String dataDepois);
- @Query("select p from Issue p left join fetch p.itens s where lower(s.descricao) like lower(concat('%', :descricao, '%')) and s.ativo=true and  s.usuarioid = :id Order by s.id DESC")
+ @Query("select p from Issue p left join fetch p.itens s where lower(s.descricao)"+
+         " like lower(concat('%', :searchTerm, '%')) or lower(s.setor)"+
+         " like lower(concat('%', :searchTerm, '%')) or lower(s.usuario)"+
+         " like lower(concat('%', :searchTerm, '%')) or lower(s.status)"+
+         " like lower(concat('%', :searchTerm, '%')) or lower(s.patrimonio)"+
+         " like lower(concat('%', :searchTerm, '%'))  or lower(s.equipamento)"+
+         " like lower(concat('%', :searchTerm, '%'))"+
+         " and s.ativo=true and p.usuarioid = :id Order by s.id DESC")
 
- Page<IssueDTO>findAllByUserContainingIgnoreCase(Pageable pageable, String descricao, long id);
+ Page findAllByUserContainingIgnoreCase(Pageable pageable, String searchTerm, long id);
 }

@@ -153,6 +153,7 @@ public class ChamadoService implements ChamadoInterface {
             return ResponseEntity.status(500).build();
         }
     }
+    // pegando chamado por e exibindo para cada usuario!
     public Page<IssueDTO> pegarChamadoId(long id, Pageable pageable,String dataAntes,String dataDepois,String descricao){
         List<Issue> lista = hardwareRepository.findAllByUsuarioidById(id,pageable );
         if (dataAntes!=null&&dataDepois!=null){
@@ -243,14 +244,23 @@ public class ChamadoService implements ChamadoInterface {
     // em produçao
     public ResponseEntity StatusJira(long id,String cardChamado,long UsuarioLogado){
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        System.out.println("meu id de usuario "+UsuarioLogado);
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }// validacão de tecnico
         validationsTec.reaberto(issue,id);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
-        return  ResponseEntity.ok().body(new MSG("chamado reaberto"));
+        return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando jira"));
+    }
+    public ResponseEntity StatusAtorizacao(long id,String cardChamado,long UsuarioLogado){
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        if(issue ==null){
+            throw new RuntimeException("nada encontrado");
+        }// validacão de tecnico
+        validationsTec.reaberto(issue,id);
+        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
+        hardwareRepository.save(issue);
+        return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando aprovação"));
     }
     public List<Issue> pegaStor(){
         var dados = hardwareRepository.findAll();
