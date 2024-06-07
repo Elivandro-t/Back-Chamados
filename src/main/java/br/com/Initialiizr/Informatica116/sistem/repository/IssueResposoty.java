@@ -62,7 +62,7 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
          " like lower(concat('%', :searchTerm, '%')) or lower(s.usuario)"+
          " like lower(concat('%', :searchTerm, '%')) or lower(s.status)"+
          " like lower(concat('%', :searchTerm, '%')) or lower(s.patrimonio)"+
-         " like lower(concat('%', :searchTerm, '%'))  or lower(s.equipamento)"+
+         " like lower(concat('%', :searchTerm, '%'))  or lower(s.cardId)"+
          " like lower(concat('%', :searchTerm, '%'))"+
          " and s.ativo=true and p.usuarioid = :id Order by s.id DESC")
 
