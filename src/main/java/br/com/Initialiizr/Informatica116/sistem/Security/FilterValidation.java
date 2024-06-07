@@ -13,11 +13,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 @Configuration
 public class FilterValidation extends OncePerRequestFilter {
+    @Autowired
+    private UserRepository repository;
     //co
     @Autowired
     TokenService tokenservice;
-    @Autowired
-    private UserRepository repository;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
      String token = tokenValidate(request);
