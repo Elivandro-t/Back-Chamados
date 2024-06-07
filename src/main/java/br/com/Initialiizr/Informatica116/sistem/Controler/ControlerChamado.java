@@ -53,11 +53,16 @@ public class ControlerChamado {
         var response = service.ListaImagensId(img);
         return  response;
     }
-    // pegando chamado por id de usuario por filial
     @GetMapping("/chamado/usuarioid/{id}")
     public Page<IssueDTO> pegarChamdoID(@PathVariable long id, @PageableDefault(size = 10) Pageable page,@RequestParam(value = "dataAntes",required = false) String dataAntes,
                                         @RequestParam(value = "dataDepois",required = false) String dataDepois,@RequestParam(value = "descricao",required = false)  String descricao){
         var response = service.pegarChamadoId(id,page,dataAntes, dataDepois, descricao);
+        return response;
+    }
+    // pegando chamado por id de usuario por filial
+    @GetMapping("/chamado/tecnico/{id}")
+    public Page<IssueDTO> pegarChamdoTsc(@PathVariable long id, @PageableDefault(size = 10) Pageable page){
+        var response = service.pegarChamadoIdTecnic(id,page);
         return response;
     }
     @GetMapping("/chamado/unit/{id}")

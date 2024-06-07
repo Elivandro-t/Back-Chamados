@@ -160,14 +160,23 @@ public class ChamadoService implements ChamadoInterface {
             return hardwareRepository.findAllDataByUserAtivoTrue(pageable,id,dataAntes,dataDepois)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-        else if (descricao!=null) {
-            return hardwareRepository.findAllByUserContainingIgnoreCase(pageable,descricao,id) .map(e->modelMapper.map(e, IssueDTO.class));
-
-        }
+//        else if (descricao!=null) {
+//            return hardwareRepository.findAllByUserContainingIgnoreCase(pageable,descricao,id) .map(e->modelMapper.map(e, IssueDTO.class));
+//
+//        }
         List<IssueDTO> lis = new ArrayList<>();
         for (Issue d:lista){
             var map = modelMapper.map(d, IssueDTO.class);
            lis.add(map);
+        }
+        return new PageImpl<>( lis);
+    }
+    public Page<IssueDTO> pegarChamadoIdTecnic(long id, Pageable pageable){
+        List<Issue> lista = hardwareRepository.findAllByUsuarioidByIdTesc(id,pageable );
+        List<IssueDTO> lis = new ArrayList<>();
+        for (Issue d:lista){
+            var map = modelMapper.map(d, IssueDTO.class);
+            lis.add(map);
         }
         return new PageImpl<>( lis);
     }
