@@ -94,7 +94,6 @@ public class ControlerChamado {
     public  ResponseEntity StatusJira(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
 
         return service.StatusJira(id,idchamado,usuariologado);
-
     }
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aprovador/{usuariologado}")
     @Transactional
@@ -103,7 +102,7 @@ public class ControlerChamado {
         return service.StatusAtorizacao(id,idchamado,usuariologado);
 
     }
-    // api de chamado aberto //
+    // api de chamado aberto de validaçao //
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aberto/{usuariologado}")
     @Transactional
     public  ResponseEntity StatusFechado(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado){
