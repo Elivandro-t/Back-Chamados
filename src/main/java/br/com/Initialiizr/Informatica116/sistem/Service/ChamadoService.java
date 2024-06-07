@@ -225,7 +225,7 @@ public class ChamadoService implements ChamadoInterface {
                 return  ResponseEntity.ok().body(new MSG("status fechado"));
             }
         }
-
+//
         // validacão de tecnico ao clicar no card
         validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
