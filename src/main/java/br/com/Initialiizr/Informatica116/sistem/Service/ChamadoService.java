@@ -86,7 +86,7 @@ public class ChamadoService implements ChamadoInterface {
                           chamdoe.setImagens(itens);
                           itens.add(imagens);
                       }
-                        String pathName = "Img";
+                        String pathName = "Logos";
                         File path = new File(pathName);
                         String name =pathName+"/"+ file.getOriginalFilename();
                         if(!path.exists()){
@@ -141,7 +141,7 @@ public class ChamadoService implements ChamadoInterface {
       return hardwareRepository.findAllByAtivo(page,filial, ativo).map(e->modelMapper.map(e,IssueDTO.class));
     }
     public ResponseEntity<Resource> ListaImagensId(String name){
-        Path path = Paths.get("Img").resolve(name);
+        Path path = Paths.get("Logos").resolve(name);
         try{
             Resource resource = new UrlResource(path.toUri());
             if(resource.exists()||resource.isReadable()){
