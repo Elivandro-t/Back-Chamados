@@ -54,7 +54,7 @@ public class ControlerChamado {
         return  response;
     }
     // pegando chamado por id de usuario por filial
-    @GetMapping("/chamado/{id}")
+    @GetMapping("/chamado/usuarioid/{id}")
     public Page<IssueDTO> pegarChamdoID(@PathVariable long id, @PageableDefault(size = 10) Pageable page,@RequestParam(value = "dataAntes",required = false) String dataAntes,
                                         @RequestParam(value = "dataDepois",required = false) String dataDepois,@RequestParam(value = "descricao",required = false)  String descricao){
         var response = service.pegarChamadoId(id,page,dataAntes, dataDepois, descricao);
