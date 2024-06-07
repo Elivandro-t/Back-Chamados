@@ -55,8 +55,9 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by s.id DESC")
  Page findAllByAtivo(Pageable page, int filial, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.usuarioid=:id Order by s.id DESC")
- Page findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
+ Page<Issue> findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
 
- @Query("SELECT p FROM Issue p INNER JOIN FETCH p.itens s WHERE p.usuarioid = :id AND (LOWER(s.descricao) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(s.setor) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(s.usuario) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(s.status) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(s.patrimonio) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(s.cardId) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) AND s.ativo = true ORDER BY s.id DESC")
- Page findAllByUserContainingIgnoreCase(Pageable pageable, String searchTerm, long id);
+ @Query("select p from Issue p left join fetch p.itens s where p.usuarioid = :id and lower(s.descricao) like lower(concat('%', :searchTerm, '%')) or lower(s.setor) like lower(concat('%', :searchTerm, '%')) or lower(s.usuario)like lower(concat('%', :searchTerm, '%')) or lower(s.status)like lower(concat('%', :searchTerm, '%')) or lower(s.patrimonio) like lower(concat('%', :searchTerm, '%'))  or lower(s.equipamento) like lower(concat('%', :searchTerm, '%') and s.ativo=true Order by s.id DESC")
+
+ Page<Issue> findAllByUserContainingIgnoreCase(Pageable pageable, String searchTerm, long id);
 }
