@@ -3,4 +3,4 @@ public class Msg extends RuntimeException{
     public  Msg(String msg){
         super(msg);
     }
-}
+};
