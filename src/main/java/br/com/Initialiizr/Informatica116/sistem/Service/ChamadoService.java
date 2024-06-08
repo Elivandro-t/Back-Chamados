@@ -189,6 +189,7 @@ public class ChamadoService implements ChamadoInterface {
          modelMapper.map(lista, IssueDTO.class);
         return ResponseEntity.ok(new MSG("tecnico adicionado ao chamado!"));
     }
+    // enviando ao usuario quando o chamado for feito
     public ResponseEntity validaChamado(long id,String cardChamado,long UsuarioLogado){
         var user =userRepository.getReferenceById(UsuarioLogado);
         System.out.println("meu id de usuario "+UsuarioLogado);
@@ -198,7 +199,6 @@ public class ChamadoService implements ChamadoInterface {
         }
        validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Status(issue);
-
             issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
             issue.getItens().forEach(e->e.setAceito(true));
             issue.getItens().forEach(e->e.setAceito(true));
