@@ -9,10 +9,6 @@ RUN mvn clean package
 
 FROM openjdk:17-jdk-slim
 WORKDIR /apt
-RUN mkdir Logos sistemBotao
-VOLUME /apt
-VOLUME /apt/Logos
-VOLUME /apt/sistemBotao
-EXPOSE 8080
 COPY --from=build /apt/target/Informatica-0.0.1-SNAPSHOT.jar /apt/app.jar
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/apt/app.jar"]
