@@ -38,11 +38,10 @@ public class TokenService {
             throw  new RuntimeException("erro ao gerar token"+exception);
         }
     }
-
+//
     private Instant DataExpired() {
         return LocalDateTime.now().plusHours(2)
                 .toInstant(ZoneOffset.of("-03:00"));
-
     }
 
 
