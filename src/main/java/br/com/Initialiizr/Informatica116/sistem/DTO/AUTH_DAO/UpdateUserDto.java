@@ -13,4 +13,5 @@ public class UpdateUserDto {
     private long id;
     private String name;
     private String lastname;
+    private String contato;
 }

@@ -278,7 +278,7 @@ public class UserService {
 
     public void updateUSer(UpdateUserDto update){
         var userResult = userRepository.getReferenceById(update.getId());
-        userResult.setName(userResult.getName());
+        userResult.setName(update.getName());
         userResult.setLastname(update.getLastname());
         userRepository.save(userResult);
     }

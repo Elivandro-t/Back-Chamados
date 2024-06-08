@@ -38,6 +38,7 @@ public class User implements UserDetails {
     private String email;
     @NotNull
     private int filial;
+    private String contato;
     @NotBlank
     private String password;
     private String codigo;
