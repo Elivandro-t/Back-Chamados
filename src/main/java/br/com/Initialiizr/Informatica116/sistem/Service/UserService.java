@@ -280,6 +280,7 @@ public class UserService {
         var userResult = userRepository.getReferenceById(update.getId());
         userResult.setName(update.getName());
         userResult.setLastname(update.getLastname());
+        userResult.setContato(update.getContato());
         userRepository.save(userResult);
     }
 }
