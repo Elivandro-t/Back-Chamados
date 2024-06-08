@@ -62,7 +62,7 @@ public class UsuarioControler {
     @Transactional
     public ResponseEntity update(@RequestBody UpdateUserDto updateUserDto) {
          userService.updateUSer(updateUserDto);
-        return ResponseEntity.ok("atualizado!");
+        return ResponseEntity.ok(new Mensagem("Atualizado com sucesso!"));
     }
     @PutMapping("perfil/usuario/{email}")
     @Transactional
