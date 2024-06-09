@@ -32,7 +32,7 @@ public class RefeshTokenService {
         }
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setUser(user);
-        refreshToken.setExpirationtime(new Date(System.currentTimeMillis() + 1000 * 60 * 60));
+        refreshToken.setExpirationtime(new Date(System.currentTimeMillis() +  1000 * 60 * 60 * 4));
         refreshToken.setRefreshtoken(UUID.randomUUID().toString());
 
         return repository.save(refreshToken);
