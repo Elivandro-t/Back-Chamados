@@ -99,12 +99,10 @@ public class ChamadoService implements ChamadoInterface {
             var chamadoItens = hardwareRepository.findOneById(issueDTO.getId());
             if(chamadoItens!=null) {
                 chamadoItens.getItens().addAll(chamado.getItens());
-                chamadoItens.incrementVerificationAttempts();
                 hardwareRepository.save(chamadoItens);
                 return modelMapper.map(chamado, IssueDTO.class);
             } else {
                 Issue issueSalvo = hardwareRepository.save(chamado);
-                chamado.incrementVerificationAttempts();
                 var hf = modelMapper.map(issueSalvo, IssueDTO.class);
                 return modelMapper.map(issueSalvo, IssueDTO.class);
             } }catch (IOException e){
