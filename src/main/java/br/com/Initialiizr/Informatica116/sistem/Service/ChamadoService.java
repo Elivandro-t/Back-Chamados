@@ -109,7 +109,7 @@ public class ChamadoService implements ChamadoInterface {
             throw  new RuntimeException(e);
         }
     }
-    // pegando chamado por id;
+    // pegando
     public IssueDTO ChamadoId(long id){
         Issue chamadoid = hardwareRepository.findOneByIds(id);
         if(chamadoid==null){throw new RuntimeException("nada encontrado");}
