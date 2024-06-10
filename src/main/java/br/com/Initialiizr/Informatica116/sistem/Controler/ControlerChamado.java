@@ -76,15 +76,18 @@ public class ControlerChamado {
         return response;
     }
     @PutMapping("/chamado/ativo/{id}")
+    @Transactional
     public ResponseEntity<?> pegarChmadoAtivo(@PathVariable long id,@RequestBody String data){
         var result = service.update(id,data);
         return result;
     }
     @PutMapping("chamado/concluido/{id}/chamadoCard/{chamadoCard}/{usuariologado}")
+    @Transactional
     public  ResponseEntity StatusFeito(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado){
         return  service.validaChamado(id,chamadoCard,usuariologado);
     }
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/fechado/{usuariologado}")
+    @Transactional
     public  ResponseEntity StatusValidacao(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
 
         return service.validaChamadoUSer(id,idchamado,usuariologado);
@@ -103,6 +106,7 @@ public class ControlerChamado {
 //    }
     // api de chamado aberto de validaçao //
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aberto/{usuariologado}")
+    @Transactional
     public  ResponseEntity StatusFechado(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado){
 
         return service.validaChamadoReaberto(id,chamadoCard,usuariologado);
