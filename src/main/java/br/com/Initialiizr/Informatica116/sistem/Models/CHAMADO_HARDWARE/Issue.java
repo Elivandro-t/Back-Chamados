@@ -29,7 +29,6 @@ public class Issue {
     private int filial;
     @NotBlank
     private String servico;
-   private int total_itens;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "issue")
     private Set<Chamado> itens = new HashSet<>();
     public String gerarCode(){
