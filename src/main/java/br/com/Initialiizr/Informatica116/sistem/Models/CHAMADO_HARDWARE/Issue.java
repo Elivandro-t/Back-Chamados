@@ -29,7 +29,7 @@ public class Issue {
     private int filial;
     @NotBlank
     private String servico;
-    int total_itens = 0;
+   private int total_itens;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "issue")
     private Set<Chamado> itens = new HashSet<>();
     public String gerarCode(){
@@ -44,9 +44,6 @@ public class Issue {
             return numero+random.nextInt(10000)+i;
         }
         return 0;
-    }
-    public void incrementVerificationAttempts() {
-        this.total_itens++;
     }
 
     public void atualiza(UpdateChamado updateChamado) {

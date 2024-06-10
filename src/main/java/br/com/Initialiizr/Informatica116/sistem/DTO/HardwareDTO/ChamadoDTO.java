@@ -39,6 +39,5 @@ public class ChamadoDTO {
     private long tecnicoid ;
     private String tecnico_responsavel ;
     private List<ImagensDTO> imagens;
-    int total;
 
 }
