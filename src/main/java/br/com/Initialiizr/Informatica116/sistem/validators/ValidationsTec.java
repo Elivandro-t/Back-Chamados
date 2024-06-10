@@ -22,15 +22,15 @@ public class ValidationsTec {
     @Autowired
     UserRepository userRepository;
     public  void Valid(Issue issueDTO, long usuariolog){
-         Instant horaInicio = Instant.now();
+        Instant horaInicio = Instant.now();
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getTecnicoid()!=usuariolog){
                 throw new RuntimeException("erro ao mudar status, voce não e o tecnico responsavel");
             }
-                if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()==Status.AGUARDANDO_TECNICO){
-                    throw new RuntimeException("erro ao mudar status, Status: aguardando tecnico");
-                }
+            if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()==Status.AGUARDANDO_TECNICO){
+                throw new RuntimeException("erro ao mudar status, Status: aguardando tecnico");
+            }
             break;
         }
     }
@@ -62,15 +62,15 @@ public class ValidationsTec {
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             System.out.println(user.getId());
-                if(chamado.getStatus()==Status.FECHADO){
-                    throw new RuntimeException("chamado fechado");
-                }
-                else if(chamado.getStatus()==Status.RE_ABERTO){
-                    throw new RuntimeException(" chamado  está aberto");
-                }
-                else if(chamado.getStatus()==Status.EM_ANDAMENTO){
-                    throw new RuntimeException(" chamado está em andamento");
-                }
+            if(chamado.getStatus()==Status.FECHADO){
+                throw new RuntimeException("chamado fechado");
+            }
+            else if(chamado.getStatus()==Status.RE_ABERTO){
+                throw new RuntimeException(" chamado ja está aberto");
+            }
+            else if(chamado.getStatus()==Status.EM_ANDAMENTO){
+                throw new RuntimeException(" chamado ja está aberto");
+            }
             break;
         }
     }
@@ -80,12 +80,12 @@ public class ValidationsTec {
             if(issueDTO ==null){
                 throw new RuntimeException("chamado fechado");
             }
-           if(chamado.getTecnicoid()==id){
-                throw new RuntimeException("chamado atrelado ao usuario!");
+            if(chamado.getTecnicoid()==id){
+                throw new RuntimeException("voce ja está de posse desse chamado");
             }
             else if(issueDTO.getUsuarioid()==id){
-               throw new RuntimeException("voce não pode aceitar seu propio chamado");
-           }
+                throw new RuntimeException("voce não pode aceitar seu propio chamado");
+            }
 
             if(chamado.getTecnico_responsavel()!=null&&!chamado.getTecnico_responsavel().trim().isEmpty()){
                 throw new RuntimeException("Erro: tecnico "+chamado.getTecnico_responsavel() + " já está de posse desse chamado");

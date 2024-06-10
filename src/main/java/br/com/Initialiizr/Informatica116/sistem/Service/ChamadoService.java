@@ -197,11 +197,12 @@ public class ChamadoService implements ChamadoInterface {
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }
-       validationsTec.Valid(issue,UsuarioLogado);
+        validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Status(issue);
-            issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
-            issue.getItens().forEach(e->e.setAceito(true));
-            issue.getItens().forEach(e->e.setAceito(true));
+
+        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
+        issue.getItens().forEach(e->e.setAceito(true));
+        issue.getItens().forEach(e->e.setAceito(true));
         return ResponseEntity.ok(new MSG("status atualizado"));
     }
     // precisa ser feito validacao para o chamado nao ser aberto
@@ -223,40 +224,20 @@ public class ChamadoService implements ChamadoInterface {
         hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("status fechado"));
     }
-    public ResponseEntity validaChamadoReaberto(long id,String cardChamado,long UsuarioLogado){
-        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        System.out.println("meu id de usuario "+UsuarioLogado);
-        if(issue ==null){
+
+    public ResponseEntity validaChamadoReaberto(long id, String cardChamado, long UsuarioLogado) {
+        Issue issue = hardwareRepository.findOneByIdChamado(id, cardChamado);
+        System.out.println("meu id de usuario " + UsuarioLogado);
+        if (issue == null) {
             throw new RuntimeException("nada encontrado");
         }
         validationsTec.reaberto(issue, UsuarioLogado);
         // validacão de tecnico
         validationsTec.StatusvalidFechado(issue);
-        issue.getItens().forEach(e->e.setStatus(Status.RE_ABERTO));
-        issue.getItens().forEach(e->e.setAceito(false));
+        issue.getItens().forEach(e -> e.setStatus(Status.RE_ABERTO));
+        issue.getItens().forEach(e -> e.setAceito(false));
         hardwareRepository.save(issue);
-        return  ResponseEntity.ok().body(new MSG("chamado reaberto"));
-    }
-    // em produçao
-    public ResponseEntity StatusJira(long id,String cardChamado,long UsuarioLogado){
-        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        if(issue ==null){
-            throw new RuntimeException("nada encontrado");
-        }// validacão de tecnico
-        validationsTec.Valid(issue,UsuarioLogado);
-        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
-        hardwareRepository.save(issue);
-        return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando jira"));
-    }
-    public ResponseEntity StatusAtorizacao(long id,String cardChamado,long UsuarioLogado){
-        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        if(issue ==null){
-            throw new RuntimeException("nada encontrado");
-        }// validacão de tecnico
-        validationsTec.Valid(issue,UsuarioLogado);
-        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
-        hardwareRepository.save(issue);
-        return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando aprovação"));
+        return ResponseEntity.ok().body(new MSG("chamado reaberto"));
     }
     public List<Issue> pegaStor(){
         var dados = hardwareRepository.findAll();
