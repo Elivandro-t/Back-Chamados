@@ -1,2 +1,2 @@
 ALTER TABLE issue
-ADD COLUMN total_itens VARCHAR(100) DEFAULT NULL;
+ADD COLUMN total_itens bigint not null;
