@@ -207,26 +207,13 @@ public class ChamadoService implements ChamadoInterface {
     // precisa ser feito validacao para o chamado nao ser aberto
     public ResponseEntity validaChamadoUSer(long id, String cardChamado,long UsuarioLogado){
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        var user = userRepository.getReferenceById(issue.getUsuarioid());
-
+        System.out.println("meu id de usuario "+UsuarioLogado);
         Instant hora = Instant.now();
         System.out.println(id);
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }
-        for(Perfil perfil: user.getItens()){
-            if(perfil.equals("suporte")){
-                issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
-                issue.getItens().forEach(e->e.setAtivo(false));
-                issue.getItens().forEach(e->e.setAceito(false));
-                issue.getItens().forEach(e->e.setClient_feito(true));
-                issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
-                hardwareRepository.save(issue);
-                return  ResponseEntity.ok().body(new MSG("status fechado"));
-            }
-        }
-//
-        // validacão de tecnico ao clicar no card
+        // validacão de tecnico
         validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
         issue.getItens().forEach(e->e.setAtivo(false));
@@ -256,7 +243,6 @@ public class ChamadoService implements ChamadoInterface {
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }// validacão de tecnico
-        validationsTec.reaberto(issue,id);
         validationsTec.Valid(issue,UsuarioLogado);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
@@ -267,7 +253,6 @@ public class ChamadoService implements ChamadoInterface {
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }// validacão de tecnico
-        validationsTec.reaberto(issue,id);
         validationsTec.Valid(issue,UsuarioLogado);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
         hardwareRepository.save(issue);
