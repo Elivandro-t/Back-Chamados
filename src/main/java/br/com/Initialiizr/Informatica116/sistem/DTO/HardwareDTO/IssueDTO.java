@@ -18,6 +18,7 @@ public class IssueDTO {
     private String servico;
     private List<ChamadoDTO> itens;
     private int TotaldeItens;
+    private  int total_itens;
 
 
 }

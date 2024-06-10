@@ -20,6 +20,7 @@ public class ChamadoDTO {
     private String cardId;
     private String titulo;
     private String setor;
+    private  String solicitacao;
     private String patrimonio;
     private String equipamento;
     private String erro;

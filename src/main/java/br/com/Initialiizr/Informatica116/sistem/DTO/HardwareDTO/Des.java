@@ -21,6 +21,7 @@ public class Des {
     private String titulo;
     private String setor;
     private String patrimonio;
+    private  String solicitacao;
     private String equipamento;
     private String erro;
     private String sistema;

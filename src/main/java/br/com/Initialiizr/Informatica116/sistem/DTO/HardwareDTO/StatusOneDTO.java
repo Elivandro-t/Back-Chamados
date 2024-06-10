@@ -17,6 +17,7 @@ public class StatusOneDTO {
     private int filial;
     private String servico;
     private List<ChamadoStatusDTO> itens;
+    private  int total_itens;
     private int TotaldeItens;
 
 

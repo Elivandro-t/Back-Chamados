@@ -17,6 +17,8 @@ public class Had {
     private long usuarioid;
     private int filial;
     private String servico;
+
     private List<Des> itens;
+    private  int total_itens;
     private int TotaldeItens;
 }

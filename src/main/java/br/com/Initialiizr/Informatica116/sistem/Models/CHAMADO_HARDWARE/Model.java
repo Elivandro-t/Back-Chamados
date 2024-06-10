@@ -23,6 +23,8 @@ public class Model {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long sistemaid;
+    @NotBlank
+    private  String solicitacao;
     @NotNull
     private String cardId;
     private String issuetype;
