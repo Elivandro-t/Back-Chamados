@@ -182,8 +182,9 @@ public class ChamadoService implements ChamadoInterface {
     }
     public ResponseEntity update(long id,String data){
         UpdateChamado updateChamado = convertJson.convertJson(data,UpdateChamado.class);
-        Issue lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.id());
-        validationsTec.existeTecnico(lista,updateChamado.tecnicoid());
+        updateChamado.setDone(true);
+        Issue lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.getId());
+        validationsTec.existeTecnico(lista,updateChamado.getId());
         lista.atualiza(updateChamado);
         lista.getItens().forEach(e->e.setStatus(Status.EM_ANDAMENTO));
          modelMapper.map(lista, IssueDTO.class);
@@ -238,6 +239,30 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e -> e.setAceito(false));
         hardwareRepository.save(issue);
         return ResponseEntity.ok().body(new MSG("chamado reaberto"));
+    }
+
+    public ResponseEntity StatusJira(long id,String cardChamado,long UsuarioLogado){
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        if(issue ==null){
+            throw new RuntimeException("nada encontrado");
+        }// validacão de tecnico
+        validationsTec.Valid(issue,UsuarioLogado);
+        validationsTec.StatusJira(issue);
+        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
+        hardwareRepository.save(issue);
+        return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando jira"));
+    }
+
+    public ResponseEntity StatusAtorizacao(long id,String cardChamado,long UsuarioLogado){
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        if(issue ==null){
+            throw new RuntimeException("nada encontrado");
+        }// validacão de tecnico
+        validationsTec.Valid(issue,UsuarioLogado);
+        validationsTec.Aprovador(issue);
+        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
+        hardwareRepository.save(issue);
+        return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando aprovação"));
     }
     public List<Issue> pegaStor(){
         var dados = hardwareRepository.findAll();

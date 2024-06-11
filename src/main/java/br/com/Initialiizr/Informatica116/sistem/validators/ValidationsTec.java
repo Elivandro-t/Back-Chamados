@@ -26,19 +26,20 @@ public class ValidationsTec {
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getTecnicoid()!=usuariolog){
-                throw new RuntimeException("erro ao mudar status, voce não e o tecnico responsavel");
+                throw new RuntimeException("Usuario "+chamado.getTecnico_responsavel() + " já está de posse desse chamado");
             }
             if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()==Status.AGUARDANDO_TECNICO){
-                throw new RuntimeException("erro ao mudar status, Status: aguardando tecnico");
+                throw new RuntimeException("Aguardando tecnico");
             }
             break;
         }
     }
+
     public  void reaberto(Issue issueDTO, long usuariolog){
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()==Status.AGUARDANDO_TECNICO){
-                throw new RuntimeException("erro ao mudar status, Status: aguardando tecnico");
+                throw new RuntimeException("Erro: AGUARDANDO TECNICO");
             }
             break;
         }
@@ -49,14 +50,44 @@ public class ValidationsTec {
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getStatus()==Status.FEITO){
-                throw new RuntimeException("erro ao atualizar status");
+                throw new RuntimeException("Erro ao atualizar status");
             }
             else if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("chamado fechado");
+                throw new RuntimeException("chamado FECHADO");
             }
             break;
         }
     }
+    public  void StatusJira(Issue issueDTO){
+        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
+        for (Chamado c: issueDTO.getItens()){
+            Chamado chamado = modelMapper.map(c,Chamado.class);
+            if(chamado.getStatus()==Status.AGUARDANDO_VALIDACAO){
+                throw new RuntimeException("Erro: Status AGUARDANDO VALIDACAO");
+            }
+            else if(chamado.getStatus()==Status.FECHADO){
+                throw new RuntimeException("chamado está FECHADO!");
+            }
+            break;
+        }
+    }
+    public  void Aprovador(Issue issueDTO){
+        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
+        for (Chamado c: issueDTO.getItens()){
+            Chamado chamado = modelMapper.map(c,Chamado.class);
+            if(chamado.getStatus()==Status.AGUARDANDO_VALIDACAO){
+                throw new RuntimeException("Erro: Status AGUARDANDO VALIDACAO");
+            }
+            else if(chamado.getStatus()==Status.AGUARDANDO_JIRA){
+                throw new RuntimeException("chamado está AGUARDANDO JIRA!");
+            }
+            else if(chamado.getStatus()==Status.FECHADO){
+                throw new RuntimeException("chamado está FECHADO!");
+            }
+            break;
+        }
+    }
+
     public  void StatusvalidFechado(Issue issueDTO){
         var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
         for (Chamado c: issueDTO.getItens()){
@@ -78,13 +109,13 @@ public class ValidationsTec {
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(issueDTO ==null){
-                throw new RuntimeException("chamado fechado");
+                throw new RuntimeException("Chamado fechado");
             }
             if(chamado.getTecnicoid()==id){
-                throw new RuntimeException("voce ja está de posse desse chamado");
+                throw new RuntimeException("Voce ja está de posse desse chamado");
             }
             else if(issueDTO.getUsuarioid()==id){
-                throw new RuntimeException("voce não pode aceitar seu propio chamado");
+                throw new RuntimeException("Voce não pode aceitar seu propio chamado");
             }
 
             if(chamado.getTecnico_responsavel()!=null&&!chamado.getTecnico_responsavel().trim().isEmpty()){

@@ -46,8 +46,8 @@ public class Issue {
     }
 
     public void atualiza(UpdateChamado updateChamado) {
-        this.getItens().forEach(e->e.setTecnicoid(updateChamado.tecnicoid()));
-        this.getItens().forEach(e->e.setTecnico_responsavel(updateChamado.tecnico_responsavel()));
+        this.getItens().forEach(e->e.setTecnicoid(updateChamado.getTecnicoid()));
+        this.getItens().forEach(e->e.setTecnico_responsavel(updateChamado.getTecnico_responsavel()));
     }
 
 }
