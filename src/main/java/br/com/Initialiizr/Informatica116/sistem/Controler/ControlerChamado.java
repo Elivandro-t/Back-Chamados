@@ -93,6 +93,13 @@ public class ControlerChamado {
         return service.validaChamadoUSer(id,idchamado,usuariologado);
 
     }
+    @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/recusado/{usuariologado}")
+    @Transactional
+    public  ResponseEntity StatusRecusado(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
+
+        return service2.validaChamadoRecusado(id,idchamado,usuariologado);
+
+    }
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/jira/{usuariologado}")
     @Transactional
     public  ResponseEntity StatusJira(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){

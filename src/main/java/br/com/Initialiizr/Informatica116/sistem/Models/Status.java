@@ -11,7 +11,8 @@ public enum Status {
     RECUSADO("recusado"),
     AGUARDANDO_ORCAMENTO("aguardando orçamento"),
     PERDA_TOTAL("perda total"),
-    FECHADO("fechado");
+    FECHADO("fechado"),
+    CANCELADO("cancelado");
 String name;
  Status(String name){
     this.name = name;
