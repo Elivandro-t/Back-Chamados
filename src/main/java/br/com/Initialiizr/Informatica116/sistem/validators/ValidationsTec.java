@@ -94,13 +94,13 @@ public class ValidationsTec {
             Chamado chamado = modelMapper.map(c,Chamado.class);
             System.out.println(user.getId());
             if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("chamado fechado");
+                throw new RuntimeException("chamado estar fechado");
             }
             else if(chamado.getStatus()==Status.RE_ABERTO){
                 throw new RuntimeException(" chamado ja está aberto");
             }
             else if(chamado.getStatus()==Status.EM_ANDAMENTO){
-                throw new RuntimeException(" chamado ja está aberto");
+                throw new RuntimeException("Solicite validação ao usuario");
             }
             break;
         }
