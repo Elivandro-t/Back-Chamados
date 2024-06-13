@@ -186,7 +186,8 @@ public class ChamadoService implements ChamadoInterface {
             return hardwareRepository.findAllBySetorContainingIgnoreCase(page,setor,filial)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-        var dados = hardwareRepository.findAllByAtivoTrue(page,filial)
+
+        var dados = hardwareRepository.findAllByAtivo(page,filial,ativo)
                 .map(e->modelMapper.map(e, IssueDTO.class));
 
         return  dados;
