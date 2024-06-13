@@ -26,8 +26,8 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p join fetch p.itens s where p.id=:id and s.id=:idItens and s.ativo=true")
  Issue findOneByUsuarioidByIdAtivoTrue(@Param("id") long id, long idItens);
 
- @Query("SELECT h FROM Issue h WHERE h.usuarioid = :usuarioid")
- Issue findOneByUsuarioid(long usuarioid);
+// @Query("SELECT h FROM Issue h WHERE h.usuarioid = :usuarioid")
+// Issue findOneByUsuarioid(long usuarioid);
 
  Issue findOneById(long id);
 //    @Transactional
@@ -46,8 +46,8 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  Page findAllDataAntesAndDataDepoisByAtivoTrue(Pageable page, String dataAntes, String dataDepois, int filial);
  @Query("select p from Issue p left join fetch p.itens s where s.setor =:setor and s.ativo=true")
  Page findAllBySetor(Pageable page, String setor);
- @Query("select p from Issue p left join fetch p.itens s where lower(s.setor)  or lower(s.descricao) like lower(concat('%', :texto, '%'))) like lower(concat('%', :setor, '%')) and s.ativo=true and p.filial=:filial Order by s.id DESC")
- Page findAllBySetorContainingIgnoreCase(Pageable page, String texto, int filial);
+ @Query("select p from Issue p left join fetch p.itens s where lower(s.setor) like lower(concat('%', :setor, '%')) and s.ativo=true and p.filial=:filial Order by s.id DESC")
+ Page findAllBySetorContainingIgnoreCase(Pageable page, String setor, int filial);
 
  @Query("select p from Issue p left join fetch p.itens s where p.usuarioid =:idusuario and s.status = 'AGUARDANDO_VALIDACAO' Order by s.id DESC")
  Page<Issue> FindAllByHardwareByStatusValidacao(Pageable page,long idusuario);
@@ -57,9 +57,16 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.usuarioid=:id Order by s.id DESC")
  Page<Issue> findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
 
- @Query("select p from Issue p left join fetch p.itens s where lower(s.setor)  or lower(s.descricao) like lower(concat('%', :texto, '%'))) and s.ativo=true and p.usuarioid = :id Order by s.id DESC")
-
- Page<Issue> findAllByUserContainingIgnoreCase(Pageable pageable, String texto, long id);
+// @Query("select p from Issue p left join fetch p.itens s where lower(s.descricao)"+
+//         " like lower(concat('%', :searchTerm, '%')) or lower(s.setor)"+
+//         " like lower(concat('%', :searchTerm, '%')) or lower(s.usuario)"+
+//         " like lower(concat('%', :searchTerm, '%')) or lower(s.status)"+
+//         " like lower(concat('%', :searchTerm, '%')) or lower(s.patrimonio)"+
+//         " like lower(concat('%', :searchTerm, '%'))  or lower(s.equipamento)"+
+//         " like lower(concat('%', :searchTerm, '%'))"+
+//         " and s.ativo=true and p.usuarioid = :id Order by s.id DESC")
+//
+// Page<Issue> findAllByUserContainingIgnoreCase(Pageable pageable, String searchTerm, long id);
  @Query("select p from Issue p left join fetch p.itens s where s.tecnicoid = :id Order by s.id DESC ")
 
  List<Issue> findAllByUsuarioidByIdTesc(long id, Pageable pageable);
