@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.RelatorioDto;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.StatusOneDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
@@ -41,6 +42,17 @@ public class ControlerChamado {
                                 @PathVariable int filial){
 
         return service.Listar(page,Setor,dataAntes,dataDepois,filial,ativo);
+    }
+
+    @GetMapping("/relatorio/{filial}")
+    public Page<RelatorioDto> relatorio(Pageable page,
+                                        @RequestParam(name = "setor",required = false) String Setor,
+                                        @RequestParam(name = "dataAntes",required = false) String dataAntes,
+                                        @RequestParam(name = "dataDepois",required = false) String dataDepois,
+                                        @RequestParam(name = "ativo",required = false) boolean ativo,
+                                        @PathVariable int filial){
+
+        return service.Relatorio(page,Setor,dataAntes,dataDepois,filial,ativo);
     }
     @GetMapping("/lista/aguardando/{id}")
     public Page<IssueDTO> listaValidando(@PageableDefault Pageable pageable, @PathVariable long id){

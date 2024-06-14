@@ -53,7 +53,7 @@ public class ValidationsTec {
                 throw new RuntimeException("Erro ao atualizar status");
             }
             else if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("chamado FECHADO");
+                throw new RuntimeException("Chamado FECHADO");
             }
             break;
         }
@@ -79,10 +79,10 @@ public class ValidationsTec {
                 throw new RuntimeException("Erro: Status AGUARDANDO VALIDACAO");
             }
             else if(chamado.getStatus()==Status.AGUARDANDO_JIRA){
-                throw new RuntimeException("chamado está AGUARDANDO JIRA!");
+                throw new RuntimeException("Chamado está AGUARDANDO JIRA!");
             }
             else if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("chamado está FECHADO!");
+                throw new RuntimeException("Chamado está FECHADO!");
             }
             break;
         }
@@ -94,10 +94,10 @@ public class ValidationsTec {
             Chamado chamado = modelMapper.map(c,Chamado.class);
             System.out.println(user.getId());
             if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("chamado estar fechado");
+                throw new RuntimeException("Chamado estar fechado");
             }
             else if(chamado.getStatus()==Status.RE_ABERTO){
-                throw new RuntimeException(" chamado ja está aberto");
+                throw new RuntimeException(" Chamado ja está aberto");
             }
             else if(chamado.getStatus()==Status.EM_ANDAMENTO){
                 throw new RuntimeException("Solicite validação ao usuario");

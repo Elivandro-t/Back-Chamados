@@ -1,10 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 import br.com.Initialiizr.Informatica116.sistem.Controler.ControlerEmail;
 import br.com.Initialiizr.Informatica116.sistem.Controler.UsuarioControler;
-import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
-import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.ImagensDTO;
-import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.StatusOneDTO;
-import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.UpdateChamado;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.*;
 import br.com.Initialiizr.Informatica116.sistem.Models.*;
 import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Perfil;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
@@ -335,5 +332,24 @@ public class ChamadoService implements ChamadoInterface {
         }
         throw new RuntimeException("nada encontrado no banco");
 
+    }
+
+    public Page<RelatorioDto> Relatorio(Pageable page, String setor,
+                                        String dataAntes, String dataDepois,
+                                        int filial, boolean ativo) {
+        if(dataAntes!=null&&dataDepois!=null){
+            return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTruefilter(page,dataAntes,dataDepois,filial)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+        }
+        if(setor!=null){
+            return hardwareRepository.findAllBySetorContainingIgnoreCaseBusca(page,setor,filial)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+        }
+
+        var dados = hardwareRepository.findAllByAtivoT(page,filial,ativo)
+                .map(e->modelMapper.map(e, IssueDTO.class));
+
+        return  dados;
+//        }ss));
     }
 }
