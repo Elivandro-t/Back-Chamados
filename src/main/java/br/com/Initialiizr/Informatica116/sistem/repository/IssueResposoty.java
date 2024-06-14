@@ -57,17 +57,19 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.usuarioid=:id Order by s.id DESC")
  Page<Issue> findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
 
-// @Query("select p from Issue p left join fetch p.itens s where lower(s.descricao)"+
-//         " like lower(concat('%', :searchTerm, '%')) or lower(s.setor)"+
-//         " like lower(concat('%', :searchTerm, '%')) or lower(s.usuario)"+
-//         " like lower(concat('%', :searchTerm, '%')) or lower(s.status)"+
-//         " like lower(concat('%', :searchTerm, '%')) or lower(s.patrimonio)"+
-//         " like lower(concat('%', :searchTerm, '%'))  or lower(s.equipamento)"+
-//         " like lower(concat('%', :searchTerm, '%'))"+
-//         " and s.ativo=true and p.usuarioid = :id Order by s.id DESC")
-//
-// Page<Issue> findAllByUserContainingIgnoreCase(Pageable pageable, String searchTerm, long id);
+
+// @Query("select distinct p from Issue p " +
+//         "left join fetch p.itens s " +
+//         "where (" +
+//         "  lower(s.descricao) like lower(concat('%', :searchTerm, '%')) " +
+//         "  or lower(s.status) like lower(concat('%', :searchTerm, '%'))) " +
+//         "s.ativo = true " +
+//         "and p.usuarioid = :id " +
+//                 "and "+
+//         "order by s.id DESC")
+// Page findIssuesWithItemsByUserIdAndSearchTerm(Pageable page,@Param("id") Long id, @Param("searchTerm") String searchTerm);
  @Query("select p from Issue p left join fetch p.itens s where s.tecnicoid = :id Order by s.id DESC ")
 
  List<Issue> findAllByUsuarioidByIdTesc(long id, Pageable pageable);
+
 }

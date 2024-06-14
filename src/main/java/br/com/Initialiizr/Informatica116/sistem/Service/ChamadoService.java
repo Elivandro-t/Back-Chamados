@@ -214,7 +214,7 @@ public class ChamadoService implements ChamadoInterface {
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
 //        else if (descricao!=null) {
-//            return hardwareRepository.findAllByUserContainingIgnoreCase(pageable,descricao,id) .map(e->modelMapper.map(e, IssueDTO.class));
+//            return hardwareRepository.findIssuesWithItemsByUserIdAndSearchTerm(pageable,id,descricao) .map(e->modelMapper.map(e, IssueDTO.class));
 //
 //        }
         List<IssueDTO> lis = new ArrayList<>();

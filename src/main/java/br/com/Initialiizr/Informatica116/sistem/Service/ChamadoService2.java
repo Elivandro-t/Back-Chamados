@@ -4,6 +4,7 @@ import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
+import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
 import org.modelmapper.ModelMapper;
@@ -24,6 +25,8 @@ public class ChamadoService2 {
     private ModelMapper modelMapper;
     @Autowired
     ValidationsTec validationsTec;
+    @Autowired
+    private UserRepository userRepository;
     public Page<IssueDTO> listaValidados(Pageable page, long idUsuario){
         var name = issueResposoty.FindAllByHardwareByStatusValidacao(page,idUsuario)
                 .map(e->modelMapper.map(e, IssueDTO.class));
@@ -36,13 +39,18 @@ public class ChamadoService2 {
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }
+        var user = userRepository.getReferenceById(UsuarioLogado);
         // validacão de tecnico
         validationsTec.StatusvalidFechado(issue);
-        issue.getItens().forEach(e->e.setStatus(Status.RECUSADO));
-        issue.getItens().forEach(e->e.setAtivo(false));
-        issue.getItens().forEach(e->e.setAceito(false));
-        issue.getItens().forEach(e->e.setClient_feito(true));
-        issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
+        issue.getItens().forEach(e->{
+            e.setStatus(Status.RECUSADO);
+            e.setAtivo(false);
+            e.setAceito(false);
+            e.setClient_feito(true);
+            e.DataFeito(LocalDateTime.now());
+            e.setDone(true);
+            e.setTecnico_responsavel(user.getName() + " "+user.getLastname());
+        });
         issueResposoty.save(issue);
         return  ResponseEntity.ok().body(new MSG("status fechado"));
     }
