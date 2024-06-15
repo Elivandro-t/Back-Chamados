@@ -25,5 +25,6 @@ public class Chamado extends Model {
     private List<Imagens> imagens;
     @ManyToOne(optional = false)
     private Issue issue;
+
     //
 }

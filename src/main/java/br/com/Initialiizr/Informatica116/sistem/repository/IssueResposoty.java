@@ -76,7 +76,7 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  Page findAllDataAntesAndDataDepoisByAtivoTruefilter(Pageable page, String dataAntes, String dataDepois, int filial);
  @Query("select p from Issue p left join fetch p.itens s where lower(s.setor) like lower(concat('%', :setor, '%')) and s.ativo=true and p.filial=:filial Order by s.setor ASC")
  Page findAllBySetorContainingIgnoreCaseBusca(Pageable page, String setor, int filial);
- @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by s.setor ASC")
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo and p.filial=:filial Order by s.setor ASC")
 
  Page findAllByAtivoT(Pageable page, int filial, boolean ativo);
 }

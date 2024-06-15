@@ -47,6 +47,7 @@ public class Model {
     private boolean ativo;
     private boolean aceito;
     private boolean client_feito;
+    private String gmid;
     private boolean done;
     public  String Datas(LocalDateTime data){
         DateTimeFormatter pattern= DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");

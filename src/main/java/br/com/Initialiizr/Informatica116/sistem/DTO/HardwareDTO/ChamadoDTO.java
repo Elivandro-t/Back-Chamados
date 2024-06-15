@@ -35,6 +35,7 @@ public class ChamadoDTO {
     String data;
     private boolean ativo;
     private String descricao ;
+    private String gmid;
     private String usuario;
     private long tecnicoid ;
     private String tecnico_responsavel ;
