@@ -76,10 +76,10 @@ public class UserService {
    private  AuthenticationManager authenticationManager;
     @Autowired
     private RefeshTokenService refeshTokenService;
-    private static final String UPLOAD_DIR = "/var/lib/data/Logos";
     @Value("${endpoint}")
     private String endpoint;
-    private String imgUser = "https://suporte-infor.onrender.com/var/lib/data/Logos/brasil.png";
+    private String imgUser = "https://suporte-infor.onrender.com/Logos/brasil.jpeg";
+    private static final String UPLOAD_DIR = "var/lib/data/Logos";
     public UserDTO registro(UserDTO userDTO){
         validatorEmail.validator(userDTO.getEmail());
         var user = userRepository.pegandoUsuarioExistente(userDTO.getEmail());
@@ -114,21 +114,18 @@ public class UserService {
     @Transactional
     public MSG image(MultipartFile image, long id) throws IOException {
         byte[] bytes = image.getBytes();
-        File file = new File(UPLOAD_DIR);
-        String names =UPLOAD_DIR+"/"+image.getOriginalFilename();
-        String imagem =endpoint+UPLOAD_DIR+"/"+image.getOriginalFilename();
+        File file = new File( UPLOAD_DIR);
+        String names = UPLOAD_DIR+"/"+image.getOriginalFilename();
+        String imagem =endpoint+ UPLOAD_DIR+"/"+image.getOriginalFilename();
         if(!file.exists()){
             file.mkdir();
         }
         Files.write(Paths.get(names),bytes);
-        System.out.println("meu id "+id + "minha imagem "+imagem);
         var usuario = userRepository.findById(id);
         if(usuario.isPresent()){
             User user = usuario.get();
             user.setImagem(imagem);
             userRepository.save(user);
-            System.out.println("minha imagem "+imagem);
-            System.out.println("enviado com sucesso");
             return  new MSG("enviado com sucesso");
         }
         throw new RuntimeException("erro ao enviar imagem");
@@ -163,7 +160,7 @@ public class UserService {
     }
 
     public ResponseEntity<Resource> ListaImagensId(String name){
-        Path path = Paths.get(UPLOAD_DIR).resolve(name);
+        Path path = Paths.get( UPLOAD_DIR).resolve(name);
         try{
             Resource resource = new UrlResource(path.toUri());
             if(resource.exists()||resource.isReadable()){
@@ -274,7 +271,7 @@ public class UserService {
         }
 
     }
-  // update de usuario
+
     public void updateUSer(UpdateUserDto update){
         var userResult = userRepository.getReferenceById(update.getId());
         userResult.setName(update.getName());
