@@ -40,6 +40,7 @@
 #ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # Estágio de construção
+# Estágio de construção
 FROM ubuntu:latest as build
 
 RUN apt-get update && apt-get install -y \
@@ -72,10 +73,17 @@ EXPOSE 8080
 # Diretório onde os arquivos de dados serão armazenados no disco persistente
 ENV DATA_DIR=/var/lib/data
 
-# Força a recriação do diretório persistente e a cópia dos dados
+# Criar o diretório persistente e copiar os dados com comandos de depuração
 RUN mkdir -p $DATA_DIR && \
-    if [ -d "/app/Logos" ]; then cp -r /app/Logos $DATA_DIR/Logos; fi && \
-    ls -l $DATA_DIR/Logos
+    echo "Checking if /app/Logos exists..." && \
+    if [ -d "/app/Logos" ]; then \
+        echo "Directory /app/Logos exists. Copying to $DATA_DIR/Logos"; \
+        cp -r /app/Logos $DATA_DIR/Logos; \
+    else \
+        echo "Directory /app/Logos does not exist."; \
+    fi && \
+    echo "Contents of $DATA_DIR:" && ls -l $DATA_DIR && \
+    echo "Contents of $DATA_DIR/Logos:" && ls -l $DATA_DIR/Logos || echo "Directory $DATA_DIR/Logos does not exist."
 
 # Comando de inicialização da aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
