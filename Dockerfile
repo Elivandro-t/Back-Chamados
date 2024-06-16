@@ -63,7 +63,6 @@ FROM openjdk:17-jdk-slim
 # Diretório de trabalho para a aplicação
 WORKDIR /app
 
-
 # Copie o arquivo .jar do estágio de construção
 COPY --from=build /app/target/Informatica-0.0.1-SNAPSHOT.jar app.jar
 
