@@ -28,6 +28,7 @@ public class TokenService {
                     .withIssuer("17100150")
                     .withSubject(user.getEmail())
                     .withClaim("name",user.getName())
+                    .withClaim("lastname",user.getLastname())
                     .withClaim("id",user.getId())
                     .withClaim("filial",user.getFilial())
                     .withClaim("perfil",perfil)

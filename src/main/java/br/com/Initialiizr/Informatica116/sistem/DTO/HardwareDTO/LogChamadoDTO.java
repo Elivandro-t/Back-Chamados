@@ -13,7 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class LogChamadoDTO {
     private long id;
+    private long card_id;
     private String name_usuario_acess;
     private long usuario_id;
-    private LocalDateTime  timestamp;
+    private String msg;
+    private String timestamp;
 }
