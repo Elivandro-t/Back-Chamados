@@ -77,7 +77,6 @@ public class UserService {
     @Autowired
     private RefeshTokenService refeshTokenService;
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
-
     @Value("${endpoint}")
     private String endpoint;
     private String imgUser = "https://suporte-infor.onrender.com/var/lib/data/Logos/brasil.png";
@@ -164,7 +163,7 @@ public class UserService {
     }
 
     public ResponseEntity<Resource> ListaImagensId(String name){
-        Path path = Paths.get("Logos").resolve(name);
+        Path path = Paths.get(UPLOAD_DIR).resolve(name);
         try{
             Resource resource = new UrlResource(path.toUri());
             if(resource.exists()||resource.isReadable()){

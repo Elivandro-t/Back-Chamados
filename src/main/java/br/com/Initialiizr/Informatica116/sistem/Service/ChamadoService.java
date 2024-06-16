@@ -54,8 +54,8 @@ public class ChamadoService implements ChamadoInterface {
     @Autowired
     ValidationsTec validationsTec;
     @Value("${endpoint}")
-    private static final String UPLOAD_DIR = "/var/lib/data/Logos";
     private String endpoint;
+    private static final String UPLOAD_DIR = "/var/lib/data/Logos";
     //servico de registo de chamado
     @Override
     public IssueDTO registrar(String DTO, MultipartFile[] files) {
