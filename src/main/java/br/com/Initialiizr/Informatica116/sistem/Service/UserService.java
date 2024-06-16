@@ -274,7 +274,7 @@ public class UserService {
         }
 
     }
-
+  // update de usuario
     public void updateUSer(UpdateUserDto update){
         var userResult = userRepository.getReferenceById(update.getId());
         userResult.setName(update.getName());
