@@ -71,10 +71,11 @@ EXPOSE 8080
 
 # Diretório onde os arquivos de dados serão armazenados no disco persistente
 ENV DATA_DIR=/var/lib/data
-RUN mkdir -p $DATA_DIR
 
-# Verifica se app/Logos existe antes de copiá-lo para o diretório persistente
-RUN if [ -d "/app/Logos" ]; then cp -r /app/Logos $DATA_DIR/Logos; fi
+# Força a recriação do diretório persistente e a cópia dos dados
+RUN mkdir -p $DATA_DIR && \
+    if [ -d "/app/Logos" ]; then cp -r /app/Logos $DATA_DIR/Logos; fi && \
+    ls -l $DATA_DIR/Logos
 
 # Comando de inicialização da aplicação
 ENTRYPOINT ["java", "-jar", "app.jar"]
