@@ -54,6 +54,7 @@ public class ChamadoService implements ChamadoInterface {
     @Autowired
     ValidationsTec validationsTec;
     @Value("${endpoint}")
+    private static final String UPLOAD_DIR = "/var/lib/data/Logos";
     private String endpoint;
     //servico de registo de chamado
     @Override
@@ -132,9 +133,8 @@ public class ChamadoService implements ChamadoInterface {
                           chamdoe.setImagens(itens);
                           itens.add(imagens);
                       }
-                        String pathName = "Logos";
-                        File path = new File(pathName);
-                        String name =pathName+"/"+ file.getOriginalFilename();
+                        File path = new File(UPLOAD_DIR);
+                        String name =UPLOAD_DIR+"/"+ file.getOriginalFilename();
                         if(!path.exists()){
                             path.mkdir();
                         }
@@ -191,7 +191,7 @@ public class ChamadoService implements ChamadoInterface {
 //        }ss));
     }
     public ResponseEntity<Resource> ListaImagensId(String name){
-        Path path = Paths.get("Logos").resolve(name);
+        Path path = Paths.get(UPLOAD_DIR).resolve(name);
         try{
             Resource resource = new UrlResource(path.toUri());
             if(resource.exists()||resource.isReadable()){

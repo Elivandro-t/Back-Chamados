@@ -76,10 +76,11 @@ public class UserService {
    private  AuthenticationManager authenticationManager;
     @Autowired
     private RefeshTokenService refeshTokenService;
+    private static final String UPLOAD_DIR = "/var/lib/data/Logos";
 
     @Value("${endpoint}")
     private String endpoint;
-    private String imgUser = "https://suporte-infor.onrender.com/Logos/perfil.png";
+    private String imgUser = "https://suporte-infor.onrender.com/var/lib/data/Logos/brasil.png";
     public UserDTO registro(UserDTO userDTO){
         validatorEmail.validator(userDTO.getEmail());
         var user = userRepository.pegandoUsuarioExistente(userDTO.getEmail());
@@ -114,10 +115,9 @@ public class UserService {
     @Transactional
     public MSG image(MultipartFile image, long id) throws IOException {
         byte[] bytes = image.getBytes();
-        String imagensUsuario = "Logos";
-        File file = new File(imagensUsuario);
-        String names =imagensUsuario+"/"+image.getOriginalFilename();
-        String imagem =endpoint+imagensUsuario+"/"+image.getOriginalFilename();
+        File file = new File(UPLOAD_DIR);
+        String names =UPLOAD_DIR+"/"+image.getOriginalFilename();
+        String imagem =endpoint+UPLOAD_DIR+"/"+image.getOriginalFilename();
         if(!file.exists()){
             file.mkdir();
         }

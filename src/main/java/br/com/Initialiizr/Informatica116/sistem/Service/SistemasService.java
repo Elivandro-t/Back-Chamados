@@ -35,6 +35,8 @@ public class SistemasService {
     private ModelMapper modelMapper;
     @Value("${endpoint}")
     private String endpoint;
+    private static final String UPLOAD_DIR = "/var/lib/data/Logos";
+
     public SistemasDTO RegistobotesChamados(String data, MultipartFile file) throws IOException {
         byte[] bytes = file.getBytes();
         SistemasDTO optionsSystemaDTo = convertJson.convertJson(data,SistemasDTO.class);
@@ -48,10 +50,9 @@ public class SistemasService {
             if(optional.isPresent()){
                 throw new RuntimeException("ja contem um Registro");
             };
-            var path = "sistemBotao";
-            String name = endpoint+"sistemBotao/"+file.getOriginalFilename();
-            String imagem = path+"/"+file.getOriginalFilename();
-            File pathName = new File(path);
+            String name = endpoint+UPLOAD_DIR+"/"+file.getOriginalFilename();
+            String imagem = UPLOAD_DIR+"/"+file.getOriginalFilename();
+            File pathName = new File(UPLOAD_DIR);
             if(!pathName.exists()){
                 pathName.mkdir();
             }
@@ -80,7 +81,7 @@ public class SistemasService {
         return modelMapper.map(list,SistemasDTO.class);
     }
     public ResponseEntity<Resource> ListaImagensId(String name){
-        Path path = Paths.get("sistemBotao").resolve(name);
+        Path path = Paths.get(UPLOAD_DIR).resolve(name);
         try{
             Resource resource = new UrlResource(path.toUri());
             if(resource.exists()||resource.isReadable()){
