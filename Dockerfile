@@ -67,23 +67,18 @@ WORKDIR /app
 # Copie o arquivo .jar do estágio de construção
 COPY --from=build /app/target/Informatica-0.0.1-SNAPSHOT.jar app.jar
 
+# Copie o diretório Logos do estágio de construção (se existir)
+COPY --from=build /app/Logos /app/Logos
+
 # Expor a porta 8080 para acesso externo
 EXPOSE 8080
 
 # Diretório onde os arquivos de dados serão armazenados no disco persistente
 ENV DATA_DIR=/var/lib/data
 
-# Criar o diretório persistente e copiar os dados com comandos de depuração
-RUN mkdir -p $DATA_DIR && \
-    echo "Checking if /app/Logos exists..." && \
-    if [ -d "/app/Logos" ]; then \
-        echo "Directory /app/Logos exists. Copying to $DATA_DIR/Logos"; \
-        cp -r /app/Logos $DATA_DIR/Logos; \
-    else \
-        echo "Directory /app/Logos does not exist."; \
-    fi && \
-    echo "Contents of $DATA_DIR:" && ls -l $DATA_DIR && \
-    echo "Contents of $DATA_DIR/Logos:" && ls -l $DATA_DIR/Logos || echo "Directory $DATA_DIR/Logos does not exist."
+# Script de inicialização para copiar os dados se o diretório Logos existir
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Comando de inicialização da aplicação
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["/entrypoint.sh"]
