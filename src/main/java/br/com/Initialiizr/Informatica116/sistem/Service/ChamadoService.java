@@ -127,7 +127,6 @@ public class ChamadoService implements ChamadoInterface {
                         byte[] bytes = file.getBytes();
                         ImagensDTO imagensDTO = new ImagensDTO(nameFile);
                         Imagens imagens = modelMapper.map(imagensDTO,Imagens.class);
-                        System.out.println("minhas imagens "+nameFile);
                       for (Chamado chamdoe:chamado.getItens()){
                           imagens.setChamado(chamdoe);
                           chamdoe.setImagens(itens);

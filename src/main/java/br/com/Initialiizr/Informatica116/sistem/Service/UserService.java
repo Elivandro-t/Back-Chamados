@@ -76,10 +76,12 @@ public class UserService {
    private  AuthenticationManager authenticationManager;
     @Autowired
     private RefeshTokenService refeshTokenService;
+
     @Value("${endpoint}")
     private String endpoint;
-    private static final String UPLOAD_DIR = "var/lib/data/Logos";
     private String imgUser = "https://suporte-infor.onrender.com/Logos/perfil.png";
+    private static final String UPLOAD_DIR = "/var/lib/data/Logos";
+
     public UserDTO registro(UserDTO userDTO){
         validatorEmail.validator(userDTO.getEmail());
         var user = userRepository.pegandoUsuarioExistente(userDTO.getEmail());
