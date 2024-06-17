@@ -204,19 +204,20 @@ public class ChamadoService implements ChamadoInterface {
     }
     // pegando chamado por e exibindo para cada usuario!
     public Page<IssueDTO> pegarChamadoId(long id, Pageable pageable,String dataAntes,String dataDepois,String descricao){
-        List<Issue> lista = hardwareRepository.findAllByUsuarioidById(id,pageable );
         if (dataAntes!=null&&dataDepois!=null){
             return hardwareRepository.findAllDataByUserAtivoTrue(pageable,id,dataAntes,dataDepois)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
+        List<Issue> lista = hardwareRepository.findAllByUsuarioidById(id,pageable );
 //        else if (descricao!=null) {
 //            return hardwareRepository.findIssuesWithItemsByUserIdAndSearchTerm(pageable,id,descricao) .map(e->modelMapper.map(e, IssueDTO.class));
 //
 //        }
+
         List<IssueDTO> lis = new ArrayList<>();
         for (Issue d:lista){
             var map = modelMapper.map(d, IssueDTO.class);
-           lis.add(map);
+            lis.add(map);
         }
         return new PageImpl<>( lis);
     }

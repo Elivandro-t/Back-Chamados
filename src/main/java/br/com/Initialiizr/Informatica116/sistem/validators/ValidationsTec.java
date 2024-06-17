@@ -66,7 +66,7 @@ public class ValidationsTec {
                 throw new RuntimeException("Erro: Status AGUARDANDO VALIDACAO");
             }
             else if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("chamado está FECHADO!");
+                throw new RuntimeException("Chamado está FECHADO!");
             }
             break;
         }
@@ -94,7 +94,7 @@ public class ValidationsTec {
             Chamado chamado = modelMapper.map(c,Chamado.class);
             System.out.println(user.getId());
             if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("Chamado estar fechado");
+                throw new RuntimeException("Chamado está fechado");
             }
             else if(chamado.getStatus()==Status.RE_ABERTO){
                 throw new RuntimeException(" Chamado ja está aberto");
@@ -119,7 +119,7 @@ public class ValidationsTec {
             }
 
             if(chamado.getTecnico_responsavel()!=null&&!chamado.getTecnico_responsavel().trim().isEmpty()){
-                throw new RuntimeException("Erro: tecnico "+chamado.getTecnico_responsavel() + " já está de posse desse chamado");
+                throw new RuntimeException("Erro: Tecnico "+chamado.getTecnico_responsavel() + " já está de posse desse chamado");
             }
             break;
         }
