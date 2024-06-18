@@ -1,11 +1,13 @@
 package br.com.Initialiizr.Informatica116.sistem.DTO.COMENTARIOS_DTO;
 
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.ImagensDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,5 +20,6 @@ public class ListaComentdDTO {
     private String  email ;
     private String userImagem;
     private String data;
+    private List<ImagensDTO> imagens;
 
 }
