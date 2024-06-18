@@ -1,5 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.validators;
 
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.ChamadoDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.*;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
@@ -21,10 +23,9 @@ public class ValidationsTec {
     IssueResposoty issueResposoty;
     @Autowired
     UserRepository userRepository;
+
     public  void Valid(Issue issueDTO, long usuariolog){
-        Instant horaInicio = Instant.now();
-        for (Chamado c: issueDTO.getItens()){
-            Chamado chamado = modelMapper.map(c,Chamado.class);
+        for (Chamado chamado: issueDTO.getItens()){
             if(chamado.getTecnicoid()!=usuariolog){
                 throw new RuntimeException("Usuario "+chamado.getTecnico_responsavel() + " já está de posse desse chamado");
             }

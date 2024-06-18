@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Models.COMENTARIOS;
 
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Imagens;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Entity
 @Table(name = "lista_commentarios")
@@ -25,6 +27,9 @@ public class ListaComments {
     private String  email ;
     private String data;
     private String userImagem;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "listaComments")
+    private List<ImagensComments> imagens;
+
     @ManyToOne(optional = false)
     private Comments comment;
     public  String Datas(LocalDateTime data){
