@@ -11,13 +11,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/comment")
+@RequestMapping
 @CrossOrigin(origins = "*")
 public class ControlerComment {
     @Autowired
     private CommetService commetService;
-    @PostMapping
-    @Transactional
+    @RequestMapping(method = RequestMethod.POST,value = "comment")
     public CommentsDTO registrar(@RequestParam(value = "data",required = false) String commentsDTO,@RequestParam(value = "file",required = false) MultipartFile[] file) throws IOException {
         return commetService.comments(commentsDTO,file);
     }
