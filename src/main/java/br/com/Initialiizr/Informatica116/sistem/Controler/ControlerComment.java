@@ -20,7 +20,7 @@ public class ControlerComment {
     public CommentsDTO registrar(@RequestParam(value = "data",required = false) String commentsDTO,@RequestParam(value = "file",required = false) MultipartFile[] file) throws IOException {
         return commetService.comments(commentsDTO,file);
     }
-    @GetMapping("/lista/{chamadoId}")
+    @GetMapping("comment/lista/{chamadoId}")
     public ResponseEntity<CommentsDTO> lista(@PathVariable long chamadoId){
         CommentsDTO commentsDTO = commetService.lista(chamadoId);
         return ResponseEntity.ok(commentsDTO);
