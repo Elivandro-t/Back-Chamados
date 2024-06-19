@@ -14,4 +14,5 @@ public class UpdateUserDto {
     private String name;
     private String lastname;
     private String contato;
+    private int filial;
 }
