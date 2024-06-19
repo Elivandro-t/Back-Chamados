@@ -189,6 +189,28 @@ public class ChamadoService implements ChamadoInterface {
         return  dados;
 //        }ss));
     }
+    // buscando todos os chamados pro filiais
+    public Page<IssueDTO> ListarChamadosFiliais(Pageable page, String setor,
+                                 String dataAntes, String dataDepois,
+                                 boolean ativo) {
+        String busca = setor != null ? setor : ""; // Define a busca como setor se não for nulo
+        if(dataAntes!=null&&dataDepois!=null){
+            return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrueAndFalse(page,dataAntes,dataDepois,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+        }
+        else if(setor!=null){
+            return hardwareRepository.findAllBySetorContainingIgnoreCaseTrueAndFalse(page,busca,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+        }
+        else {
+
+            var dados = hardwareRepository.findAllByAtivoTrueAndFalse(page,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+
+            return  dados;
+        }
+
+    }
     public ResponseEntity<Resource> ListaImagensId(String name){
         Path path = Paths.get(UPLOAD_DIR).resolve(name);
         try{

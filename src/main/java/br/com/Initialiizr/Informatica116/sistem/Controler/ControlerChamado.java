@@ -43,6 +43,16 @@ public class ControlerChamado {
 
         return service.Listar(page,Setor,dataAntes,dataDepois,filial,ativo);
     }
+    //Listando todo os dados do usuarios filiais retornado para o service |ListaChamadosFiliais
+    @GetMapping("/lista/filiais/cds")
+    public Page<IssueDTO> listaChamadosFilias(Pageable page,
+                                @RequestParam(name = "setor",required = false) String Setor,
+                                @RequestParam(name = "dataAntes",required = false) String dataAntes,
+                                @RequestParam(name = "dataDepois",required = false) String dataDepois,
+                                @RequestParam(name = "ativo",required = false) boolean ativo){
+
+        return service.ListarChamadosFiliais(page,Setor,dataAntes,dataDepois,ativo);
+    }
 
     @GetMapping("/relatorio/{filial}")
     public Page<RelatorioDto> relatorio(Pageable page,

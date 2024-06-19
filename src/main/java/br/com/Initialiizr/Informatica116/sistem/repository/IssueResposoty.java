@@ -79,4 +79,22 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo and p.filial=:filial Order by s.setor ASC")
 
  Page findAllByAtivoT(Pageable page, int filial, boolean ativo);
+
+ @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo= :ativo Order by s.id DESC")
+
+ Page findAllDataAntesAndDataDepoisByAtivoTrueAndFalse(Pageable page, String dataAntes, String dataDepois, boolean ativo);
+
+// @Query("select p from Issue p left join fetch p.itens s " +
+//         "where lower(s.setor) like lower(concat('%', :setor, '%')) " +
+//         "and s.ativo = :ativo " +
+//         "Order by s.id DESC")
+@Query("select p from Issue p left join fetch p.itens s " +
+        "where (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
+        "or lower(s.cardId) like lower(concat('%', :busca, '%'))) " +
+        "and s.ativo = :ativo " +
+        "Order by s.id DESC")
+ Page findAllBySetorContainingIgnoreCaseTrueAndFalse(Pageable page,@Param("busca")String busca,@Param("ativo") boolean ativo);
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo Order by s.id DESC")
+
+ Page findAllByAtivoTrueAndFalse(Pageable page, boolean ativo);
 }
