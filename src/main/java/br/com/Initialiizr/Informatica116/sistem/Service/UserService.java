@@ -283,6 +283,7 @@ public class UserService {
         userResult.setName(update.getName());
         userResult.setLastname(update.getLastname());
         userResult.setContato(update.getContato());
+        userResult.setFilial(update.getFilial());
         userRepository.save(userResult);
     }
 }
