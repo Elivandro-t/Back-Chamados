@@ -133,6 +133,12 @@ public class ControlerChamado {
     public  ResponseEntity StatusAprovador(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
         return service.StatusAtorizacao(id,idchamado,usuariologado);
     }
+    @PutMapping("chamado/guardando-tecnico/{id}/chamadoCard/{chamadoCard}/tec/{usuariologado}")
+    @Transactional
+    public  ResponseEntity StatusVoltaChamdo(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
+        return service.ClearTcnico(id,idchamado,usuariologado);
+    }
+
     // api de chamado aberto de validaçao //
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aberto/{usuariologado}")
     @Transactional

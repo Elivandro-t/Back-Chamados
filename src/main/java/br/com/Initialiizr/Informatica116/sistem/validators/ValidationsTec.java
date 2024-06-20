@@ -30,7 +30,7 @@ public class ValidationsTec {
                 throw new RuntimeException("Usuario "+chamado.getTecnico_responsavel() + " já está de posse desse chamado");
             }
             if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()==Status.AGUARDANDO_TECNICO){
-                throw new RuntimeException("Aguardando tecnico");
+                throw new RuntimeException("Aceite o card");
             }
             break;
         }

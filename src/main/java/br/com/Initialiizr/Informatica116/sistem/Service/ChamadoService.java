@@ -266,6 +266,27 @@ public class ChamadoService implements ChamadoInterface {
          modelMapper.map(lista, IssueDTO.class);
         return ResponseEntity.ok(new MSG("tecnico adicionado ao chamado!"));
     }
+    public ResponseEntity ClearTcnico(long id,String cardChamado,long UsuarioLogado){
+        var user =userRepository.getReferenceById(UsuarioLogado);
+        System.out.println("meu id de usuario "+UsuarioLogado);
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        if(issue ==null){
+            throw new RuntimeException("nada encontrado");
+        }
+        validationsTec.Valid(issue,UsuarioLogado);
+        validationsTec.StatusvalidFechado(issue);
+        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_TECNICO));
+        issue.getItens().forEach(e->{
+            e.setAceito(false);
+            e.setDone(false);
+            e.setClient_feito(false);
+            e.setTecnicoid(0);
+            e.setTecnico_responsavel(null);
+        });
+
+        return ResponseEntity.ok(new MSG("status atualizado"));
+    }
+
     // enviando ao usuario quando o chamado for feito
     public ResponseEntity validaChamado(long id,String cardChamado,long UsuarioLogado){
         var user =userRepository.getReferenceById(UsuarioLogado);
@@ -279,7 +300,8 @@ public class ChamadoService implements ChamadoInterface {
 
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
         issue.getItens().forEach(e->e.setAceito(true));
-        issue.getItens().forEach(e->e.setAceito(true));
+        issue.getItens().forEach(e->e.setAceito(true)
+        );
         return ResponseEntity.ok(new MSG("status atualizado"));
     }
     // precisa ser feito validacao para o chamado nao ser aberto
