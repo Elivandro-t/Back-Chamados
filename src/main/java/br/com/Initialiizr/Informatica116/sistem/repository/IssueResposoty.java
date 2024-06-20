@@ -42,8 +42,8 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
     Optional<Issue> getReferenceByIdFeito(long id, String chamadoid);
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = true AND  p.filial=:filial Order by s.id DESC")
  Page<Issue> findAllByAtivoTrue(Pageable page, int filial);
-@Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.filial=:filial Order by s.id DESC")
- Page findAllDataAntesAndDataDepoisByAtivoTrue(Pageable page, String dataAntes, String dataDepois, int filial);
+@Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=:ativo and p.filial=:filial Order by s.id DESC")
+ Page findAllDataAntesAndDataDepoisByAtivoTrue(Pageable page, String dataAntes, String dataDepois, int filial,boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where s.setor =:setor and s.ativo=true")
  Page findAllBySetor(Pageable page, String setor);
  @Query("select p from Issue p left join fetch p.itens s where lower(s.setor) like lower(concat('%', :setor, '%')) and s.ativo=true and p.filial=:filial Order by s.id DESC")
@@ -74,14 +74,11 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.filial=:filial Order by s.setor ASC")
 
  Page findAllDataAntesAndDataDepoisByAtivoTruefilter(Pageable page, String dataAntes, String dataDepois, int filial);
- @Query("select p from Issue p left join fetch p.itens s where lower(s.setor) like lower(concat('%', :setor, '%')) and s.ativo=true and p.filial=:filial Order by s.setor ASC")
- Page findAllBySetorContainingIgnoreCaseBusca(Pageable page, String setor, int filial);
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo and p.filial=:filial Order by s.setor ASC")
 
  Page findAllByAtivoT(Pageable page, int filial, boolean ativo);
 
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo= :ativo Order by s.id DESC")
-
  Page findAllDataAntesAndDataDepoisByAtivoTrueAndFalse(Pageable page, String dataAntes, String dataDepois, boolean ativo);
 
 // @Query("select p from Issue p left join fetch p.itens s " +
@@ -94,7 +91,15 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
         "and s.ativo = :ativo " +
         "Order by s.id DESC")
  Page findAllBySetorContainingIgnoreCaseTrueAndFalse(Pageable page,@Param("busca")String busca,@Param("ativo") boolean ativo);
- @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo Order by s.id DESC")
 
+ @Query("select p from Issue p left join fetch p.itens s " +
+         "where (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
+         "or lower(s.cardId) like lower(concat('%', :busca, '%'))) " +
+         "and s.ativo = true " +
+         "and p.filial = :filial " +
+         "Order by s.id DESC")
+ Page findAllBySetorContainingIgnoreCaseBusca(Pageable page,@Param("busca") String busca, int filial);
+
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo Order by s.id DESC")
  Page findAllByAtivoTrueAndFalse(Pageable page, boolean ativo);
 }

@@ -174,19 +174,19 @@ public class ChamadoService implements ChamadoInterface {
     public Page<IssueDTO> Listar(Pageable page, String setor,
                                  String dataAntes, String dataDepois,
                                  int filial,boolean ativo) {
+        String busca = setor != null ? setor : "";
         if(dataAntes!=null&&dataDepois!=null){
-            return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrue(page,dataAntes,dataDepois,filial)
+            return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrue(page,dataAntes,dataDepois,filial,ativo)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-        if(setor!=null){
-            return hardwareRepository.findAllBySetorContainingIgnoreCase(page,setor,filial)
+        else if(setor!=null){
+            return hardwareRepository.findAllBySetorContainingIgnoreCaseBusca(page,busca,filial)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-
-        var dados = hardwareRepository.findAllByAtivo(page,filial,ativo)
-                .map(e->modelMapper.map(e, IssueDTO.class));
-
-        return  dados;
+        else {
+            return hardwareRepository.findAllByAtivo(page, filial, ativo)
+                    .map(e -> modelMapper.map(e, IssueDTO.class));
+        }
 //        }ss));
     }
     // buscando todos os chamados pro filiais
