@@ -37,8 +37,7 @@ public class ValidationsTec {
     }
 
     public  void reaberto(Issue issueDTO, long usuariolog){
-        for (Chamado c: issueDTO.getItens()){
-            Chamado chamado = modelMapper.map(c,Chamado.class);
+        for (Chamado chamado: issueDTO.getItens()){
             if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()==Status.AGUARDANDO_TECNICO){
                 throw new RuntimeException("Erro: AGUARDANDO TECNICO");
             }

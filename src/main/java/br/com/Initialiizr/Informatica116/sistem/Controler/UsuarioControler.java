@@ -9,8 +9,11 @@ import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.UserVerify;
 import br.com.Initialiizr.Informatica116.sistem.Security.TokenService;
 import br.com.Initialiizr.Informatica116.sistem.Service.RefeshTokenService;
 import br.com.Initialiizr.Informatica116.sistem.Service.UserService;
+
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -37,19 +40,25 @@ public class UsuarioControler {
     private RefeshTokenService refeshTokenService;
     @PostMapping("registrar")
     @Transactional
-    public ResponseEntity<MsgRegiste> registrar(@RequestBody UserDTO userDTO){
-        userService.registro(userDTO);
-        return ResponseEntity.ok().body(new MsgRegiste("cadastrado com sucesso!"));
+    public MsgRegistre registrar(@RequestBody @Valid UserDTO userDTO){
+        var result = userService.registro(userDTO);
+        return result;
+
     }
     @GetMapping("/user/{email}")
-    public UserComment findOneByEmal(@PathVariable  String email){
+    public UserComment findOneByEmal(@PathVariable String email){
         return userService.pegarUsuarioEmail(email);
     }
     @PostMapping("login")
     @Transactional
     public ResponseEntity login(@RequestBody LoginDTo userDTO){
-        var response = userService.Login(userDTO);
-        return ResponseEntity.ok(response);
+       try{
+           var response = userService.Login(userDTO);
+           return ResponseEntity.ok(response);
+       }catch (ValidationException e){
+           return ResponseEntity.badRequest().body(new MsgRegistre(e.getMessage()));
+
+       }
     }
     @PutMapping("foto/usuario/{id}")
     @Transactional

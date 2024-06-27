@@ -2,6 +2,7 @@ package br.com.Initialiizr.Informatica116.sistem.repository;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
+import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import io.micrometer.core.instrument.binder.db.MetricsDSLContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -102,4 +103,15 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
 
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo Order by s.id DESC")
  Page findAllByAtivoTrueAndFalse(Pageable page, boolean ativo);
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = true AND  s.status=:status Order by s.id DESC")
+
+ List<Issue> findByStatusAndDataInicioEsperaBefore(Status status);
+ @Query("select p from Issue p left join fetch p.itens s " +
+         "where p.usuarioid=:id and (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
+         "or lower(s.cardId) like lower(concat('%', :busca, '%'))) " +
+         "and s.ativo = :ativo "  +
+         "Order by s.id DESC")
+ Page findAllBySetorContainingIgnoreCaseTrueAndFalseByUsuario(Pageable pageable, long id,@Param("busca") String busca, boolean ativo);
+ @Query("select p from Issue p left join fetch p.itens s where p.usuarioid=:id and s.ativo = :ativo Order by s.id DESC")
+ Page findAllByAtivoTrueAndFalseByUsuario(Pageable pageable, long id, boolean ativo);
 }

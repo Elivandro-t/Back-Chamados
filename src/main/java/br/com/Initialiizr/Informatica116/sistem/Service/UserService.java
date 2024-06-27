@@ -21,11 +21,13 @@ import br.com.Initialiizr.Informatica116.sistem.validators.ValidatorPassword;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ValidationException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.health.Status;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
@@ -82,28 +84,28 @@ public class UserService {
     private String imgUser = "https://suporte-infor.onrender.com/Logos/perfil.png";
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
 
-    public UserDTO registro(UserDTO userDTO){
-        validatorEmail.validator(userDTO.getEmail());
-        var user = userRepository.pegandoUsuarioExistente(userDTO.getEmail());
-        if(user==null){
-            throw new RuntimeException("email e nulo");
-        }
-        if(user.isPresent()){
-            throw new RuntimeException("usuario já registrado!");
-        }
-        List<Perfil> perfis = new ArrayList<>();
-        password.validator(userDTO.getPassword());
-        var usuario = modelMapper.map(userDTO, User.class);
-        Perfil perfil = new Perfil();
-        perfil.setName("user");
-        perfil.setUser(usuario);
-        perfil.setAtivo(true);
-        perfis.add(perfil);
-        usuario.setItens(perfis);
-        usuario.setImagem(imgUser);
-        usuario.criptografar(userDTO.getPassword());
-        var registrado = userRepository.save(usuario);
-        return modelMapper.map(registrado,UserDTO.class);
+    public MsgRegistre registro(UserDTO userDTO){
+            validatorEmail.validator(userDTO.getEmail());
+            var user = userRepository.pegandoUsuarioExistente(userDTO.getEmail());
+            List<Perfil> perfis = new ArrayList<>();
+            password.validator(userDTO.getPassword());
+            if(user.isPresent()){
+                throw new RuntimeException("usuario já registrado!");
+            }
+                var usuario = modelMapper.map(userDTO, User.class);
+                Perfil perfil = new Perfil();
+                perfil.setName("user");
+                perfil.setUser(usuario);
+                perfil.setAtivo(true);
+                perfis.add(perfil);
+                usuario.setItens(perfis);
+                usuario.setImagem(imgUser);
+                usuario.criptografar(userDTO.getPassword());
+                var registrado = userRepository.save(usuario);
+                 modelMapper.map(registrado,UserDTO.class);
+
+                return new MsgRegistre("cadastrado com sucesso");
+
     }
     public MsgToken Login(LoginDTo loginDTo){
             var token = new UsernamePasswordAuthenticationToken(loginDTo.email(),loginDTo.password());
@@ -215,7 +217,7 @@ public class UserService {
                 user.resetVerificationAttempts();
             }
             userRepository.save(user);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensagem("Código de verificação inválido."));
+           throw new RuntimeException("Código de verificação inválido.");
         }
         user.resetVerificationAttempts();
         return ResponseEntity.ok(new Mensagem("Código de verificação válido."));

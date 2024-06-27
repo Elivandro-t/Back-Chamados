@@ -2,8 +2,8 @@ package br.com.Initialiizr.Informatica116.sistem.Service;
 import br.com.Initialiizr.Informatica116.sistem.Controler.ControlerEmail;
 import br.com.Initialiizr.Informatica116.sistem.Controler.UsuarioControler;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.*;
+import br.com.Initialiizr.Informatica116.sistem.DTO.MESAGENS.Mensagem;
 import br.com.Initialiizr.Informatica116.sistem.Models.*;
-import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Perfil;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Imagens;
@@ -31,9 +31,11 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class ChamadoService implements ChamadoInterface {
@@ -56,6 +58,9 @@ public class ChamadoService implements ChamadoInterface {
     @Value("${endpoint}")
     private String endpoint;
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
+    public ChamadoService(IssueResposoty issueResposoty){
+        this.hardwareRepository = issueResposoty;
+    }
     //servico de registo de chamado
     @Override
     public IssueDTO registrar(String DTO, MultipartFile[] files) {
@@ -225,23 +230,23 @@ public class ChamadoService implements ChamadoInterface {
         }
     }
     // pegando chamado por e exibindo para cada usuario!
-    public Page<IssueDTO> pegarChamadoId(long id, Pageable pageable,String dataAntes,String dataDepois,String descricao){
+    public Page<IssueDTO> pegarChamadoId(long id, Pageable pageable,String dataAntes,String dataDepois,String descricao,boolean ativo){
+        String busca = descricao != null ? descricao : ""; //
         if (dataAntes!=null&&dataDepois!=null){
             return hardwareRepository.findAllDataByUserAtivoTrue(pageable,id,dataAntes,dataDepois)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-        List<Issue> lista = hardwareRepository.findAllByUsuarioidById(id,pageable );
-//        else if (descricao!=null) {
-//            return hardwareRepository.findIssuesWithItemsByUserIdAndSearchTerm(pageable,id,descricao) .map(e->modelMapper.map(e, IssueDTO.class));
-//
-//        }
-
-        List<IssueDTO> lis = new ArrayList<>();
-        for (Issue d:lista){
-            var map = modelMapper.map(d, IssueDTO.class);
-            lis.add(map);
+        else if(descricao!=null){
+            return hardwareRepository.findAllBySetorContainingIgnoreCaseTrueAndFalseByUsuario(pageable,id,busca,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
         }
-        return new PageImpl<>( lis);
+        else {
+
+            var dados = hardwareRepository.findAllByAtivoTrueAndFalseByUsuario(pageable,id,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+
+            return  dados;
+        }
     }
     public Page<IssueDTO> pegarChamadoIdTecnic(long id, Pageable pageable){
         List<Issue> lista = hardwareRepository.findAllByUsuarioidByIdTesc(id,pageable );
@@ -284,7 +289,7 @@ public class ChamadoService implements ChamadoInterface {
             e.setTecnico_responsavel(null);
         });
 
-        return ResponseEntity.ok(new MSG("status atualizado"));
+        return ResponseEntity.ok(new Mensagem("Status atualizado"));
     }
 
     // enviando ao usuario quando o chamado for feito
@@ -297,9 +302,8 @@ public class ChamadoService implements ChamadoInterface {
         }
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Status(issue);
-
+        issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
-        issue.getItens().forEach(e->e.setAceito(true));
         issue.getItens().forEach(e->e.setAceito(true)
         );
         return ResponseEntity.ok(new MSG("status atualizado"));
@@ -319,7 +323,6 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e->e.setAtivo(false));
         issue.getItens().forEach(e->e.setAceito(false));
         issue.getItens().forEach(e->e.setClient_feito(true));
-        issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
         hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("status fechado"));
     }
@@ -335,6 +338,7 @@ public class ChamadoService implements ChamadoInterface {
         validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e -> e.setStatus(Status.RE_ABERTO));
         issue.getItens().forEach(e -> e.setAceito(false));
+        issue.getItens().forEach(e->e.setData_chamdo_feito(null));
         hardwareRepository.save(issue);
         return ResponseEntity.ok().body(new MSG("chamado reaberto"));
     }
@@ -395,5 +399,42 @@ public class ChamadoService implements ChamadoInterface {
 
         return  dados;
 //        }ss));
+    }
+
+
+    public void verificarEFecharChamadosAguardandoValidacao() {
+        List<Issue> chamadosAguardandoValidacao = hardwareRepository.findByStatusAndDataInicioEsperaBefore(Status.AGUARDANDO_VALIDACAO);
+
+        for (Issue chamado : chamadosAguardandoValidacao) {
+            boolean fechouChamado = false;
+
+            for (Chamado item : chamado.getItens()) {
+                String dataFeitoStr = item.getData_chamdo_feito();
+                if (dataFeitoStr != null) {
+                    LocalDateTime dataFeito = LocalDateTime.parse(dataFeitoStr);
+                    LocalDateTime agora = LocalDateTime.now();
+
+                    // Calcula a diferença de tempo em minutos
+                    long diferencaMinutos = Duration.between(dataFeito, agora).toMinutes();
+
+                    if (diferencaMinutos >= 2) {
+                        // Marca que pelo menos um item foi fechado
+                        fechouChamado = true;
+
+                        // Realiza as operações para fechar o item do chamado
+                        item.setStatus(Status.FECHADO);
+                        item.setAtivo(false);
+                        item.setAceito(false);
+                        item.DataFeito(LocalDateTime.now());
+                        item.setClient_feito(true);
+                    }
+                }
+            }
+
+            // Se pelo menos um item foi fechado, salva o chamado
+            if (fechouChamado) {
+                hardwareRepository.save(chamado);
+            }
+        }
     }
 }

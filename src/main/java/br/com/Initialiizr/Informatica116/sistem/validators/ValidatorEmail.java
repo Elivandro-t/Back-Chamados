@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.validators;
 
+import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
@@ -11,7 +12,7 @@ public class ValidatorEmail {
 
     public void validator(String email){
         if(!isEmail(email)){
-            throw new RuntimeException("email e invalido");
+            throw new ValidationException("email e invalido");
         }
 
     }
