@@ -107,10 +107,10 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
 
  List<Issue> findByStatusAndDataInicioEsperaBefore(Status status);
  @Query("select p from Issue p left join fetch p.itens s " +
-         "where p.usuarioid=:id and (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
+         "where p.usuarioid = :id and (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
          "or lower(s.cardId) like lower(concat('%', :busca, '%'))) " +
-         "and s.ativo = :ativo "  +
-         "Order by s.id DESC")
+         "and s.ativo = :ativo " +
+         "order by s.id DESC")
  Page findAllBySetorContainingIgnoreCaseTrueAndFalseByUsuario(Pageable pageable, long id,@Param("busca") String busca, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where p.usuarioid=:id and s.ativo = :ativo Order by s.id DESC")
  Page findAllByAtivoTrueAndFalseByUsuario(Pageable pageable, long id, boolean ativo);

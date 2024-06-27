@@ -241,10 +241,8 @@ public class ChamadoService implements ChamadoInterface {
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
         else {
-
             var dados = hardwareRepository.findAllByAtivoTrueAndFalseByUsuario(pageable,id,ativo)
                     .map(e->modelMapper.map(e, IssueDTO.class));
-
             return  dados;
         }
     }
@@ -288,7 +286,6 @@ public class ChamadoService implements ChamadoInterface {
             e.setTecnicoid(0);
             e.setTecnico_responsavel(null);
         });
-
         return ResponseEntity.ok(new Mensagem("Status atualizado"));
     }
 

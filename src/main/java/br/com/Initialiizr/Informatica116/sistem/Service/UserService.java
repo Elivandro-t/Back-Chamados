@@ -215,12 +215,13 @@ public class UserService {
             user.incrementVerificationAttempts();
             if (user.getExp() >= 3) {
                 user.resetVerificationAttempts();
+                throw new RuntimeException("limite expirado!");
             }
             userRepository.save(user);
            throw new RuntimeException("Código de verificação inválido.");
         }
         user.resetVerificationAttempts();
-        return ResponseEntity.ok(new Mensagem("Código de verificação válido."));
+        return ResponseEntity.ok(new MsgRegistre("Código de verificação válido."));
     }
     // alterando senha do endpoint
     public ResponseEntity AlterByCode(AlterPassword alterPassword){
