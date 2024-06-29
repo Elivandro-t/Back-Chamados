@@ -1,0 +1,2 @@
+ALTER TABLE issue
+ADD COLUMN usuario_logado VARCHAR(100) DEFAULT NULL;

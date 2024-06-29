@@ -14,6 +14,7 @@ import java.util.List;
 public class IssueDTO {
     private long id;
     private long usuarioid;
+    private String usuario_logado;
     private int filial;
     private String servico;
     private List<ChamadoDTO> itens;

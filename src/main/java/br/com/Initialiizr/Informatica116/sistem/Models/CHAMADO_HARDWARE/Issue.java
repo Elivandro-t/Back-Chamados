@@ -27,6 +27,8 @@ public class Issue {
     @NotNull
     private long usuarioid;
     @NotNull
+    private String usuario_logado;
+    @NotNull
     private int filial;
     @NotBlank
     private String servico;
