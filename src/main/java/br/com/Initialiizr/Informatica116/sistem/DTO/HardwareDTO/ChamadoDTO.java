@@ -38,7 +38,12 @@ public class ChamadoDTO {
     private String gmid;
     private String usuario;
     private long tecnicoid ;
-    private String tecnico_responsavel ;
+    private String cpf;
+    private String nome_mae;
+    private String data_admin;
+    private String data_nasc;
+    private String funcao;
+    private String tecnico_responsavel;
     private List<ImagensDTO> imagens;
 
 }
