@@ -40,7 +40,9 @@ public class ChamadoDTO {
     private long tecnicoid ;
     private String cpf;
     private String nome_mae;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private String data_admin;
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private String data_nasc;
     private String funcao;
     private String tecnico_responsavel;

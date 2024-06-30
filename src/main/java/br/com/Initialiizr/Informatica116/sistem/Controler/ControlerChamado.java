@@ -6,6 +6,7 @@ import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService2;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -28,7 +29,7 @@ public class ControlerChamado {
     private ChamadoService2 service2;
 
     @RequestMapping(method = RequestMethod.POST,value = "chamado")
-    public ResponseEntity<IssueDTO> chamadoDT(@RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
+    public ResponseEntity<IssueDTO> chamadoDT(@RequestParam ("data") @Valid String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
         var response = service.registrar(data,file);
         System.out.println(data);
         return ResponseEntity.ok().body(response);
