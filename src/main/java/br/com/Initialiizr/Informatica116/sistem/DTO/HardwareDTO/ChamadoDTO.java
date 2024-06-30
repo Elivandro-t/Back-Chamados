@@ -44,6 +44,7 @@ public class ChamadoDTO {
     private String data_admin;
     @JsonFormat(pattern = "dd-MM-yyyy")
     private String data_nasc;
+    private  int filial;
     private String funcao;
     private String tecnico_responsavel;
     private String centro_de_custo;
