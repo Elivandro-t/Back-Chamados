@@ -53,7 +53,7 @@ public class Model {
     private String nome_mae;
     private String data_admin;
     private String data_nasc;
-    private int centro_de_custo;
+    private String centro_de_custo;
     private String funcao;
     public  String Datas(LocalDateTime data){
         DateTimeFormatter pattern= DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");

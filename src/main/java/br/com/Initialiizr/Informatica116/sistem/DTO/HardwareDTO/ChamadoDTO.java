@@ -46,6 +46,7 @@ public class ChamadoDTO {
     private String data_nasc;
     private String funcao;
     private String tecnico_responsavel;
+    private String centro_de_custo;
     private List<ImagensDTO> imagens;
 
 }
