@@ -37,7 +37,6 @@ public class Model {
     private String data_chamdo_feito;
     private String data;
     private String datacreate;
-    @NotBlank
     @Column(columnDefinition = "TEXT")
     private String descricao ;
     @NotBlank
