@@ -15,10 +15,9 @@ import java.util.List;
 public class LogService {
     @Autowired
     private LogRepository logRepository;
-
     @Autowired
     private ModelMapper modelMapper;
-
+ // logs usuario
     public void log(LogChamadoDTO logChamadoDTO) {
         LogChamado log = new LogChamado( logChamadoDTO);
         logRepository.save(log);
