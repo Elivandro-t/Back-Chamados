@@ -47,5 +47,8 @@ public class ChamadoDTO {
     private String tecnico_responsavel;
     private String centro_de_custo;
     private List<ImagensDTO> imagens;
+    private String emailGestorAprovador;
+    private String nomeDogestor;
+    private String emailUsuario;
 
 }

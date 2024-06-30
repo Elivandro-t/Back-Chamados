@@ -50,6 +50,9 @@ public class Model {
     private String gmid;
     private  Integer filial;
     private String cpf;
+    private String emailGestorAprovador;
+    private String nomeDogestor;
+    private String emailUsuario;
     private String nome_mae;
     private String data_admin;
     private String data_nasc;
