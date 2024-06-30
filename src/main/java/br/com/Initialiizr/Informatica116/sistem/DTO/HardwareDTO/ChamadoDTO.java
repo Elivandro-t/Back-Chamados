@@ -42,7 +42,7 @@ public class ChamadoDTO {
     private String nome_mae;
     private String data_admin;
     private String data_nasc;
-    private  int filial;
+    private  Integer filial;
     private String funcao;
     private String tecnico_responsavel;
     private String centro_de_custo;

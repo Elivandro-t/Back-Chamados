@@ -48,7 +48,7 @@ public class Model {
     private boolean client_feito;
     private boolean done;
     private String gmid;
-    private  int filial;
+    private  Integer filial;
     private String cpf;
     private String nome_mae;
     private String data_admin;
