@@ -49,7 +49,7 @@ public BotService(String botName, String botToken){
         mensagem += "- Número:" + numeroChamado + "\n";
         mensagem += "- Categoria: "+ titulo+"\n";
         mensagem += "- Data: "+data+"\n\n";
-        mensagem += "- Link: " + "http://localhost:4200" + "/chamado/" + numeroChamado + "/" + UsuarioId + "/" + idChamado + "/admin" + "\n\n";
+        mensagem += "- Link: " + "https://back-chamados.onrender.com" + "/chamado/" + numeroChamado + "/" + UsuarioId + "/" + idChamado + "/admin" + "\n\n";
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(mensagem);
