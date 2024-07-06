@@ -57,6 +57,8 @@ public class ChamadoService implements ChamadoInterface {
     ValidationsTec validationsTec;
     @Value("${endpoint}")
     private String endpoint;
+    @Autowired
+    BotService botService;
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
     public ChamadoService(IssueResposoty issueResposoty){
         this.hardwareRepository = issueResposoty;
@@ -149,11 +151,17 @@ public class ChamadoService implements ChamadoInterface {
             var chamadoItens = hardwareRepository.findOneById(issueDTO.getId());
             if(chamadoItens!=null) {
                 chamadoItens.getItens().addAll(chamado.getItens());
-                hardwareRepository.save(chamadoItens);
-                return modelMapper.map(chamado, IssueDTO.class);
+                Issue issueSalvo = hardwareRepository.save(chamadoItens);
+                var hf = modelMapper.map(issueSalvo, IssueDTO.class);
+                for (ChamadoDTO chamadoDTO:hf.getItens()){
+                    botService.enviarNotificacaoChamado(chamadoDTO.getCardId(), issueSalvo.getUsuario_logado(),issueSalvo.getUsuarioid(),chamadoDTO.getId(),chamadoDTO.getData(),issueSalvo.getServico());
+                }                return modelMapper.map(chamado, IssueDTO.class);
             } else {
                 Issue issueSalvo = hardwareRepository.save(chamado);
                 var hf = modelMapper.map(issueSalvo, IssueDTO.class);
+                for (ChamadoDTO c:hf.getItens()){
+                    botService.enviarNotificacaoChamado(c.getCardId(), issueSalvo.getUsuario_logado(),issueSalvo.getUsuarioid(),c.getId(),c.getData(),issueSalvo.getServico());
+                }
                 return modelMapper.map(issueSalvo, IssueDTO.class);
             } }catch (IOException e){
             throw  new RuntimeException(e);

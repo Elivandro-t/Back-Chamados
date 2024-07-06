@@ -31,7 +31,6 @@ public class ControlerChamado {
     @RequestMapping(method = RequestMethod.POST,value = "chamado")
     public ResponseEntity<IssueDTO> chamadoDT(@RequestParam ("data") @Valid String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
         var response = service.registrar(data,file);
-        System.out.println(data);
         return ResponseEntity.ok().body(response);
     }
     @GetMapping("/lista/{filial}")

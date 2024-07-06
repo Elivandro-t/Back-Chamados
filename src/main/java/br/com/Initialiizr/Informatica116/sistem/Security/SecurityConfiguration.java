@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Security;
 
+import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
 public class SecurityConfiguration {
@@ -52,5 +56,15 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public BotService botService() throws TelegramApiException {
+         var key = "7436839194:AAF8TeUL-xtQS_gkaLJvSW_03pJ5LPVPn8c";
+
+        BotService botService = new BotService("Agile_service_bot",key);
+        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
+        teleBots.registerBot(botService);
+        return botService;
     }
 }
