@@ -43,6 +43,10 @@ public class ControlerChamado {
 
         return service.Listar(page,Setor,dataAntes,dataDepois,filial,ativo);
     }
+    @PostMapping("/whats")
+    public  ResponseEntity<?> apiWhats(@RequestBody IssueDTO issueDTO){
+        return  ResponseEntity.ok("deu ok");
+    }
     //Listando todo os dados do usuarios filiais retornado para o service |ListaChamadosFiliais
     @GetMapping("/lista/filiais/cds")
     public Page<IssueDTO> listaChamadosFilias(Pageable page,
