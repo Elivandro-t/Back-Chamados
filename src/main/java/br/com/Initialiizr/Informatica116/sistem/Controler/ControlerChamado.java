@@ -45,7 +45,7 @@ public class ControlerChamado {
     }
     @RequestMapping(method = RequestMethod.POST,value = "/whats")
     public  ResponseEntity<?> apiWhats(@RequestParam ("data") String data){
-        return  ResponseEntity.ok("deu ok");
+        return  ResponseEntity.ok(data);
     }
     //Listando todo os dados do usuarios filiais retornado para o service |ListaChamadosFiliais
     @GetMapping("/lista/filiais/cds")
