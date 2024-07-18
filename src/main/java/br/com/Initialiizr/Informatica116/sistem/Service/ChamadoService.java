@@ -174,7 +174,7 @@ public class ChamadoService implements ChamadoInterface {
         IssueDTO chamado = modelMapper.map(chamadoid, IssueDTO.class);
         return  chamado;
     }
-    // pegando chamado chamado por card
+    // pegando chamado por card
     @Override
     public IssueDTO Card(String card, long id) {
         Issue chamadoid = hardwareRepository.findOneByCard(card,id);
@@ -202,7 +202,7 @@ public class ChamadoService implements ChamadoInterface {
         }
 //        }ss));
     }
-    // buscando todos os chamados pro filiais
+    // buscando todos os chamados por filiais
     public Page<IssueDTO> ListarChamadosFiliais(Pageable page, String setor,
                                  String dataAntes, String dataDepois,
                                  boolean ativo) {

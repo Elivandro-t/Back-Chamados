@@ -53,7 +53,7 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p left join fetch p.itens s where p.usuarioid =:idusuario and s.status = 'AGUARDANDO_VALIDACAO' Order by s.id DESC")
  Page<Issue> FindAllByHardwareByStatusValidacao(Pageable page,long idusuario);
 
- @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by s.id DESC")
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by case when s.status = 'AGUARDANDO_TECNICO' then 1 else 2 end,p.id")
  Page findAllByAtivo(Pageable page, int filial, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.usuarioid=:id Order by s.id DESC")
  Page<Issue> findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
@@ -92,7 +92,6 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
         "and s.ativo = :ativo " +
         "Order by s.id DESC")
  Page findAllBySetorContainingIgnoreCaseTrueAndFalse(Pageable page,@Param("busca")String busca,@Param("ativo") boolean ativo);
-
  @Query("select p from Issue p left join fetch p.itens s " +
          "where (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
          "or lower(s.cardId) like lower(concat('%', :busca, '%'))) " +
@@ -101,16 +100,29 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
          "Order by s.id DESC")
  Page findAllBySetorContainingIgnoreCaseBusca(Pageable page,@Param("busca") String busca, int filial);
 
- @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo Order by s.id DESC")
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo Order by case when s.status = 'AGUARDANDO_TECNICO' then 1 else 2 end,p.id")
  Page findAllByAtivoTrueAndFalse(Pageable page, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = true AND  s.status=:status Order by s.id DESC")
 
  List<Issue> findByStatusAndDataInicioEsperaBefore(Status status);
- @Query("select p from Issue p left join fetch p.itens s " +
-         "where p.usuarioid = :id and (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
-         "or lower(s.cardId) like lower(concat('%', :busca, '%'))) " +
-         "and s.ativo = :ativo " +
-         "order by s.id DESC")
+ //buscando status do usuario que foi fechado
+
+// @Query("select p from Issue p left join fetch p.itens s " +
+//         "where p.usuarioid = :id and (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
+//         "or lower(s.cardId) like lower(concat('%', :busca, '%')) ) " +
+//         "or lower(s.status) like lower(concat('%', :busca, '%'))  ) " +
+//         "and s.ativo = :ativo " +
+//         "order by s.id DESC")
+@Query("select p from Issue p left join fetch p.itens s " +
+        "where p.usuarioid = :id " +
+        "and (:busca is null or " +
+        "    lower(s.setor) like lower(concat('%', :busca, '%')) " +
+        "    or lower(s.cardId) like lower(concat('%', :busca, '%')) " +
+        "    or lower(s.status) like lower(concat('%', :busca, '%')) " +
+        "    or lower(s.tecnico_responsavel) like lower(concat('%', :busca, '%')) " +
+        ") " +
+        "and s.ativo = :ativo " +
+        "order by s.id DESC")
  Page findAllBySetorContainingIgnoreCaseTrueAndFalseByUsuario(Pageable pageable, long id,@Param("busca") String busca, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where p.usuarioid=:id and s.ativo = :ativo Order by s.id DESC")
  Page findAllByAtivoTrueAndFalseByUsuario(Pageable pageable, long id, boolean ativo);
