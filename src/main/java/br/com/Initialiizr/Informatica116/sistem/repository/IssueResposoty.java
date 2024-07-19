@@ -53,7 +53,7 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  @Query("select p from Issue p left join fetch p.itens s where p.usuarioid =:idusuario and s.status = 'AGUARDANDO_VALIDACAO' Order by s.id DESC")
  Page<Issue> FindAllByHardwareByStatusValidacao(Pageable page,long idusuario);
 
- @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by case when s.status = 'AGUARDANDO_TECNICO' then 1 else 2 end,p.id")
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo AND  p.filial=:filial Order by case when s.status = 'AGUARDANDO_TECNICO' then 1 else 2 end,s.id DESC")
  Page findAllByAtivo(Pageable page, int filial, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.usuarioid=:id Order by s.id DESC")
  Page<Issue> findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
@@ -100,7 +100,7 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
          "Order by s.id DESC")
  Page findAllBySetorContainingIgnoreCaseBusca(Pageable page,@Param("busca") String busca, int filial);
 
- @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo Order by case when s.status = 'AGUARDANDO_TECNICO' then 1 else 2 end,p.id")
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo Order by case when s.status = 'AGUARDANDO_TECNICO' then 1 else 2 end,s.id DESC")
  Page findAllByAtivoTrueAndFalse(Pageable page, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = true AND  s.status=:status Order by s.id DESC")
 
