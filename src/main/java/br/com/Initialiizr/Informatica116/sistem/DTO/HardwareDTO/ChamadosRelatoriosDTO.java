@@ -21,6 +21,7 @@ public class ChamadosRelatoriosDTO {
     private String titulo;
     private String setor;
     private  String solicitacao;
+    private Integer matricula;
     private String patrimonio;
     private String equipamento;
     private Status status ;

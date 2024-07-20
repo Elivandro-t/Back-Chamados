@@ -49,6 +49,7 @@ public class Model {
     private boolean done;
     private String gmid;
     private  Integer filial;
+    private Integer matricula;
     private String tell;
     private String cpf;
     private String emailGestorAprovador;

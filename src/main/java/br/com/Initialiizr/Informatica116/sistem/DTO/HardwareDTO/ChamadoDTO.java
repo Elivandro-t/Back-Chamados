@@ -45,6 +45,7 @@ public class ChamadoDTO {
     private  Integer filial;
     private String funcao;
     private String tecnico_responsavel;
+    private Integer matricula;
     private String tell;
     private String centro_de_custo;
     private List<ImagensDTO> imagens;
