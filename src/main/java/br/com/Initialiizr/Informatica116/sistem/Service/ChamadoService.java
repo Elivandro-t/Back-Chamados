@@ -386,24 +386,26 @@ public class ChamadoService implements ChamadoInterface {
         throw new RuntimeException("nada encontrado no banco");
 
     }
-
+// listando api pra monitoramento
     public Page<RelatorioDto> Relatorio(Pageable page, String setor,
-                                        String dataAntes, String dataDepois,
-                                        int filial, boolean ativo) {
+                                        String dataAntes, String dataDepois, boolean ativo) {
+        String busca = setor != null ? setor : ""; // Define a busca como setor se não for nulo
         if(dataAntes!=null&&dataDepois!=null){
-            return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTruefilter(page,dataAntes,dataDepois,filial)
+            return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrueAndFalse(page,dataAntes,dataDepois,ativo)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
-        if(setor!=null){
-            return hardwareRepository.findAllBySetorContainingIgnoreCaseBusca(page,setor,filial)
+        else if(setor!=null){
+            return hardwareRepository.findAllBySetorContainingIgnoreCaseTrueAndFalse(page,busca,ativo)
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
+        else {
 
-        var dados = hardwareRepository.findAllByAtivoT(page,filial,ativo)
-                .map(e->modelMapper.map(e, IssueDTO.class));
+            var dados = hardwareRepository.findAllByAtivoTrueAndFalse(page,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
 
-        return  dados;
-//        }ss));
+            return  dados;
+        }
+
     }
 
 

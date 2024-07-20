@@ -58,15 +58,14 @@ public class ControlerChamado {
         return service.ListarChamadosFiliais(page,Setor,dataAntes,dataDepois,ativo);
     }
 
-    @GetMapping("/relatorio/{filial}")
+    @GetMapping("/relatorio")
     public Page<RelatorioDto> relatorio(Pageable page,
                                         @RequestParam(name = "setor",required = false) String Setor,
                                         @RequestParam(name = "dataAntes",required = false) String dataAntes,
                                         @RequestParam(name = "dataDepois",required = false) String dataDepois,
-                                        @RequestParam(name = "ativo",required = false) boolean ativo,
-                                        @PathVariable int filial){
+                                        @RequestParam(name = "ativo",required = false) boolean ativo){
 
-        return service.Relatorio(page,Setor,dataAntes,dataDepois,filial,ativo);
+        return service.Relatorio(page,Setor,dataAntes,dataDepois,ativo);
     }
     @GetMapping("/lista/aguardando/{id}")
     public Page<IssueDTO> listaValidando(@PageableDefault Pageable pageable, @PathVariable long id){
