@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET,"/lista/setor").permitAll()
                         .requestMatchers(HttpMethod.GET,"/send/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/registrar").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/relatorio/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/relatorio").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(filterValidation, UsernamePasswordAuthenticationFilter.class)
