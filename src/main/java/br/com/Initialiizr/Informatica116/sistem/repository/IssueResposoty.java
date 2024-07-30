@@ -60,17 +60,6 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  Page<Issue> findAllDataByUserAtivoTrue(Pageable page,long id, String dataAntes, String dataDepois);
 
 
-// @Query("select distinct p from Issue p " +
-//         "left join fetch p.itens s " +
-//         "where (" +
-//         "  lower(s.descricao) like lower(concat('%', :searchTerm, '%')) " +
-//         "  or lower(s.status) like lower(concat('%', :searchTerm, '%'))) " +
-//         "s.ativo = true " +
-//         "and p.usuarioid = :id " +
-//                 "and "+
-//         "order by s.id DESC")
-// Page findIssuesWithItemsByUserIdAndSearchTerm(Pageable page,@Param("id") Long id, @Param("searchTerm") String searchTerm);
-
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.filial=:filial Order by s.setor ASC")
 
  Page findAllDataAntesAndDataDepoisByAtivoTruefilter(Pageable page, String dataAntes, String dataDepois, int filial);
@@ -129,12 +118,15 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
 
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo= :ativo and s.tecnicoid = :idTecnico Order by s.id DESC")
  Page findAllDataAntesAndDataDepoisByAtivoTrueAndFalseTec(Pageable page, String dataAntes, String dataDepois, long idTecnico, boolean ativo);
+
  @Query("select p from Issue p left join fetch p.itens s " +
          "where (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
          "or lower(s.cardId) like lower(concat('%', :busca, '%'))) " +
-         "and s.ativo = :ativo and s.tecnicoid=:idTecnico " +
+         "and s.ativo = :ativo " +
+         "and s.tecnicoid = :idTecnico "+
          "order by s.id DESC")
- Page findAllBySetorContainingIgnoreCaseTrueAndFalseAndTec(Pageable page, long idTecnico, String busca, boolean ativo);
+ Page findAllBySetorContainingIgnoreCaseTrueAndFalseAndTec(Pageable page, long idTecnico,@Param("busca") String busca, boolean ativo);
+
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo and s.tecnicoid=:idTecnico Order by case when s.status = 'EM_ANDAMENTO' then 1 else 2 end,s.id DESC")
  Page findAllByAtivoTrueAndFalseAndTecnico(Pageable page, long idTecnico, boolean ativo);
 }

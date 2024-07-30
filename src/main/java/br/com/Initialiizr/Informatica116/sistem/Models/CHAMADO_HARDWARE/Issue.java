@@ -30,6 +30,7 @@ public class Issue {
     private String usuario_logado;
     @NotNull
     private int filial;
+    private  String contato;
     @NotBlank
     private String servico;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "issue")

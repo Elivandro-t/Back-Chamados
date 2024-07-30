@@ -16,6 +16,7 @@ public class IssueDTO {
     private long usuarioid;
     private String usuario_logado;
     private int filial;
+    private  String contato;
     private String servico;
     private List<ChamadoDTO> itens;
     private int TotaldeItens;
