@@ -10,12 +10,15 @@ import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ChamadoService2 {
@@ -54,4 +57,35 @@ public class ChamadoService2 {
         issueResposoty.save(issue);
         return  ResponseEntity.ok().body(new MSG("status fechado"));
     }
+// Listando chamados atrelado ao tecnico
+    public Page<IssueDTO> ListarChamadosTecnico(Pageable page,long idTecnico, String setor,
+                                                String dataAntes, String dataDepois,
+                                                boolean ativo) {
+        String busca = setor != null ? setor : ""; // Define a busca como setor se não for nulo
+        if(dataAntes!=null&&dataDepois!=null){
+            return issueResposoty.findAllDataAntesAndDataDepoisByAtivoTrueAndFalseTec(page,dataAntes,dataDepois,idTecnico,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+        }
+        else if(setor!=null){
+            return issueResposoty.findAllBySetorContainingIgnoreCaseTrueAndFalseAndTec(page,idTecnico,busca,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+        }
+        else {
+
+            var dados = issueResposoty.findAllByAtivoTrueAndFalseAndTecnico(page,idTecnico,ativo)
+                    .map(e->modelMapper.map(e, IssueDTO.class));
+
+            return  dados;
+        }
+
+    }
+//    public Page<IssueDTO> pegarChamadoIdTecnic(long id, Pageable pageable){
+//        List<Issue> lista = issueResposoty.findAllByUsuarioidByIdTesc(id,pageable );
+//        List<IssueDTO> lis = new ArrayList<>();
+//        for (Issue d:lista){
+//            var map = modelMapper.map(d, IssueDTO.class);
+//            lis.add(map);
+//        }
+//        return new PageImpl<>( lis);
+//    }
 }

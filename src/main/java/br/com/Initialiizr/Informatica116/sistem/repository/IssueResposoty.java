@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -69,9 +70,7 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
 //                 "and "+
 //         "order by s.id DESC")
 // Page findIssuesWithItemsByUserIdAndSearchTerm(Pageable page,@Param("id") Long id, @Param("searchTerm") String searchTerm);
- @Query("select p from Issue p left join fetch p.itens s where s.tecnicoid = :id Order by s.id DESC ")
 
- List<Issue> findAllByUsuarioidByIdTesc(long id, Pageable pageable);
  @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo=true and p.filial=:filial Order by s.setor ASC")
 
  Page findAllDataAntesAndDataDepoisByAtivoTruefilter(Pageable page, String dataAntes, String dataDepois, int filial);
@@ -126,4 +125,21 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
  Page findAllBySetorContainingIgnoreCaseTrueAndFalseByUsuario(Pageable pageable, long id,@Param("busca") String busca, boolean ativo);
  @Query("select p from Issue p left join fetch p.itens s where p.usuarioid=:id and s.ativo = :ativo Order by s.id DESC")
  Page findAllByAtivoTrueAndFalseByUsuario(Pageable pageable, long id, boolean ativo);
+
+
+ @Query("select p from Issue p left join fetch p.itens s where s.datacreate between :dataAntes and :dataDepois and s.ativo= :ativo and s.tecnicoid = :idTecnico Order by s.id DESC")
+ Page findAllDataAntesAndDataDepoisByAtivoTrueAndFalseTec(Pageable page, String dataAntes, String dataDepois, long idTecnico, boolean ativo);
+ @Query("select p from Issue p left join fetch p.itens s " +
+         "where (:busca is null or lower(s.setor) like lower(concat('%', :busca, '%')) " +
+         "or lower(s.cardId) like lower(concat('%', :busca, '%'))) " +
+         "and s.ativo = :ativo and s.tecnicoid=:idTecnico " +
+         "order by s.id DESC")
+ Page findAllBySetorContainingIgnoreCaseTrueAndFalseAndTec(Pageable page, long idTecnico, String busca, boolean ativo);
+ @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo and s.tecnicoid=:idTecnico Order by case when s.status = 'EM_ANDAMENTO' then 1 else 2 end,s.id DESC")
+ Page findAllByAtivoTrueAndFalseAndTecnico(Pageable page, long idTecnico, boolean ativo);
 }
+
+//
+//@Query("select p from Issue p left join fetch p.itens s where s.tecnicoid = :id Order by s.id DESC ")
+//
+//List<Issue> findAllByUsuarioidByIdTesc(long id, Pageable pageable);

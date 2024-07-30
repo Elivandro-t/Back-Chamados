@@ -86,8 +86,13 @@ public class ControlerChamado {
     }
     // pegando chamado por id de usuario por filial
     @GetMapping("/chamado/tecnico/{id}")
-    public Page<IssueDTO> pegarChamdoTsc(@PathVariable long id, @PageableDefault(size = 10) Pageable page){
-        var response = service.pegarChamadoIdTecnic(id,page);
+    public Page<IssueDTO> pegarChamdoTsc(Pageable page,
+                                         @PathVariable long id,
+                                         @RequestParam(name = "setor",required = false) String Setor,
+                                         @RequestParam(name = "dataAntes",required = false) String dataAntes,
+                                         @RequestParam(name = "dataDepois",required = false) String dataDepois,
+                                         @RequestParam(name = "ativo",required = false) boolean ativo){
+        var response = service2.ListarChamadosTecnico(page,id,Setor,dataAntes,dataDepois,ativo);
         return response;
     }
     @GetMapping("/chamado/unit/{id}")

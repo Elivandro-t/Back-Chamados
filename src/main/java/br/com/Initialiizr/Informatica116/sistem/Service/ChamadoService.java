@@ -66,55 +66,6 @@ public class ChamadoService implements ChamadoInterface {
     //servico de registo de chamado
     @Override
     public IssueDTO registrar(String DTO, MultipartFile[] files) {
-//        try{;
-//            List<Imagens> itens = new ArrayList<>();
-//            IssueDTO issueDTO = convertJson.convertJson(DTO, IssueDTO.class);
-//            Issue chamado = modelMapper.map(issueDTO, Issue.class);
-//            chamado.getItens().forEach(e->{
-//                e.setStatus(Status.AGUARDANDO_TECNICO);
-//                e.setIssue(chamado);
-//                e.Datas(LocalDateTime.now());
-//                e.DataCreate(LocalDateTime.now());
-//                e.setAtivo(true);
-//                e.setCardId("CARD-"+chamado.gerarCode());
-//            });
-//            chamado.setServico("hardware");
-//            if(files!=null){
-//                for(MultipartFile file:files){
-//                    if(file!=null){
-//                        String nameFile =endpoint+"imagens"+"/"+ file.getOriginalFilename();
-//                        byte[] bytes = file.getBytes();
-//                        ImagensDTO imagensDTO = new ImagensDTO(nameFile);
-//                        Imagens imagens = modelMapper.map(imagensDTO,Imagens.class);
-//                        System.out.println("minhas imagens "+nameFile);
-//                        for (Chamado chamdoe:chamado.getItens()){
-//                            imagens.setChamado(chamdoe);
-//                            chamdoe.setImagens(itens);
-//                            itens.add(imagens);
-//                        }
-//                        String pathName = "Img";
-//                        File path = new File(pathName);
-//                        String name =pathName+"/"+ file.getOriginalFilename();
-//                        if(!path.exists()){
-//                            path.mkdir();
-//                        }
-//                        Files.write(Paths.get(name), bytes);
-//                    }
-//                }
-//            }
-//            var s = hardwareRepository.findOneByUsuarioid(issueDTO.getUsuarioid());
-//
-//            var chamadoItens = hardwareRepository.findOneById(issueDTO.getId());
-//            if(chamadoItens!=null) {
-//                chamadoItens.getItens().addAll(chamado.getItens());
-//                hardwareRepository.save(chamadoItens);
-//                return modelMapper.map(chamado, IssueDTO.class);
-//            } else {
-//                Issue issueSalvo = hardwareRepository.save(chamado);
-//                return modelMapper.map(issueSalvo, IssueDTO.class);
-//            } }catch (IOException e){
-//            throw  new RuntimeException(e);
-//        }
         try{
             List<Imagens> itens = new ArrayList<>();
             IssueDTO issueDTO = convertJson.convertJson(DTO, IssueDTO.class);
@@ -254,15 +205,15 @@ public class ChamadoService implements ChamadoInterface {
             return  dados;
         }
     }
-    public Page<IssueDTO> pegarChamadoIdTecnic(long id, Pageable pageable){
-        List<Issue> lista = hardwareRepository.findAllByUsuarioidByIdTesc(id,pageable );
-        List<IssueDTO> lis = new ArrayList<>();
-        for (Issue d:lista){
-            var map = modelMapper.map(d, IssueDTO.class);
-            lis.add(map);
-        }
-        return new PageImpl<>( lis);
-    }
+//    public Page<IssueDTO> pegarChamadoIdTecnic(long id, Pageable pageable){
+//        List<Issue> lista = hardwareRepository.findAllByUsuarioidByIdTesc(id,pageable );
+//        List<IssueDTO> lis = new ArrayList<>();
+//        for (Issue d:lista){
+//            var map = modelMapper.map(d, IssueDTO.class);
+//            lis.add(map);
+//        }
+//        return new PageImpl<>( lis);
+//    }
     public ResponseEntity update(long id,String data){
         UpdateChamado updateChamado = convertJson.convertJson(data,UpdateChamado.class);
         Issue lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.getId());
