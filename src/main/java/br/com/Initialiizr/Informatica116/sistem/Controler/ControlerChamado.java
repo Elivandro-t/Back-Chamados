@@ -6,6 +6,8 @@ import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService2;
+import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
+import br.com.Initialiizr.Informatica116.sistem.validators.Msg;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -164,5 +166,11 @@ public class ControlerChamado {
     public  ResponseEntity<StatusOneDTO> OneStatus(@PathVariable long id, @PathVariable("chamadoCard") String card){
         var result =  service.OneStatus(id,card);
         return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("/chamado/delete/{id}")
+    public  ResponseEntity<MSG> delete(@PathVariable long id){
+        String msg =service2.RemoverChamado(id);
+        return ResponseEntity.ok(new MSG(msg));
     }
 }

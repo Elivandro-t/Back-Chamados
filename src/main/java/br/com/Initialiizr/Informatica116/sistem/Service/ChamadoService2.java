@@ -1,14 +1,17 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
+import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -79,13 +82,21 @@ public class ChamadoService2 {
         }
 
     }
-//    public Page<IssueDTO> pegarChamadoIdTecnic(long id, Pageable pageable){
-//        List<Issue> lista = issueResposoty.findAllByUsuarioidByIdTesc(id,pageable );
-//        List<IssueDTO> lis = new ArrayList<>();
-//        for (Issue d:lista){
-//            var map = modelMapper.map(d, IssueDTO.class);
-//            lis.add(map);
-//        }
-//        return new PageImpl<>( lis);
-//    }
+
+    public  String RemoverChamado(long id){
+        try {
+            var remove = issueResposoty.findOneById(id);
+            if (remove != null) {
+                issueResposoty.delete(remove);
+                return "Chamado com ID " + id + " deletado com sucesso";
+            } else {
+                return "Chamado com ID " + id + " não encontrado";
+            }
+        } catch (EmptyResultDataAccessException e) {
+            return "Chamado com ID " + id + " não encontrado";
+        } catch (Exception e) {
+            // Tratamento genérico de exceções
+            return "Erro ao tentar remover o chamado: " + e.getMessage();
+        }
+    }
 }
