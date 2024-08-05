@@ -99,9 +99,9 @@ public class UsuarioControler {
                      String token = tokenService.geratoken(user, user.getAuthorities());
                      return ResponseEntity.ok(new RefreshtokenDTO(token,request.getRefreshtoken()));
                  })
-                 .orElseThrow(()->new CredentialsExpiredException("erro ao validar token"));
+                 .orElseThrow(()->new CredentialsExpiredException("Refresh token expirado"));
         } catch (CredentialsExpiredException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Erro ao validar token");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Erro("Refresh token expirado"));
         }
     }
     @PutMapping("/alterar/password")
