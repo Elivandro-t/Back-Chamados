@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -21,6 +22,5 @@ public class IssueDTO {
     private List<ChamadoDTO> itens;
     private int TotaldeItens;
     private  int total_itens;
-
 
 }

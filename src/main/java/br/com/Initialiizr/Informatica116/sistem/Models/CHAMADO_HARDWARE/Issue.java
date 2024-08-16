@@ -1,6 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.UpdateChamado;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -33,13 +35,14 @@ public class Issue {
     private  String contato;
     @NotBlank
     private String servico;
+    @JsonDeserialize
+    private LocalDateTime hora_aceito;
+    private  LocalDateTime data_criacao;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "issue")
     private Set<Chamado> itens = new HashSet<>();
     public String gerarCode(){
         int codigobase = 4000;
-
             return String.valueOf(gerarrandom(codigobase));
-
     }
     private int gerarrandom(int numero){
         Random random = new Random();

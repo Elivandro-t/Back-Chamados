@@ -25,7 +25,7 @@ public class Model {
     private long sistemaid;
     @NotBlank
     private  String solicitacao;
-    @NotNull
+    @NotBlank
     private String cardId;
     private String issuetype;
     @NotBlank
@@ -60,6 +60,7 @@ public class Model {
     private String data_nasc;
     private String centro_de_custo;
     private String funcao;
+    private LocalDateTime dataTecnicoAceito;
     public  String Datas(LocalDateTime data){
         DateTimeFormatter pattern= DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
         String dataFormat = data.format(pattern);

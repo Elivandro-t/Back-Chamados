@@ -11,6 +11,8 @@ import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoInterface;
+import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoValidator.ValidationComponent;
+import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoValidator.ValidationDiaValid;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
 import org.modelmapper.ModelMapper;
@@ -55,6 +57,10 @@ public class ChamadoService implements ChamadoInterface {
     ServiceHardware serviceHardware;
     @Autowired
     ValidationsTec validationsTec;
+    @Autowired
+    private ValidationComponent validationComponent;
+//    @Autowired
+//    private ValidationDiaValid validationDiaValid;
     @Value("${endpoint}")
     private String endpoint;
     @Autowired
@@ -70,6 +76,10 @@ public class ChamadoService implements ChamadoInterface {
             List<Imagens> itens = new ArrayList<>();
             IssueDTO issueDTO = convertJson.convertJson(DTO, IssueDTO.class);
             Issue chamado = modelMapper.map(issueDTO, Issue.class);
+            chamado.setData_criacao(LocalDateTime.now());
+//            // validaçao de dia ou hora de atendimento
+//            validationDiaValid.validation(chamado);
+
             chamado.getItens().forEach(e->{
                 e.setStatus(Status.AGUARDANDO_TECNICO);
                 e.setIssue(chamado);
@@ -219,10 +229,12 @@ public class ChamadoService implements ChamadoInterface {
         Issue lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.getId());
         validationsTec.existeTecnico(lista,updateChamado.getTecnicoid());
         lista.atualiza(updateChamado);
+        lista.setHora_aceito(LocalDateTime.now());
         lista.getItens().forEach(
                 e->{
                     e.setStatus(Status.EM_ANDAMENTO);
                     e.setDone(true);
+                    e.setDataTecnicoAceito(LocalDateTime.now());
                 }
         );
          modelMapper.map(lista, IssueDTO.class);
@@ -236,8 +248,10 @@ public class ChamadoService implements ChamadoInterface {
             throw new RuntimeException("nada encontrado");
         }
         validationsTec.Valid(issue,UsuarioLogado);
-        validationsTec.StatusvalidFechado(issue);
+//        validationsTec.StatusvalidFechado(issue);
+        validationComponent.validation(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_TECNICO));
+        issue.setHora_aceito(null);
         issue.getItens().forEach(e->{
             e.setAceito(false);
             e.setDone(false);
