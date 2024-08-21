@@ -30,7 +30,6 @@ public class ChamadoDTO {
     private boolean aceito;
     private boolean client_feito;
     private boolean done;
-    private String data_chamdo_feito;
     private String datacreate;
     @JsonFormat(pattern = "dd-MM-yyyy")
     String data;
@@ -40,7 +39,6 @@ public class ChamadoDTO {
     private String usuario;
     private long tecnicoid ;
     private String cpf;
-    private String nome_mae;
     private String data_admin;
     private String data_nasc;
     private  Integer filial;

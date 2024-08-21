@@ -129,6 +129,9 @@ public interface IssueResposoty extends JpaRepository<Issue,Long> {
 
  @Query("select p from Issue p left join fetch p.itens s where s.ativo = :ativo and s.tecnicoid=:idTecnico Order by case when s.status = 'EM_ANDAMENTO' then 1 else 2 end,s.id DESC")
  Page findAllByAtivoTrueAndFalseAndTecnico(Pageable page, long idTecnico, boolean ativo);
+
+     @Query("select p from Issue p left join fetch p.itens s where s.ativo = true")
+    List<Issue> findAllByAtivoStatusValidacao();
 }
 
 //

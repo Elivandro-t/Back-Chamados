@@ -64,7 +64,7 @@ public class ChamadoService implements ChamadoInterface {
     @Value("${endpoint}")
     private String endpoint;
     @Autowired
-    BotService botService;
+//    BotService botService;
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
     public ChamadoService(IssueResposoty issueResposoty){
         this.hardwareRepository = issueResposoty;
@@ -115,13 +115,13 @@ public class ChamadoService implements ChamadoInterface {
                 Issue issueSalvo = hardwareRepository.save(chamadoItens);
                 var hf = modelMapper.map(issueSalvo, IssueDTO.class);
                 for (ChamadoDTO chamadoDTO:hf.getItens()){
-                    botService.enviarNotificacaoChamado(chamadoDTO.getCardId(), issueSalvo.getUsuario_logado(),issueSalvo.getUsuarioid(),chamadoDTO.getId(),chamadoDTO.getData(),issueSalvo.getServico());
+//                    botService.enviarNotificacaoChamado(chamadoDTO.getCardId(), issueSalvo.getUsuario_logado(),issueSalvo.getUsuarioid(),chamadoDTO.getId(),chamadoDTO.getData(),issueSalvo.getServico());
                 }                return modelMapper.map(chamado, IssueDTO.class);
             } else {
                 Issue issueSalvo = hardwareRepository.save(chamado);
                 var hf = modelMapper.map(issueSalvo, IssueDTO.class);
                 for (ChamadoDTO c:hf.getItens()){
-                    botService.enviarNotificacaoChamado(c.getCardId(), issueSalvo.getUsuario_logado(),issueSalvo.getUsuarioid(),c.getId(),c.getData(),issueSalvo.getServico());
+//                    botService.enviarNotificacaoChamado(c.getCardId(), issueSalvo.getUsuario_logado(),issueSalvo.getUsuarioid(),c.getId(),c.getData(),issueSalvo.getServico());
                 }
                 return modelMapper.map(issueSalvo, IssueDTO.class);
             } }catch (IOException e){
@@ -258,6 +258,7 @@ public class ChamadoService implements ChamadoInterface {
             e.setClient_feito(false);
             e.setTecnicoid(0);
             e.setTecnico_responsavel(null);
+            e.setData_chamdo_feito(null);
         });
         return ResponseEntity.ok(new Mensagem("Status atualizado"));
     }
@@ -272,7 +273,7 @@ public class ChamadoService implements ChamadoInterface {
         }
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Status(issue);
-        issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
+        issue.getItens().forEach(e->e.setData_chamdo_feito(LocalDateTime.now()));
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
         issue.getItens().forEach(e->e.setAceito(true)
         );
@@ -374,39 +375,5 @@ public class ChamadoService implements ChamadoInterface {
     }
 
 
-    public void verificarEFecharChamadosAguardandoValidacao() {
-        List<Issue> chamadosAguardandoValidacao = hardwareRepository.findByStatusAndDataInicioEsperaBefore(Status.AGUARDANDO_VALIDACAO);
 
-        for (Issue chamado : chamadosAguardandoValidacao) {
-            boolean fechouChamado = false;
-
-            for (Chamado item : chamado.getItens()) {
-                String dataFeitoStr = item.getData_chamdo_feito();
-                if (dataFeitoStr != null) {
-                    LocalDateTime dataFeito = LocalDateTime.parse(dataFeitoStr);
-                    LocalDateTime agora = LocalDateTime.now();
-
-                    // Calcula a diferença de tempo em minutos
-                    long diferencaMinutos = Duration.between(dataFeito, agora).toMinutes();
-
-                    if (diferencaMinutos >= 2) {
-                        // Marca que pelo menos um item foi fechado
-                        fechouChamado = true;
-
-                        // Realiza as operações para fechar o item do chamado
-                        item.setStatus(Status.FECHADO);
-                        item.setAtivo(false);
-                        item.setAceito(false);
-                        item.DataFeito(LocalDateTime.now());
-                        item.setClient_feito(true);
-                    }
-                }
-            }
-
-            // Se pelo menos um item foi fechado, salva o chamado
-            if (fechouChamado) {
-                hardwareRepository.save(chamado);
-            }
-        }
-    }
 }

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -22,4 +23,14 @@ public class Comments {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "comment")
     private List<ListaComments> itens;
 
+    public Comments(long chamadoid, String usuario, String comentario, String email, String img) {
+        this.chamadoid = chamadoid;
+        this.itens.forEach(e->{
+            e.Datas(LocalDateTime.now());
+            e.setComments(comentario);
+            e.setEmail(email);
+            e.setComment(this);
+            e.setUserImagem(img);
+        });
+    }
 }

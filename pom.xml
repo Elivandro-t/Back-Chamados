@@ -101,7 +101,12 @@
 <!--			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>-->
 <!--			<version>4.1.1</version>-->
 <!--		</dependency>-->
-
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20231013</version>
+		</dependency>
+		<!--dependencia json-->
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>

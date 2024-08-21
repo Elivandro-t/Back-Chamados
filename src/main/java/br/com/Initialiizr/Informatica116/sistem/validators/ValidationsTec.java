@@ -139,7 +139,6 @@ public class ValidationsTec {
             issue.getItens().forEach(e->e.setAtivo(false));
             issue.getItens().forEach(e->e.setAceito(false));
             issue.getItens().forEach(e->e.setClient_feito(true));
-            issue.getItens().forEach(e->e.DataFeito(LocalDateTime.now()));
             issueResposoty.save(issue);
             System.out.println("Status atualizado para 'feito'.");
         }

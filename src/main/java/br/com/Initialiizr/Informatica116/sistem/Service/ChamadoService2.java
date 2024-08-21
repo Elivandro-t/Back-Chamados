@@ -53,7 +53,6 @@ public class ChamadoService2 {
             e.setAtivo(false);
             e.setAceito(false);
             e.setClient_feito(true);
-            e.DataFeito(LocalDateTime.now());
             e.setDone(true);
             e.setTecnico_responsavel(user.getName() + " "+user.getLastname());
         });

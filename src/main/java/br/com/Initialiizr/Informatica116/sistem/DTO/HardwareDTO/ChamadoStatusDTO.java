@@ -13,7 +13,6 @@ import lombok.Setter;
 public class ChamadoStatusDTO {
     private long id;
     private Status status ;
-    private String data_chamdo_feito;
     @JsonFormat(pattern = "dd-MM-yyyy")
     String data;
     private boolean ativo;
