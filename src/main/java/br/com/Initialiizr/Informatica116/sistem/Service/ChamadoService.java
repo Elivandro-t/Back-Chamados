@@ -129,8 +129,11 @@ public class ChamadoService implements ChamadoInterface {
                 var hf = modelMapper.map(issueSalvo, IssueDTO.class);
 
                 for (Chamado c:issueSalvo.getItens()){
-                    commetService.EnvioComentarios(c.getId(),"✅ Sua solicitação foi recebida com sucesso! \n" +
-                            "\n");
+                    commetService.EnvioComentarios(c.getId(),"✅ Sua solicitação foi recebida com sucesso!\n" +
+                            "\n" +
+                            "⛔Para solicitações que requerem aprovação do gestor, caso não sejam aprovadas em até 2 dias, o chamado será cancelado e será necessário abrir um novo chamado.\n" +
+                            "\n" +
+                            "\uD83D\uDCAC Caso precise adicionar informações após abrir o chamado, utilize o campo de comentários para entrar em contato com o nosso time de suporte.");
                 }
                 return modelMapper.map(issueSalvo, IssueDTO.class);
             } }catch (IOException e){
