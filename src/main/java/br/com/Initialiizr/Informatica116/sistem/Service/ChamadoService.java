@@ -149,7 +149,6 @@ public class ChamadoService implements ChamadoInterface {
         }
         throw new RuntimeException("nada encontrado no banco");
     }
-    @Async
     public Page<IssueDTO> Listar(Pageable page, String setor,
                                  String dataAntes, String dataDepois,
                                  int filial,boolean ativo) {
