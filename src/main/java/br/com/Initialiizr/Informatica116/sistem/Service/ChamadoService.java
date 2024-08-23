@@ -241,13 +241,10 @@ public class ChamadoService implements ChamadoInterface {
                     e.setDataTecnicoAceito(LocalDateTime.now());
                 }
         );
-        commetService.EnvioComentarios(updateChamado.getId(),"Seu chamado foi concluído com sucesso. Por favor, valide sua solicitação para confirmar que tudo está correto. Caso não esteja de acordo ou precise de ajustes, você pode recusar a solicitação.\n" +
-                "\n" +
-                "Se não houver uma resposta ou validação dentro do prazo de 2 dias, o chamado será fechado automaticamente.\n" +
-                "\n" +
-                "Agradecemos pela sua colaboração!\n" +
-                "\n" +
-                "Suporte TI");
+        for (Chamado c:lista.getItens()){
+            commetService.EnvioComentarios(updateChamado.getId(),"O estado do seu pedido foi alterado para "+c.getStatus().name().replace("_",""));
+
+        }
         modelMapper.map(lista, IssueDTO.class);
         return ResponseEntity.ok(new MSG("tecnico adicionado ao chamado!"));
     }
@@ -293,6 +290,13 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e->e.setAceito(true)
         );
         for (Chamado c:issue.getItens()){
+            commetService.EnvioComentarios(c.getId(),"Seu chamado foi concluído com sucesso. Por favor, valide sua solicitação para confirmar que tudo está correto. Caso não esteja de acordo ou precise de ajustes, você pode recusar a solicitação.\n" +
+                    "\n" +
+                    "Se não houver uma resposta ou validação dentro do prazo de 2 dias, o chamado será fechado automaticamente.\n" +
+                    "\n" +
+                    "Agradecemos pela sua colaboração!\n" +
+                    "\n" +
+                    "Suporte TI");
             commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
 
         }
