@@ -247,7 +247,7 @@ public class ChamadoService implements ChamadoInterface {
                 }
         );
         for (Chamado c:lista.getItens()){
-            commetService.EnvioComentarios(updateChamado.getId(),"O estado do seu pedido foi alterado para "+c.getStatus().name().replace("_",""));
+            commetService.EnvioComentarios(updateChamado.getId(),"O estado do seu pedido foi alterado para Em andamento");
 
         }
         modelMapper.map(lista, IssueDTO.class);
@@ -274,7 +274,7 @@ public class ChamadoService implements ChamadoInterface {
             e.setData_chamdo_feito(null);
         });
         for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para Aguardando tecnico");
 
         }
         return ResponseEntity.ok(new Mensagem("Status atualizado"));
@@ -302,7 +302,7 @@ public class ChamadoService implements ChamadoInterface {
                     "Agradecemos pela sua colaboração!\n" +
                     "\n" +
                     "Suporte TI");
-            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para Aguardando validaçao");
 
         }
 
@@ -325,7 +325,7 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e->e.setClient_feito(true));
         hardwareRepository.save(issue);
         for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para Fechado");
 
         }
         return  ResponseEntity.ok().body(new MSG("status fechado"));
@@ -345,7 +345,7 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e->e.setData_chamdo_feito(null));
         hardwareRepository.save(issue);
         for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para Re aberto");
         }
         return ResponseEntity.ok().body(new MSG("chamado reaberto"));
     }
@@ -360,7 +360,7 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
         for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para Aguardando jira");
 
         }
         return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando jira"));
@@ -375,7 +375,7 @@ public class ChamadoService implements ChamadoInterface {
         validationsTec.Aprovador(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
         for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para Aguardando jira");
 
         }
         hardwareRepository.save(issue);
