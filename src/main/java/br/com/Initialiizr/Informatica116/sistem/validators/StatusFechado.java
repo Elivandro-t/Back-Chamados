@@ -67,7 +67,7 @@ public class StatusFechado {
         jsonObject.put("chamadoid", c.getId());
         items.put("usuario", "Resposta automática\n");
         items.put("email", "suporte.dev18@gmail.com");
-        items.put("userImagem", "https://suporte-infor.onrender.com/Logos/assistente.jpeg");
+        items.put("userImagem", "https://back-chamados.onrender.com/Logos/assistente.jpeg");
         items.put("comments", "Olá, " + itensChamados.getUsuario_logado() + "," + "\n" +
                 "\n" +
                 "Devido a falta de validação no período de 2 dias, o chamado foi encerrado.\n" +
