@@ -248,10 +248,10 @@ public class ChamadoService implements ChamadoInterface {
                 "Agradecemos pela sua colaboração!\n" +
                 "\n" +
                 "Suporte TI");
-         modelMapper.map(lista, IssueDTO.class);
+        modelMapper.map(lista, IssueDTO.class);
         return ResponseEntity.ok(new MSG("tecnico adicionado ao chamado!"));
     }
-    public ResponseEntity ClearTcnico(long id,String cardChamado,long UsuarioLogado){
+    public ResponseEntity ClearTcnico(long id,String cardChamado,long UsuarioLogado) throws IOException {
         var user =userRepository.getReferenceById(UsuarioLogado);
         System.out.println("meu id de usuario "+UsuarioLogado);
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
@@ -271,11 +271,15 @@ public class ChamadoService implements ChamadoInterface {
             e.setTecnico_responsavel(null);
             e.setData_chamdo_feito(null);
         });
+        for (Chamado c:issue.getItens()){
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+
+        }
         return ResponseEntity.ok(new Mensagem("Status atualizado"));
     }
 
     // enviando ao usuario quando o chamado for feito
-    public ResponseEntity validaChamado(long id,String cardChamado,long UsuarioLogado){
+    public ResponseEntity validaChamado(long id,String cardChamado,long UsuarioLogado) throws IOException {
         var user =userRepository.getReferenceById(UsuarioLogado);
         System.out.println("meu id de usuario "+UsuarioLogado);
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
@@ -288,10 +292,15 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
         issue.getItens().forEach(e->e.setAceito(true)
         );
+        for (Chamado c:issue.getItens()){
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+
+        }
+
         return ResponseEntity.ok(new MSG("status atualizado"));
     }
     // precisa ser feito validacao para o chamado nao ser aberto
-    public ResponseEntity validaChamadoUSer(long id, String cardChamado,long UsuarioLogado){
+    public ResponseEntity validaChamadoUSer(long id, String cardChamado,long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         System.out.println("meu id de usuario "+UsuarioLogado);
         Instant hora = Instant.now();
@@ -306,10 +315,14 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e->e.setAceito(false));
         issue.getItens().forEach(e->e.setClient_feito(true));
         hardwareRepository.save(issue);
+        for (Chamado c:issue.getItens()){
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+
+        }
         return  ResponseEntity.ok().body(new MSG("status fechado"));
     }
 
-    public ResponseEntity validaChamadoReaberto(long id, String cardChamado, long UsuarioLogado) {
+    public ResponseEntity validaChamadoReaberto(long id, String cardChamado, long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id, cardChamado);
         System.out.println("meu id de usuario " + UsuarioLogado);
         if (issue == null) {
@@ -322,10 +335,13 @@ public class ChamadoService implements ChamadoInterface {
         issue.getItens().forEach(e -> e.setAceito(false));
         issue.getItens().forEach(e->e.setData_chamdo_feito(null));
         hardwareRepository.save(issue);
+        for (Chamado c:issue.getItens()){
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+        }
         return ResponseEntity.ok().body(new MSG("chamado reaberto"));
     }
 
-    public ResponseEntity StatusJira(long id,String cardChamado,long UsuarioLogado){
+    public ResponseEntity StatusJira(long id,String cardChamado,long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
@@ -334,10 +350,14 @@ public class ChamadoService implements ChamadoInterface {
         validationsTec.StatusJira(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
+        for (Chamado c:issue.getItens()){
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+
+        }
         return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando jira"));
     }
 
-    public ResponseEntity StatusAtorizacao(long id,String cardChamado,long UsuarioLogado){
+    public ResponseEntity StatusAtorizacao(long id,String cardChamado,long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
@@ -345,6 +365,10 @@ public class ChamadoService implements ChamadoInterface {
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Aprovador(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
+        for (Chamado c:issue.getItens()){
+            commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para "+c.getStatus());
+
+        }
         hardwareRepository.save(issue);
         return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando aprovação"));
     }

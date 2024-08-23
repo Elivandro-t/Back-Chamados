@@ -118,12 +118,12 @@ public class ControlerChamado {
     }
     @PutMapping("chamado/concluido/{id}/chamadoCard/{chamadoCard}/{usuariologado}")
     @Transactional
-    public  ResponseEntity StatusFeito(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado){
+    public  ResponseEntity StatusFeito(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado) throws IOException {
         return  service.validaChamado(id,chamadoCard,usuariologado);
     }
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/fechado/{usuariologado}")
     @Transactional
-    public  ResponseEntity StatusValidacao(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
+    public  ResponseEntity StatusValidacao(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado) throws IOException {
 
         return service.validaChamadoUSer(id,idchamado,usuariologado);
 
@@ -137,25 +137,25 @@ public class ControlerChamado {
     }
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/jira/{usuariologado}")
     @Transactional
-    public  ResponseEntity StatusJira(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
+    public  ResponseEntity StatusJira(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado) throws IOException {
 
         return service.StatusJira(id,idchamado,usuariologado);
     }
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aprovador/{usuariologado}")
     @Transactional
-    public  ResponseEntity StatusAprovador(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
+    public  ResponseEntity StatusAprovador(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado) throws IOException {
         return service.StatusAtorizacao(id,idchamado,usuariologado);
     }
     @PutMapping("chamado/guardando-tecnico/{id}/chamadoCard/{chamadoCard}/tec/{usuariologado}")
     @Transactional
-    public  ResponseEntity StatusVoltaChamdo(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado){
+    public  ResponseEntity StatusVoltaChamdo(@PathVariable long id,@PathVariable("chamadoCard") String idchamado,@PathVariable long usuariologado) throws IOException {
         return service.ClearTcnico(id,idchamado,usuariologado);
     }
 
     // api de chamado aberto de validaçao //
     @PutMapping("chamado/validacao/{id}/chamadoCard/{chamadoCard}/aberto/{usuariologado}")
     @Transactional
-    public  ResponseEntity StatusFechado(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado){
+    public  ResponseEntity StatusFechado(@PathVariable long id,@PathVariable("chamadoCard") String chamadoCard,@PathVariable long usuariologado) throws IOException {
 
         return service.validaChamadoReaberto(id,chamadoCard,usuariologado);
 
