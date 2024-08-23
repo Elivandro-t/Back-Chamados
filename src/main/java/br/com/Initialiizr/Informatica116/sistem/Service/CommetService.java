@@ -6,11 +6,14 @@ import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.ImagensDTO;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Imagens;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.COMENTARIOS.Comments;
 import br.com.Initialiizr.Informatica116.sistem.Models.COMENTARIOS.ImagensComments;
 import br.com.Initialiizr.Informatica116.sistem.Models.COMENTARIOS.ListaComments;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.repository.CommentsRepository;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +39,8 @@ public class CommetService {
     @Value("${endpoint}")
     private String endpoint;
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
+    JSONObject items = new JSONObject();
+    JSONObject jsonObject = new JSONObject();
 
     public CommentsDTO comments(String commentsDTO, MultipartFile[] files) throws IOException {
         CommentsDTO data = convertJson.convertJson(commentsDTO, CommentsDTO.class);
@@ -85,6 +90,17 @@ public class CommetService {
         return modelMapper.map(comments,CommentsDTO.class);
     }
 
-
+    public void EnvioComentarios(long chamadoID,String msg) throws IOException {
+        jsonObject.put("chamadoid", chamadoID);
+        items.put("usuario", "Resposta automática\n");
+        items.put("email", "suporte.dev18@gmail.com");
+        items.put("userImagem", "https://back-chamados.onrender.com/Logos/assistente.jpeg");
+        items.put("comments",msg);
+        JSONArray itensArray = new JSONArray();
+        itensArray.put(items);
+        jsonObject.put("itens", itensArray);
+        String jsonString = jsonObject.toString(4); // 4 é a indentação para uma visualização mais legível do json exibido
+        comments(jsonString, null);
+    }
 
 }

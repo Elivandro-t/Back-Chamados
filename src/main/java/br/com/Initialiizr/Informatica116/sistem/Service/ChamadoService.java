@@ -61,6 +61,9 @@ public class ChamadoService implements ChamadoInterface {
     ValidationsTec validationsTec;
     @Autowired
     private ValidationComponent validationComponent;
+
+    @Autowired
+    private CommetService commetService;
 //    @Autowired
 //    private ValidationDiaValid validationDiaValid;
     @Value("${endpoint}")
@@ -124,8 +127,10 @@ public class ChamadoService implements ChamadoInterface {
             } else {
                 Issue issueSalvo = hardwareRepository.save(chamado);
                 var hf = modelMapper.map(issueSalvo, IssueDTO.class);
-                for (ChamadoDTO c:hf.getItens()){
-//                    botService.enviarNotificacaoChamado(c.getCardId(), issueSalvo.getUsuario_logado(),issueSalvo.getUsuarioid(),c.getId(),c.getData(),issueSalvo.getServico());
+
+                for (Chamado c:issueSalvo.getItens()){
+                    commetService.EnvioComentarios(c.getId(),"✅ Sua solicitação foi recebida com sucesso! \n" +
+                            "\n");
                 }
                 return modelMapper.map(issueSalvo, IssueDTO.class);
             } }catch (IOException e){
@@ -220,7 +225,7 @@ public class ChamadoService implements ChamadoInterface {
         }
     }
 
-    public ResponseEntity update(long id,String data){
+    public ResponseEntity update(long id,String data) throws IOException {
         UpdateChamado updateChamado = convertJson.convertJson(data,UpdateChamado.class);
         Issue lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.getId());
         validationsTec.existeTecnico(lista,updateChamado.getTecnicoid());
@@ -233,6 +238,13 @@ public class ChamadoService implements ChamadoInterface {
                     e.setDataTecnicoAceito(LocalDateTime.now());
                 }
         );
+        commetService.EnvioComentarios(updateChamado.getId(),"Seu chamado foi concluído com sucesso. Por favor, valide sua solicitação para confirmar que tudo está correto. Caso não esteja de acordo ou precise de ajustes, você pode recusar a solicitação.\n" +
+                "\n" +
+                "Se não houver uma resposta ou validação dentro do prazo de 2 dias, o chamado será fechado automaticamente.\n" +
+                "\n" +
+                "Agradecemos pela sua colaboração!\n" +
+                "\n" +
+                "Suporte TI");
          modelMapper.map(lista, IssueDTO.class);
         return ResponseEntity.ok(new MSG("tecnico adicionado ao chamado!"));
     }
