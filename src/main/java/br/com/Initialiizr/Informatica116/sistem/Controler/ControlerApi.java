@@ -11,7 +11,7 @@ import javax.crypto.MacSpi;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/send")
+@RequestMapping("/send/zap")
 public class ControlerApi {
     @Autowired
     ApiService api;

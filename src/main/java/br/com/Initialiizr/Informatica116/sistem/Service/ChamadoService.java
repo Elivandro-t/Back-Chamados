@@ -18,6 +18,7 @@ import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -70,10 +72,12 @@ public class ChamadoService implements ChamadoInterface {
         this.hardwareRepository = issueResposoty;
     }
     //servico de registo de chamado
+
     @Override
     public IssueDTO registrar(String DTO, MultipartFile[] files) {
         try{
             List<Imagens> itens = new ArrayList<>();
+
             IssueDTO issueDTO = convertJson.convertJson(DTO, IssueDTO.class);
             Issue chamado = modelMapper.map(issueDTO, Issue.class);
             chamado.setData_criacao(LocalDateTime.now());
@@ -145,6 +149,7 @@ public class ChamadoService implements ChamadoInterface {
         }
         throw new RuntimeException("nada encontrado no banco");
     }
+    @Async
     public Page<IssueDTO> Listar(Pageable page, String setor,
                                  String dataAntes, String dataDepois,
                                  int filial,boolean ativo) {
@@ -215,15 +220,7 @@ public class ChamadoService implements ChamadoInterface {
             return  dados;
         }
     }
-//    public Page<IssueDTO> pegarChamadoIdTecnic(long id, Pageable pageable){
-//        List<Issue> lista = hardwareRepository.findAllByUsuarioidByIdTesc(id,pageable );
-//        List<IssueDTO> lis = new ArrayList<>();
-//        for (Issue d:lista){
-//            var map = modelMapper.map(d, IssueDTO.class);
-//            lis.add(map);
-//        }
-//        return new PageImpl<>( lis);
-//    }
+
     public ResponseEntity update(long id,String data){
         UpdateChamado updateChamado = convertJson.convertJson(data,UpdateChamado.class);
         Issue lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.getId());

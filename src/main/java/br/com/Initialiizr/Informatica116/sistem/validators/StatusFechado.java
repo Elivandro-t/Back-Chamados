@@ -28,7 +28,6 @@ public class StatusFechado {
     @Autowired
     private CommetService commetService;
     JSONObject items = new JSONObject();
-
     JSONObject jsonObject = new JSONObject();
     @Scheduled(cron = "0 0/1 * * * *")
     public  void validation() throws IOException {
@@ -48,7 +47,7 @@ public class StatusFechado {
                         c.setDone(true);
                         c.setData_chamdo_feito(null);
                         modify = true;
-                        EnvioComentarios(itensChamados);
+                        EnvioComentarios(itensChamados, c);
                         // Exibindo o JSON como String
                     }
                 }
@@ -64,8 +63,8 @@ public class StatusFechado {
 
 
     };
-    private void EnvioComentarios(Issue itensChamados) throws IOException {
-        jsonObject.put("chamadoid", itensChamados.getId());
+    private void EnvioComentarios(Issue itensChamados, Chamado c) throws IOException {
+        jsonObject.put("chamadoid", c.getId());
         items.put("usuario", "Resposta automática\n");
         items.put("email", "suporte.dev18@gmail.com");
         items.put("userImagem", "https://suporte-infor.onrender.com/Logos/assistente.jpeg");

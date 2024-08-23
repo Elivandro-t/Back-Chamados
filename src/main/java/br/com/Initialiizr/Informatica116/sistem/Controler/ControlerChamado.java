@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +36,7 @@ public class ControlerChamado {
         var response = service.registrar(data,file);
         return ResponseEntity.ok().body(response);
     }
+
     @GetMapping("/lista/{filial}")
     public Page<IssueDTO> lista(Pageable page,
                                 @RequestParam(name = "setor",required = false) String Setor,

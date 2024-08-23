@@ -2,6 +2,7 @@ package br.com.Initialiizr.Informatica116.sistem.Service;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.Api.Api;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +25,16 @@ public class ApiService {
         // Crie o HttpClient
         HttpClient httpClient = HttpClient.newBuilder().build();
 
-        // Converta o objeto Api para JSON usando Jackson
-        ObjectMapper objectMapper = new ObjectMapper();
-        String jsonPayload = objectMapper.writeValueAsString(msg);
-
+        JSONObject json = new JSONObject();
+        json.put("number",msg.getNumber());
+        json.put("text",msg.getTextMessage());
+        System.out.println(json.toString());
         // Crie o HttpRequest com o corpo JSON e cabeçalhos
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .headers("apikey " + apiKey) // Adicione o cabeçalho Authorization
-                .POST(HttpRequest.BodyPublishers.ofString(String.valueOf(msg), StandardCharsets.UTF_8)) // Envia o JSON no corpo
+                .headers("apikey " + apiKey)
+                .header("Content-Type", "application/json")// Adicione o cabeçalho Authorization
+                .POST(HttpRequest.BodyPublishers.ofString(json.toString(), StandardCharsets.UTF_8)) // Envia o JSON no corpo
                 .build();
 
         // Envie a solicitação e obtenha a resposta
