@@ -51,6 +51,7 @@ public class ChamadoDTO {
     private String emailGestorAprovador;
     private String nomeDogestor;
     private String emailUsuario;
+    private String data_fechado;
 
 
 

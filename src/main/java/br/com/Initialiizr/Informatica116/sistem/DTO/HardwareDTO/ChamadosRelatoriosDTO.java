@@ -29,6 +29,7 @@ public class ChamadosRelatoriosDTO {
     private boolean client_feito;
     private boolean done;
     private String datacreate;
+    private String data_fechado;
     @JsonFormat(pattern = "dd-MM-yyyy")
     String data;
     private boolean ativo;

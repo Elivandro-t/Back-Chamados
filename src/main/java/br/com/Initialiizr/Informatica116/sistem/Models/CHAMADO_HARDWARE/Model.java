@@ -61,16 +61,17 @@ public class Model {
     private String data;
     private String datacreate;
     private LocalDateTime dataTecnicoAceito;
+    private String data_fechado;
     public  String Datas(LocalDateTime data){
         DateTimeFormatter pattern= DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
         String dataFormat = data.format(pattern);
         return this.data = dataFormat;
     }
-//    public  String DataFeito(LocalDateTime data){
-//        DateTimeFormatter  pattern= DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
-//        String dataFormat = data.format(pattern);
-//        return this.data_chamdo_feito = dataFormat;
-//    }
+    public  String DataFeito(LocalDateTime data){
+        DateTimeFormatter  pattern= DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+        String dataFormat = data.format(pattern);
+        return this.data_fechado = dataFormat;
+    }
     public  String DataCreate(LocalDateTime data){
         DateTimeFormatter  pattern= DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String dataFormat = data.format(pattern);

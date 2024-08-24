@@ -54,6 +54,7 @@ public class ChamadoService2 {
             e.setAceito(false);
             e.setClient_feito(true);
             e.setDone(true);
+            e.DataFeito(LocalDateTime.now());
             e.setTecnico_responsavel(user.getName() + " "+user.getLastname());
         });
         issueResposoty.save(issue);

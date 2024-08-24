@@ -319,10 +319,13 @@ public class ChamadoService implements ChamadoInterface {
         }
         // validacão de tecnico
         validationsTec.StatusvalidFechado(issue);
-        issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
-        issue.getItens().forEach(e->e.setAtivo(false));
-        issue.getItens().forEach(e->e.setAceito(false));
-        issue.getItens().forEach(e->e.setClient_feito(true));
+        issue.getItens().forEach(e->{
+            e.setStatus(Status.FECHADO);
+            e.setAtivo(false);
+            e.setAceito(false);
+            e.setClient_feito(true);
+            e.DataFeito(LocalDateTime.now());
+        });
         hardwareRepository.save(issue);
         for (Chamado c:issue.getItens()){
             commetService.EnvioComentarios(c.getId(),"O estado do seu pedido foi alterado para Fechado");
