@@ -17,6 +17,6 @@ public class ChamadoStatusDTO {
     String data;
     private boolean ativo;
     private String tecnico_responsavel ;
-    private  String data_feito;
+    private String data_fechado;
 
 }
