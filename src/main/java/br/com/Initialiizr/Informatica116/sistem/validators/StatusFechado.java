@@ -46,6 +46,7 @@ public class StatusFechado {
                         c.setClient_feito(true);
                         c.setDone(true);
                         c.setData_chamdo_feito(null);
+                        c.DataFeito(LocalDateTime.now());
                         modify = true;
                         EnvioComentarios(itensChamados, c);
                         // Exibindo o JSON como String
