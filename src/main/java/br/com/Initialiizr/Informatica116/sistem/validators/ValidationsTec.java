@@ -96,6 +96,9 @@ public class ValidationsTec {
             if(chamado.getStatus()==Status.FECHADO){
                 throw new RuntimeException("Chamado está fechado");
             }
+            if(chamado.getStatus()==Status.RECUSADO){
+                throw new RuntimeException("Chamado está recusado");
+            }
             else if(chamado.getStatus()==Status.RE_ABERTO){
                 throw new RuntimeException(" Chamado ja está aberto");
             }
