@@ -13,4 +13,6 @@ public interface SetorRepository extends JpaRepository<Setor,Long> {
     Optional getReferenceByName(String name);
     @Query("SELECT s FROM Setor s ORDER BY s.name asc")
     List<Setor> findAllOrderByDesc();
+
+   Optional<Setor> findOneByName(String setor);
 }

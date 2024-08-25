@@ -36,14 +36,6 @@ public class ValidationsTec {
         }
     }
 
-    public  void reaberto(Issue issueDTO, long usuariolog){
-        for (Chamado chamado: issueDTO.getItens()){
-            if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()==Status.AGUARDANDO_TECNICO){
-                throw new RuntimeException("Erro: AGUARDANDO TECNICO");
-            }
-            break;
-        }
-    }
     public  void Status(Issue issueDTO){
         var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
         System.out.println(user.getId());
@@ -58,56 +50,7 @@ public class ValidationsTec {
             break;
         }
     }
-    public  void StatusJira(Issue issueDTO){
-        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
-        for (Chamado c: issueDTO.getItens()){
-            Chamado chamado = modelMapper.map(c,Chamado.class);
-            if(chamado.getStatus()==Status.AGUARDANDO_VALIDACAO){
-                throw new RuntimeException("Erro: Status AGUARDANDO VALIDACAO");
-            }
-            else if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("Chamado está FECHADO!");
-            }
-            break;
-        }
-    }
-    public  void Aprovador(Issue issueDTO){
-        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
-        for (Chamado c: issueDTO.getItens()){
-            Chamado chamado = modelMapper.map(c,Chamado.class);
-            if(chamado.getStatus()==Status.AGUARDANDO_VALIDACAO){
-                throw new RuntimeException("Erro: Status AGUARDANDO VALIDACAO");
-            }
-            else if(chamado.getStatus()==Status.AGUARDANDO_JIRA){
-                throw new RuntimeException("Chamado está AGUARDANDO JIRA!");
-            }
-            else if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("Chamado está FECHADO!");
-            }
-            break;
-        }
-    }
 
-    public  void StatusvalidFechado(Issue issueDTO){
-        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
-        for (Chamado c: issueDTO.getItens()){
-            Chamado chamado = modelMapper.map(c,Chamado.class);
-            System.out.println(user.getId());
-            if(chamado.getStatus()==Status.FECHADO){
-                throw new RuntimeException("Chamado está fechado");
-            }
-            if(chamado.getStatus()==Status.RECUSADO){
-                throw new RuntimeException("Chamado está recusado");
-            }
-            else if(chamado.getStatus()==Status.RE_ABERTO){
-                throw new RuntimeException(" Chamado ja está aberto");
-            }
-            else if(chamado.getStatus()==Status.EM_ANDAMENTO){
-                throw new RuntimeException("Solicite validação ao usuario");
-            }
-            break;
-        }
-    }
     public  void existeTecnico(Issue issueDTO, long id){
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
@@ -135,15 +78,74 @@ public class ValidationsTec {
         Instant agora = Instant.now();
         return agora.isAfter(dataExpired());
     }
-    private void atualizarStatus(Issue issue) {
-        System.out.println("h " +Expired());
-        if (Expired()) {
-            issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
-            issue.getItens().forEach(e->e.setAtivo(false));
-            issue.getItens().forEach(e->e.setAceito(false));
-            issue.getItens().forEach(e->e.setClient_feito(true));
-            issueResposoty.save(issue);
-            System.out.println("Status atualizado para 'feito'.");
+//    private void atualizarStatus(Issue issue) {
+//        System.out.println("h " +Expired());
+//        if (Expired()) {
+//            issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
+//            issue.getItens().forEach(e->e.setAtivo(false));
+//            issue.getItens().forEach(e->e.setAceito(false));
+//            issue.getItens().forEach(e->e.setClient_feito(true));
+//            issueResposoty.save(issue);
+//            System.out.println("Status atualizado para 'feito'.");
+//        }
+//    }
+public  void StatusJira(Issue issueDTO){
+    var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
+    for (Chamado c: issueDTO.getItens()){
+        Chamado chamado = modelMapper.map(c,Chamado.class);
+        if(chamado.getStatus()== Status.AGUARDANDO_VALIDACAO){
+            throw new RuntimeException("Erro: Status AGUARDANDO VALIDACAO");
+        }
+        else if(chamado.getStatus()==Status.FECHADO){
+            throw new RuntimeException("Chamado está FECHADO!");
+        }
+        break;
+    }
+}
+
+    public  void Aprovador(Issue issueDTO){
+        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
+        for (Chamado c: issueDTO.getItens()){
+            Chamado chamado = modelMapper.map(c,Chamado.class);
+            if(chamado.getStatus()== Status.AGUARDANDO_VALIDACAO){
+                throw new RuntimeException("Erro: Status AGUARDANDO VALIDACAO");
+            }
+            else if(chamado.getStatus()==Status.AGUARDANDO_JIRA){
+                throw new RuntimeException("Chamado está AGUARDANDO JIRA!");
+            }
+            else if(chamado.getStatus()==Status.FECHADO){
+                throw new RuntimeException("Chamado está FECHADO!");
+            }
+            break;
         }
     }
+
+    public  void reaberto(Issue issueDTO){
+        for (Chamado chamado: issueDTO.getItens()){
+            if(chamado.getTecnico_responsavel()==null&&chamado.getStatus()== Status.AGUARDANDO_TECNICO){
+                throw new RuntimeException("Erro: AGUARDANDO TECNICO");
+            }
+            break;
+        }
+    }
+
+    public  void StatusvalidFechado(Issue issueDTO) {
+        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
+        for (Chamado c : issueDTO.getItens()) {
+            Chamado chamado = modelMapper.map(c, Chamado.class);
+            System.out.println(user.getId());
+            if (chamado.getStatus() == Status.FECHADO) {
+                throw new RuntimeException("Chamado está fechado");
+            } else if (chamado.getStatus() == Status.RECUSADO) {
+                throw new RuntimeException("Chamado está recusado");
+            } else if (chamado.getStatus() == Status.RE_ABERTO) {
+                throw new RuntimeException(" Chamado ja está em aberto");
+            } else if (chamado.getStatus() == Status.EM_ANDAMENTO) {
+                throw new RuntimeException("Solicite validação ao usuario");
+            }
+            break;
+        }
+    }
+
+
 }

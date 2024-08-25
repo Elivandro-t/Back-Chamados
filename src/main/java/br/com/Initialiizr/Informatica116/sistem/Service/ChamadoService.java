@@ -7,8 +7,10 @@ import br.com.Initialiizr.Informatica116.sistem.Models.*;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Imagens;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Setor;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
+import br.com.Initialiizr.Informatica116.sistem.repository.SetorRepository;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoInterface;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoValidator.ValidationComponent;
@@ -56,16 +58,14 @@ public class ChamadoService implements ChamadoInterface {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    ServiceHardware serviceHardware;
-    @Autowired
     ValidationsTec validationsTec;
     @Autowired
     private ValidationComponent validationComponent;
 
     @Autowired
     private CommetService commetService;
-//    @Autowired
-//    private ValidationDiaValid validationDiaValid;
+    @Autowired
+    private ValidationDiaValid validationDiaValid;
     @Value("${endpoint}")
     private String endpoint;
     @Autowired
@@ -74,19 +74,23 @@ public class ChamadoService implements ChamadoInterface {
     public ChamadoService(IssueResposoty issueResposoty){
         this.hardwareRepository = issueResposoty;
     }
+    @Autowired
+    private SetorRepository setorRepository;
     //servico de registo de chamado
-
     @Override
     public IssueDTO registrar(String DTO, MultipartFile[] files) {
         try{
             List<Imagens> itens = new ArrayList<>();
-
             IssueDTO issueDTO = convertJson.convertJson(DTO, IssueDTO.class);
             Issue chamado = modelMapper.map(issueDTO, Issue.class);
             chamado.setData_criacao(LocalDateTime.now());
-//            // validaçao de dia ou hora de atendimento
-//            validationDiaValid.validation(chamado);
-
+            validationDiaValid.validation(chamado);
+            for (Chamado c: chamado.getItens()){
+                Optional<Setor> setor  = setorRepository.findOneByName(c.getSetor());
+                if(!setor.isPresent()){
+                    throw new RuntimeException("Informe um setor valido");
+                }
+            }
             chamado.getItens().forEach(e->{
                 e.setStatus(Status.AGUARDANDO_TECNICO);
                 e.setIssue(chamado);
@@ -119,22 +123,17 @@ public class ChamadoService implements ChamadoInterface {
             var chamadoItens = hardwareRepository.findOneById(issueDTO.getId());
             if(chamadoItens!=null) {
                 chamadoItens.getItens().addAll(chamado.getItens());
-                Issue issueSalvo = hardwareRepository.save(chamadoItens);
-                var hf = modelMapper.map(issueSalvo, IssueDTO.class);
-                for (ChamadoDTO chamadoDTO:hf.getItens()){
-//                    botService.enviarNotificacaoChamado(chamadoDTO.getCardId(), issueSalvo.getUsuario_logado(),issueSalvo.getUsuarioid(),chamadoDTO.getId(),chamadoDTO.getData(),issueSalvo.getServico());
-                }                return modelMapper.map(chamado, IssueDTO.class);
+               hardwareRepository.save(chamadoItens);
+               return modelMapper.map(chamado, IssueDTO.class);
             } else {
                 Issue issueSalvo = hardwareRepository.save(chamado);
-                var hf = modelMapper.map(issueSalvo, IssueDTO.class);
-
                 for (Chamado c:issueSalvo.getItens()){
                     commetService.EnvioComentarios(c.getId(), "\n" +
                             "✅ Sua solicitação foi recebida com sucesso!\n" +
                             "\n" +
                             "\n" +
                             "\n" +
-                            "⛔Para solicitações que requerem aprovação do gestor, caso não sejam aprovadas em até 2 dias, o chamado será cancelado e será necessário abrir um novo chamado.\n" +
+                            "⛔Para solicitações que requerem aprovação do gestor, caso não sejam aprovadas em até 2 dias, o chamado será cancelado.\n" +
                             "\n" +
                             "\n" +
                             "\n" +
@@ -194,10 +193,8 @@ public class ChamadoService implements ChamadoInterface {
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
         else {
-
             var dados = hardwareRepository.findAllByAtivoTrueAndFalse(page,ativo)
                     .map(e->modelMapper.map(e, IssueDTO.class));
-
             return  dados;
         }
 
@@ -261,7 +258,7 @@ public class ChamadoService implements ChamadoInterface {
             throw new RuntimeException("nada encontrado");
         }
         validationsTec.Valid(issue,UsuarioLogado);
-//        validationsTec.StatusvalidFechado(issue);
+        validationsTec.StatusvalidFechado(issue);
         validationComponent.validation(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_TECNICO));
         issue.setHora_aceito(null);
@@ -290,6 +287,7 @@ public class ChamadoService implements ChamadoInterface {
         }
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Status(issue);
+        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setData_chamdo_feito(LocalDateTime.now()));
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
         issue.getItens().forEach(e->e.setAceito(true)
@@ -340,7 +338,7 @@ public class ChamadoService implements ChamadoInterface {
         if (issue == null) {
             throw new RuntimeException("nada encontrado");
         }
-        validationsTec.reaberto(issue, UsuarioLogado);
+        validationsTec.reaberto(issue);
         // validacão de tecnico
         validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e -> e.setStatus(Status.RE_ABERTO));
@@ -360,6 +358,7 @@ public class ChamadoService implements ChamadoInterface {
         }// validacão de tecnico
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.StatusJira(issue);
+        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
         for (Chamado c:issue.getItens()){
@@ -376,6 +375,7 @@ public class ChamadoService implements ChamadoInterface {
         }// validacão de tecnico
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Aprovador(issue);
+        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
         for (Chamado c:issue.getItens()){
             commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Aguardando jira");
