@@ -358,7 +358,6 @@ public class ChamadoService implements ChamadoInterface {
         }// validacão de tecnico
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.StatusJira(issue);
-        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_JIRA));
         hardwareRepository.save(issue);
         for (Chamado c:issue.getItens()){
@@ -375,7 +374,6 @@ public class ChamadoService implements ChamadoInterface {
         }// validacão de tecnico
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Aprovador(issue);
-        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
         for (Chamado c:issue.getItens()){
             commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Aguardando jira");
