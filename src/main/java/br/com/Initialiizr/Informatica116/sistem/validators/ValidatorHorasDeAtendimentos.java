@@ -19,7 +19,7 @@ public class ValidatorHorasDeAtendimentos {
     public void  horasDeAtendimento(ComprasEServicos chamadoDTO){
         var dataChamado = chamadoDTO.getHora_aceito();
         boolean domingo = dataChamado.getDayOfWeek().equals(DayOfWeek.SUNDAY);
-        var dataAbertura = dataChamado.getHour() < 8;
+        var dataAbertura = dataChamado.getHour() <=8;
         var finalAbertura = dataChamado.getHour() >= 18;
         System.out.println("data em hora "+dataChamado.getHour());
         if(domingo || dataAbertura || finalAbertura){
@@ -27,14 +27,14 @@ public class ValidatorHorasDeAtendimentos {
         }
 
     }
-//    public void  horasEmMinutos(ComprasEServicos chamadoDTO){
-//        var compras = compraRepository.existsComprasEServicosByHora_aceito();
-//        var dataChamado = compras.getHora_aceito();
-//        var dataAgora = LocalDateTime.now();
-//        var horaSoma = Duration.between(dataAgora,dataChamado).toMinutes();
-//        if(horaSoma< 30){
-//            throw new RuntimeException("aguarde "+ 30 + "minutos para continuar");
-//        }
-//
-//    }
+    public void  validaHoraDiaFechado(){
+        var dataChamado = LocalDateTime.now();
+        boolean domingo = dataChamado.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+        var dataAbertura = dataChamado.getHour() <=8;
+        var finalAbertura = dataChamado.getHour() >= 18;
+        if(domingo || dataAbertura || finalAbertura){
+            throw new RuntimeException("Fora do horario de atendimento!");
+        }
+
+    }
 }
