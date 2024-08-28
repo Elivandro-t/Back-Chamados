@@ -287,7 +287,6 @@ public class ChamadoService implements ChamadoInterface {
         }
         validationsTec.Valid(issue,UsuarioLogado);
         validationsTec.Status(issue);
-        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e->e.setData_chamdo_feito(LocalDateTime.now()));
         issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
         issue.getItens().forEach(e->e.setAceito(true)
@@ -340,7 +339,6 @@ public class ChamadoService implements ChamadoInterface {
         }
         validationsTec.reaberto(issue);
         // validacão de tecnico
-        validationsTec.StatusvalidFechado(issue);
         issue.getItens().forEach(e -> e.setStatus(Status.RE_ABERTO));
         issue.getItens().forEach(e -> e.setAceito(false));
         issue.getItens().forEach(e->e.setData_chamdo_feito(null));
