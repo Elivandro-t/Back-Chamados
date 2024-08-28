@@ -26,11 +26,11 @@ public class CriaChamadoAuto {
             JSONObject object = new JSONObject();
             JSONObject itens = new JSONObject();
             JSONArray jsonArray = new JSONArray();
-            object.put("usuarioid", 3);
+            object.put("usuarioid", 173);
             object.put("filial", 116);
-            object.put("usuario_logado", "Suporte automatico");
+            object.put("usuario_logado", "Suporte Automatico");
             object.put("servico", "Hardware");
-            itens.put("usuario", "Suporte automatico");
+            itens.put("usuario", "Suporte Automatico");
             itens.put("issuetype","Hardware");
             itens.put("sistemaid",1);
             itens.put("equipamento","IMPRESSORAS");
