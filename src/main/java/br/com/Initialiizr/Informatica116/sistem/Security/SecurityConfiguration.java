@@ -1,6 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Security;
 
-//import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
+import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,14 +60,14 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public BotService botService() throws TelegramApiException {
-//         var key = "7436839194:AAF8TeUL-xtQS_gkaLJvSW_03pJ5LPVPn8c";
-//         var key2 = "7194413702:AAEJ6mmnGBV9sapSSycxxyBdjRkR2gMHa88";
-//
-//        BotService botService = new BotService("agile_ti_bot",key2);
-//        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
-//        teleBots.registerBot(botService);
-//        return botService;
-//    }
+    @Bean
+    public BotService botService() throws TelegramApiException {
+         var key = "7436839194:AAF8TeUL-xtQS_gkaLJvSW_03pJ5LPVPn8c";
+         var key2 = "7194413702:AAEJ6mmnGBV9sapSSycxxyBdjRkR2gMHa88";
+
+        BotService botService = new BotService("agile_ti_bot",key2);
+        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
+        teleBots.registerBot(botService);
+        return botService;
+    }
 }

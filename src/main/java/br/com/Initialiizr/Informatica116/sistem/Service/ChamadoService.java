@@ -69,7 +69,7 @@ public class ChamadoService implements ChamadoInterface {
     @Value("${endpoint}")
     private String endpoint;
     @Autowired
-//    BotService botService;
+    BotService botService;
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
     public ChamadoService(IssueResposoty issueResposoty){
         this.hardwareRepository = issueResposoty;
@@ -128,6 +128,7 @@ public class ChamadoService implements ChamadoInterface {
             } else {
                 Issue issueSalvo = hardwareRepository.save(chamado);
                 for (Chamado c:issueSalvo.getItens()){
+                    botService.enviarNotificacaoChamado(c.getCardId(),chamado.getUsuario_logado(),chamado.getUsuarioid(),c.getId(),c.getDatacreate(),c.getTitulo());
                     commetService.EnvioComentarios(c.getId(), "\n" +
                             "✅ Sua solicitação foi recebida com sucesso!\n" +
                             "\n" +

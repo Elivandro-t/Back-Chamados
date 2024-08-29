@@ -56,11 +56,13 @@ public class CriaChamadoAuto {
             var domingo = Hora.getDayOfWeek().equals(DayOfWeek.SUNDAY);
             var tarde = Hora.getHour() == 15;
 
-                if (manha || tarde || !domingo) {
+                if (manha ||!domingo) {
                     chamadoService.registrar(jsonString, null);
                     chamado = true;
+                } else if (tarde ||!domingo ) {
+                    
                 }
-            }catch (RuntimeException e){
+        }catch (RuntimeException e){
 
             }
 
