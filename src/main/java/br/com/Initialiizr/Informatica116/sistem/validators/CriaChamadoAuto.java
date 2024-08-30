@@ -19,7 +19,7 @@ public class CriaChamadoAuto {
     @Autowired
     private IssueResposoty issueResposoty;
     private boolean chamado = false;
-    @Scheduled(cron = "* 0/1 * * * *")
+    @Scheduled(cron = "* * * * * *")
     public void CriaChamado(){
         try {
            if(chamado) return;
@@ -56,10 +56,10 @@ public class CriaChamadoAuto {
             var domingo = Hora.getDayOfWeek().equals(DayOfWeek.SUNDAY);
             var tarde = Hora.getHour() == 15;
 
-                if (manha ||!domingo) {
+                if (manha) {
                     chamadoService.registrar(jsonString, null);
                     chamado = true;
-                } else if (tarde ||!domingo ) {
+                } else if (tarde ) {
                     
                 }
         }catch (RuntimeException e){
