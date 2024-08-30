@@ -52,7 +52,7 @@ public class CriaChamadoAuto {
         object.put("itens", jsonArray);
         String jsonString = object.toString(4);
             var Hora = LocalDateTime.now();
-            var manha = Hora.getHour() == 10 && Hora.getMinute() == 30;
+            var manha = Hora.getHour() == 8 && Hora.getMinute() == 30;
             var domingo = Hora.getDayOfWeek().equals(DayOfWeek.SUNDAY);
             var tarde = Hora.getHour() == 14 && Hora.getMinute() == 2;
 
@@ -60,7 +60,7 @@ public class CriaChamadoAuto {
                     chamadoService.registrar(jsonString, null);
                     chamado = true;
                 } else if (tarde ) {
-                    
+                    chamadoService.registrar(jsonString, null);
                 }
         }catch (RuntimeException e){
 
