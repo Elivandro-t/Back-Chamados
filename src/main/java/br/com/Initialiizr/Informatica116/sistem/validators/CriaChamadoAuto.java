@@ -54,13 +54,14 @@ public class CriaChamadoAuto {
             var Hora = LocalDateTime.now();
             var manha = Hora.getHour() == 8 && Hora.getMinute() == 30;
             var domingo = Hora.getDayOfWeek().equals(DayOfWeek.SUNDAY);
-            var tarde = Hora.getHour() == 14 && Hora.getMinute() == 2;
+            var tarde = Hora.getHour() == 14 && Hora.getMinute() == 15;
 
                 if (manha) {
                     chamadoService.registrar(jsonString, null);
                     chamado = true;
                 } else if (tarde ) {
                     chamadoService.registrar(jsonString, null);
+                    chamado = true;
                 }
         }catch (RuntimeException e){
 
