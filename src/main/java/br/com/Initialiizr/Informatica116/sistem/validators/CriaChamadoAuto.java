@@ -19,7 +19,7 @@ public class CriaChamadoAuto {
     @Autowired
     private IssueResposoty issueResposoty;
     private boolean chamado = false;
-    @Scheduled(cron = "* * * * * *",zone = "America/Sao_Paulo")
+    @Scheduled(cron = "0 0 8,15 * * *")
     public void CriaChamado(){
         try {
            if(chamado) return;
@@ -47,19 +47,13 @@ public class CriaChamadoAuto {
                     "Obrigado pela atenção!<br>" +
                     "<br>" +
                     "<strong>Atenciosamente</strong>,");
-
         jsonArray.put(itens);
         object.put("itens", jsonArray);
         String jsonString = object.toString(4);
             var Hora = LocalDateTime.now();
-            var manha = Hora.getHour() == 8 && Hora.getMinute() == 30;
-            var domingo = Hora.getDayOfWeek().equals(DayOfWeek.SUNDAY);
-            var tarde = Hora.getHour() == 14 && Hora.getMinute() == 15;
-
-                if (manha) {
-                    chamadoService.registrar(jsonString, null);
-                    chamado = true;
-                } else if (tarde ) {
+            var manha = Hora.getHour() == 8;
+            var tarde = Hora.getHour() == 15;
+                if (manha||tarde) {
                     chamadoService.registrar(jsonString, null);
                     chamado = true;
                 }
