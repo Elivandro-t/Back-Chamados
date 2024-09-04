@@ -19,7 +19,7 @@ public class CriaChamadoAuto {
     @Autowired
     private IssueResposoty issueResposoty;
     private boolean chamado = false;
-    @Scheduled(cron = "0 0 9,14 * * *")
+    @Scheduled(cron = "0 0 10,14 * * *")
     public void CriaChamado(){
         try {
            if(chamado) return;
@@ -51,7 +51,7 @@ public class CriaChamadoAuto {
         object.put("itens", jsonArray);
         String jsonString = object.toString(4);
             var Hora = LocalDateTime.now();
-            var manha = Hora.getHour() == 9;
+            var manha = Hora.getHour() == 10;
             var tarde = Hora.getHour() == 14;
                 if (manha||tarde) {
                     chamadoService.registrar(jsonString, null);
@@ -61,5 +61,9 @@ public class CriaChamadoAuto {
 
             }
 
+    }
+    @Scheduled(cron = "0 0 0 * * *") // Executa diariamente à meia-noite
+    public void resetChamadoFlag() {
+        chamado = false;
     }
 }
