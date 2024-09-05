@@ -35,7 +35,7 @@ public class Issue {
     private  String contato;
     @NotBlank
     private String servico;
-    @JsonDeserialize
+//    @JsonDeserialize
     private LocalDateTime hora_aceito;
     private  LocalDateTime data_criacao;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "issue")

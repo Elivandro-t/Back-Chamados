@@ -16,19 +16,17 @@ import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoInterface;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoValidator.ValidationComponent;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoValidator.ValidationDiaValid;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
+import br.com.Initialiizr.Informatica116.sistem.validators.ValidaSetor.ValidaSetor;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -37,11 +35,9 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class ChamadoService implements ChamadoInterface {
@@ -75,22 +71,18 @@ public class ChamadoService implements ChamadoInterface {
         this.hardwareRepository = issueResposoty;
     }
     @Autowired
-    private SetorRepository setorRepository;
+    private ValidaSetor validaSetor;
     //servico de registo de chamado
     @Override
     public IssueDTO registrar(String DTO, MultipartFile[] files) {
         try{
             List<Imagens> itens = new ArrayList<>();
+
             IssueDTO issueDTO = convertJson.convertJson(DTO, IssueDTO.class);
             Issue chamado = modelMapper.map(issueDTO, Issue.class);
             chamado.setData_criacao(LocalDateTime.now());
             validationDiaValid.validation(chamado);
-            for (Chamado c: chamado.getItens()){
-                Optional<Setor> setor  = setorRepository.findOneByName(c.getSetor());
-                if(!setor.isPresent()){
-                    throw new RuntimeException("Informe um setor valido");
-                }
-            }
+            validaSetor.validaSetor(chamado);
             chamado.getItens().forEach(e->{
                 e.setStatus(Status.AGUARDANDO_TECNICO);
                 e.setIssue(chamado);
@@ -99,6 +91,7 @@ public class ChamadoService implements ChamadoInterface {
                 e.setAtivo(true);
                 e.setCardId("CARD-"+chamado.gerarCode());
             });
+            // validação de imagens
             if(files!=null){
                 for(MultipartFile file:files){
                     if(file!=null){
@@ -120,6 +113,8 @@ public class ChamadoService implements ChamadoInterface {
                     }
                 }
             }
+
+            /// Adicionando um chamado na lista ou crie uma
             var chamadoItens = hardwareRepository.findOneById(issueDTO.getId());
             if(chamadoItens!=null) {
                 chamadoItens.getItens().addAll(chamado.getItens());
@@ -145,27 +140,31 @@ public class ChamadoService implements ChamadoInterface {
             throw  new RuntimeException(e);
         }
     }
-    // pegand
+    // pegando chamado ṕor id
     public IssueDTO ChamadoId(long id){
         Issue chamadoid = hardwareRepository.findOneByIds(id);
-        if(chamadoid==null){throw new RuntimeException("nada encontrado");}
-        IssueDTO chamado = modelMapper.map(chamadoid, IssueDTO.class);
-        return  chamado;
+        if(chamadoid!=null){
+            return modelMapper.map(chamadoid, IssueDTO.class);
+        }
+        throw new RuntimeException("Nada encontrado no banco");
     }
     // pegando chamado por card
     @Override
     public IssueDTO Card(String card, long id) {
         Issue chamadoid = hardwareRepository.findOneByCard(card,id);
         if(chamadoid!=null){
-            IssueDTO chamado = modelMapper.map(chamadoid, IssueDTO.class);
-            return  chamado;
+            return modelMapper.map(chamadoid, IssueDTO.class);
         }
-        throw new RuntimeException("nada encontrado no banco");
+        throw new RuntimeException("Nada encontrado no banco");
     }
+
+    // listando todos os chamado e filtrando os dados usando as informacoes escritas no parametro do metodo
     public Page<IssueDTO> Listar(Pageable page, String setor,
                                  String dataAntes, String dataDepois,
                                  int filial,boolean ativo) {
+
         String busca = setor != null ? setor : "";
+
         if(dataAntes!=null&&dataDepois!=null){
             return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrue(page,dataAntes,dataDepois,filial,ativo)
                     .map(e->modelMapper.map(e, IssueDTO.class));
@@ -178,8 +177,8 @@ public class ChamadoService implements ChamadoInterface {
             return hardwareRepository.findAllByAtivo(page, filial, ativo)
                     .map(e -> modelMapper.map(e, IssueDTO.class));
         }
-//        }ss));
     }
+
     // buscando todos os chamados por filiais
     public Page<IssueDTO> ListarChamadosFiliais(Pageable page, String setor,
                                  String dataAntes, String dataDepois,
@@ -225,12 +224,11 @@ public class ChamadoService implements ChamadoInterface {
                     .map(e->modelMapper.map(e, IssueDTO.class));
         }
         else {
-            var dados = hardwareRepository.findAllByAtivoTrueAndFalseByUsuario(pageable,id,ativo)
+            return hardwareRepository.findAllByAtivoTrueAndFalseByUsuario(pageable,id,ativo)
                     .map(e->modelMapper.map(e, IssueDTO.class));
-            return  dados;
         }
     }
-
+     /// quando o atendente aceita o chamado o status do chamado muda para em andamento
     public ResponseEntity update(long id,String data) throws IOException {
         UpdateChamado updateChamado = convertJson.convertJson(data,UpdateChamado.class);
         Issue lista = hardwareRepository.findOneByUsuarioidByIdAtivoTrue(id,updateChamado.getId());
@@ -252,30 +250,29 @@ public class ChamadoService implements ChamadoInterface {
         return ResponseEntity.ok(new MSG("tecnico adicionado ao chamado!"));
     }
     public ResponseEntity ClearTcnico(long id,String cardChamado,long UsuarioLogado) throws IOException {
-        var user =userRepository.getReferenceById(UsuarioLogado);
-        System.out.println("meu id de usuario "+UsuarioLogado);
-        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        if(issue ==null){
-            throw new RuntimeException("nada encontrado");
-        }
-        validationsTec.Valid(issue,UsuarioLogado);
-        validationsTec.StatusvalidFechado(issue);
-        validationComponent.validation(issue);
-        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_TECNICO));
-        issue.setHora_aceito(null);
-        issue.getItens().forEach(e->{
-            e.setAceito(false);
-            e.setDone(false);
-            e.setClient_feito(false);
-            e.setTecnicoid(0);
-            e.setTecnico_responsavel(null);
-            e.setData_chamdo_feito(null);
-        });
-        for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Aguardando tecnico");
 
+        Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
+        if(issue!=null){
+            validationsTec.Valid(issue,UsuarioLogado);
+            validationsTec.StatusvalidFechado(issue);
+            validationComponent.validation(issue);
+            issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_TECNICO));
+            issue.setHora_aceito(null);
+            issue.getItens().forEach(e->{
+                e.setAceito(false);
+                e.setDone(false);
+                e.setClient_feito(false);
+                e.setTecnicoid(0);
+                e.setTecnico_responsavel(null);
+                e.setData_chamdo_feito(null);
+            });
+            for (Chamado c:issue.getItens()){
+                commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Aguardando tecnico");
+
+            }
+            return ResponseEntity.ok(new Mensagem("Status atualizado"));
         }
-        return ResponseEntity.ok(new Mensagem("Status atualizado"));
+        throw new RuntimeException("nada encontrado");
     }
 
     // enviando ao usuario quando o chamado for feito
@@ -284,27 +281,18 @@ public class ChamadoService implements ChamadoInterface {
         System.out.println("meu id de usuario "+UsuarioLogado);
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         if(issue ==null){
-            throw new RuntimeException("nada encontrado");
+            validationsTec.Valid(issue,UsuarioLogado);
+            validationsTec.Status(issue);
+            issue.getItens().forEach(e->{
+                        e.setData_chamdo_feito(LocalDateTime.now());
+                        e.setStatus(Status.AGUARDANDO_VALIDACAO);
+                        e.setAceito(true);
+                    }
+            );
+            EnviarTextComentario(issue,"Aguardando validação");
+            return ResponseEntity.ok(new MSG("status atualizado"));
         }
-        validationsTec.Valid(issue,UsuarioLogado);
-        validationsTec.Status(issue);
-        issue.getItens().forEach(e->e.setData_chamdo_feito(LocalDateTime.now()));
-        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_VALIDACAO));
-        issue.getItens().forEach(e->e.setAceito(true)
-        );
-        for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"Seu chamado foi concluído com sucesso. Por favor, valide sua solicitação para confirmar que tudo está correto. Caso não esteja de acordo ou precise de ajustes, você pode recusar a solicitação.\n" +
-                    "\n" +
-                    "Se não houver uma resposta ou validação dentro do prazo de 2 dias, o chamado será fechado automaticamente.\n" +
-                    "\n" +
-                    "Agradecemos pela sua colaboração!\n" +
-                    "\n" +
-                    "Suporte TI");
-            commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Aguardando validaçao");
-
-        }
-
-        return ResponseEntity.ok(new MSG("status atualizado"));
+        throw new RuntimeException("Nada encontrado");
     }
     // precisa ser feito validacao para o chamado nao ser aberto
     public ResponseEntity validaChamadoUSer(long id, String cardChamado,long UsuarioLogado) throws IOException {
@@ -331,23 +319,25 @@ public class ChamadoService implements ChamadoInterface {
         }
         return  ResponseEntity.ok().body(new MSG("status fechado"));
     }
-
+  // fazendo a validacao de o chamado ja está reaber caso não ele abri o adicionando o status aberto
     public ResponseEntity validaChamadoReaberto(long id, String cardChamado, long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id, cardChamado);
-        System.out.println("meu id de usuario " + UsuarioLogado);
-        if (issue == null) {
-            throw new RuntimeException("nada encontrado");
+        if (issue != null) {
+            validationsTec.reaberto(issue);
+            // validacão de tecnico
+            issue.getItens().forEach(e -> {
+                e.setStatus(Status.RE_ABERTO);
+                e.setAceito(false);
+                e.setData_chamdo_feito(null);
+            });
+            hardwareRepository.save(issue);
+            for (Chamado c:issue.getItens()){
+                commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Re aberto");
+            }
+            return ResponseEntity.ok().body(new MSG("chamado reaberto"));
         }
-        validationsTec.reaberto(issue);
-        // validacão de tecnico
-        issue.getItens().forEach(e -> e.setStatus(Status.RE_ABERTO));
-        issue.getItens().forEach(e -> e.setAceito(false));
-        issue.getItens().forEach(e->e.setData_chamdo_feito(null));
-        hardwareRepository.save(issue);
-        for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Re aberto");
-        }
-        return ResponseEntity.ok().body(new MSG("chamado reaberto"));
+        throw new RuntimeException("nada encontrado");
+
     }
 
     public ResponseEntity StatusJira(long id,String cardChamado,long UsuarioLogado) throws IOException {
@@ -369,22 +359,21 @@ public class ChamadoService implements ChamadoInterface {
     public ResponseEntity StatusAtorizacao(long id,String cardChamado,long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         if(issue ==null){
-            throw new RuntimeException("nada encontrado");
-        }// validacão de tecnico
-        validationsTec.Valid(issue,UsuarioLogado);
-        validationsTec.Aprovador(issue);
-        issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
-        for (Chamado c:issue.getItens()){
-            commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Aguardando jira");
+            validationsTec.Valid(issue,UsuarioLogado);
+            validationsTec.Aprovador(issue);
+            issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
+            for (Chamado c:issue.getItens()){
+                commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Aguardando jira");
 
+            }
+            hardwareRepository.save(issue);
+            return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando aprovação"));
         }
-        hardwareRepository.save(issue);
-        return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando aprovação"));
+        throw new RuntimeException("nada encontrado");
+
     }
     public List<Issue> pegaStor(){
-        var dados = hardwareRepository.findAll();
-
-        return  dados;
+        return hardwareRepository.findAll();
     }
 
     public StatusOneDTO OneStatus(long id, String card) {
@@ -416,4 +405,22 @@ public class ChamadoService implements ChamadoInterface {
             return  dados;
         }
     }
-}
+/// enviando mesagem de texto para o usuario
+    private void EnviarTextComentario(Issue issue,String status) {
+        try {
+            for (Chamado c : issue.getItens()) {
+                commetService.EnvioComentarios(c.getId(), "Seu chamado foi concluído com sucesso. Por favor, valide sua solicitação para confirmar que tudo está correto. Caso não esteja de acordo ou precise de ajustes, você pode recusar a solicitação.\n" +
+                        "\n" +
+                        "Se não houver uma resposta ou validação dentro do prazo de 2 dias, o chamado será fechado automaticamente.\n" +
+                        "\n" +
+                        "Agradecemos pela sua colaboração!\n" +
+                        "\n" +
+                        "Suporte TI");
+                commetService.EnvioComentarios(c.getId(), "O status do seu pedido foi alterado para " + status);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    }
