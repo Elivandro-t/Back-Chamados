@@ -356,7 +356,7 @@ public class ChamadoService implements ChamadoInterface {
 
     public ResponseEntity StatusAtorizacao(long id,String cardChamado,long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        if(issue ==null){
+        if(issue!=null){
             validationsTec.Valid(issue,UsuarioLogado);
             validationsTec.Aprovador(issue);
             issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
