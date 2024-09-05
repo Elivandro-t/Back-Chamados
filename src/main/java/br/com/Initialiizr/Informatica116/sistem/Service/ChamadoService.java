@@ -277,10 +277,8 @@ public class ChamadoService implements ChamadoInterface {
 
     // enviando ao usuario quando o chamado for feito
     public ResponseEntity validaChamado(long id,String cardChamado,long UsuarioLogado) throws IOException {
-        var user =userRepository.getReferenceById(UsuarioLogado);
-        System.out.println("meu id de usuario "+UsuarioLogado);
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        if(issue ==null){
+        if(issue !=null){
             validationsTec.Valid(issue,UsuarioLogado);
             validationsTec.Status(issue);
             issue.getItens().forEach(e->{
