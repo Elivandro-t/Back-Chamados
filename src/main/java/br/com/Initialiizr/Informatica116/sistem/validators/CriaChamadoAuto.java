@@ -19,7 +19,7 @@ public class CriaChamadoAuto {
     @Autowired
     private IssueResposoty issueResposoty;
     private boolean chamado = false;
-    @Scheduled(cron = "0 0 9,15 * * *")
+    @Scheduled(cron = "0 0 9,13 * * *")
     public void CriaChamado(){
         try {
            if(chamado) return;
@@ -38,21 +38,21 @@ public class CriaChamadoAuto {
             itens.put("titulo", "Hardware");
             itens.put("patrimonio","00000");
             itens.put("solicitacao", "Verificação de impressoras");
-            itens.put("descricao", "<b>Aviso de Manutenção - Impressoras</b><br>" +
+            itens.put("descricao", "<b>Aviso de verificação - Impressoras</b><br>" +
                     "<br>" +
                     "Olá,<br>" +
                     "<br>" +
-                    "Este é um aviso automático para informar que as impressoras das cidades e da externa precisam ser verificadas. Por favor, tome as medidas necessárias para garantir que estejam funcionando corretamente.<br>" +
+                    "Este é um aviso automático para informar que as impressoras das cidades e da externa precisam ser verificadas. Por favor, tome as medidas necessárias para garantir que estejam funcionando corretamente e anexando foto nos comentarios para provar que realmente foi verificadas!.<br>" +
                     "<br>" +
                     "Obrigado pela atenção!<br>" +
                     "<br>" +
-                    "<strong>Atenciosamente</strong>,");
+                    "<strong>Atenciosamente Suporte TI</strong>,");
         jsonArray.put(itens);
         object.put("itens", jsonArray);
         String jsonString = object.toString(4);
             var Hora = LocalDateTime.now();
             var manha = Hora.getHour() == 9;
-            var tarde = Hora.getHour() == 15;
+            var tarde = Hora.getHour() == 13;
                 if (manha||tarde) {
                     chamadoService.registrar(jsonString, null);
                     chamado = true;
@@ -62,7 +62,7 @@ public class CriaChamadoAuto {
             }
 
     }
-    @Scheduled(cron = "0 0 8,13 * * *") // Executa diariamente à meia-noite
+    @Scheduled(cron = "0 0 8,12 * * *") // Executa diariamente à meia-noite
     public void resetChamadoFlag() {
         chamado = false;
     }

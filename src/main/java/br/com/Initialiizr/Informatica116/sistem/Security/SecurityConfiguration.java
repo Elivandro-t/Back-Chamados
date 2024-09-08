@@ -13,9 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+//import org.telegram.telegrambots.meta.TelegramBotsApi;
+//import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+//import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 @Configuration
 public class SecurityConfiguration {
@@ -60,14 +60,14 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public BotService botService() throws TelegramApiException {
-         var key = "7436839194:AAF8TeUL-xtQS_gkaLJvSW_03pJ5LPVPn8c";
-         var key2 = "7194413702:AAEJ6mmnGBV9sapSSycxxyBdjRkR2gMHa88";
-
-        BotService botService = new BotService("agile_ti_bot",key2);
-        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
-        teleBots.registerBot(botService);
-        return botService;
-    }
+//    @Bean
+//    public BotService botService() throws TelegramApiException {
+//         var key = "7436839194:AAF8TeUL-xtQS_gkaLJvSW_03pJ5LPVPn8c";
+//         var key2 = "7194413702:AAEJ6mmnGBV9sapSSycxxyBdjRkR2gMHa88";
+//
+//        BotService botService = new BotService("agile_ti_bot",key2);
+//        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
+//        teleBots.registerBot(botService);
+//        return botService;
+//    }
 }

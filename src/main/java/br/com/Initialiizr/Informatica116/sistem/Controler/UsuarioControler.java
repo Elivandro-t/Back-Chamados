@@ -28,7 +28,6 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping
-@CrossOrigin(origins = "*")
 public class UsuarioControler {
     @Autowired
     UserService userService;

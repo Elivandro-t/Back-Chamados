@@ -7,15 +7,12 @@ import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService2;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
-import br.com.Initialiizr.Informatica116.sistem.validators.Msg;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +22,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-@CrossOrigin(origins = "*")
 public class ControlerChamado {
     @Autowired
     private ChamadoService service;
@@ -33,8 +29,9 @@ public class ControlerChamado {
     private ChamadoService2 service2;
 
     @RequestMapping(method = RequestMethod.POST,value = "chamado")
-    public ResponseEntity<IssueDTO> chamadoDT(@RequestParam ("data") @Valid String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
+    public ResponseEntity<IssueDTO> chamadoDT(@RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
         var response = service.registrar(data,file);
+        System.out.println("minhas request "+data.toString());
         return ResponseEntity.ok().body(response);
     }
 

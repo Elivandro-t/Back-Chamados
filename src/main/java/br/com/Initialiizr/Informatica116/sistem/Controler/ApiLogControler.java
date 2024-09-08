@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping
-@CrossOrigin(origins = "*")
 public class ApiLogControler {
     @Autowired
     private LogService logService;

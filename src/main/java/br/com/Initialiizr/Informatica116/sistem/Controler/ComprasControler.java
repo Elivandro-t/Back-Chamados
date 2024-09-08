@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("compras")
-@CrossOrigin(origins = "*")
 public class ComprasControler  {
     @Autowired
     private ComprasService service;

@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-@CrossOrigin(origins = "*")
 public class OptionsController {
     @Autowired
     private SetorService service;

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping
-@CrossOrigin(origins = "*")
 public class CardControler {
     @Autowired
     private ConvertJson convertJson;

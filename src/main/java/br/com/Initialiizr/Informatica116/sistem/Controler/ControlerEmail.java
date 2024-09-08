@@ -16,7 +16,6 @@ import java.util.Random;
 
 @RestController
 @RequestMapping
-@CrossOrigin(origins = "*")
 public class ControlerEmail {
     @Autowired
     private JavaMailSender javaMailSender;
