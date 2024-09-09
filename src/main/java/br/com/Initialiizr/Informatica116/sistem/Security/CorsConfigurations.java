@@ -13,11 +13,7 @@ public class CorsConfigurations {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://suporteinformatic.com.br/")
-                        .allowedOrigins("http://suporteinformatic-com-br.umbler.net ")
-                        .allowedOrigins("kamino02.umbler.net")
-                        .allowedOrigins("http://localhost:4200")
-                        .allowedOrigins("http://192.168.88.70")
+                        .allowedOrigins("https://suporteinformatic.com.br,http://192.168.88.70,http://localhost:4200,,http://suporteinformatic-com-br.umbler.net")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true)
