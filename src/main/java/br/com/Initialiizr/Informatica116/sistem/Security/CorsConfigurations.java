@@ -13,10 +13,10 @@ public class CorsConfigurations {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://suporteinformatic.com.br")
-                        .allowedOrigins("http://localhost:4200")
+                        .allowedOrigins("https://suporteinformatic.com.br/")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*");
+                        .allowedHeaders("*")
+                        .allowCredentials(true);
             }
         };
     }
