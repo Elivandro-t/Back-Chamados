@@ -4,9 +4,10 @@ import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Service.CommetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
+@Component
 public class EnvioComentarios {
     @Autowired
     private CommetService commetService;
