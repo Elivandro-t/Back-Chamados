@@ -7,17 +7,18 @@ import br.com.Initialiizr.Informatica116.sistem.Models.*;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Imagens;
-import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Setor;
 import br.com.Initialiizr.Informatica116.sistem.Security.ConvertJson;
 import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
-import br.com.Initialiizr.Informatica116.sistem.repository.SetorRepository;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoInterface;
 import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoValidator.ValidationComponent;
-import br.com.Initialiizr.Informatica116.sistem.validators.ChamadoValidator.ValidationDiaValid;
+import br.com.Initialiizr.Informatica116.sistem.validators.criacao.CriacaoValidacao;
+import br.com.Initialiizr.Informatica116.sistem.validators.criacao.EnvioComentarios;
+import br.com.Initialiizr.Informatica116.sistem.validators.criacao.ValidationDiaValid;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
-import br.com.Initialiizr.Informatica116.sistem.validators.ValidaSetor.ValidaSetor;
+import br.com.Initialiizr.Informatica116.sistem.validators.criacao.ValidaSetor;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidationsTec;
+import br.com.Initialiizr.Informatica116.sistem.validators.validaStatusFechadoETecnicoLogado.ValidaStatusFechadoELogado;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,10 +61,10 @@ public class ChamadoService implements ChamadoInterface {
 
     @Autowired
     private CommetService commetService;
-    @Autowired
-    private ValidationDiaValid validationDiaValid;
     @Value("${endpoint}")
     private String endpoint;
+    @Autowired
+    private EnvioComentarios envioComentaiors;
 //    @Autowired
 //    BotService botService;
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
@@ -71,7 +72,9 @@ public class ChamadoService implements ChamadoInterface {
         this.hardwareRepository = issueResposoty;
     }
     @Autowired
-    private ValidaSetor validaSetor;
+    private List<CriacaoValidacao> lista;
+
+    @Autowired List<ValidaStatusFechadoELogado> validaStatusFechadoELogado;
     //servico de registo de chamado
     @Override
     public IssueDTO registrar(String DTO, MultipartFile[] files) {
@@ -81,16 +84,18 @@ public class ChamadoService implements ChamadoInterface {
             IssueDTO issueDTO = convertJson.convertJson(DTO, IssueDTO.class);
             Issue chamado = modelMapper.map(issueDTO, Issue.class);
             chamado.setData_criacao(LocalDateTime.now());
-            validationDiaValid.validation(chamado);
-            validaSetor.validaSetor(chamado);
-            chamado.getItens().forEach(e->{
+            // validação
+            lista.forEach(e->e.valid(chamado));
+            chamado.getItens().forEach(e->
+            {
                 e.setStatus(Status.AGUARDANDO_TECNICO);
                 e.setIssue(chamado);
                 e.Datas(LocalDateTime.now());
                 e.DataCreate(LocalDateTime.now());
                 e.setAtivo(true);
                 e.setCardId("CARD-"+chamado.gerarCode());
-            });
+            }
+                    );
             // validação de imagens
             if(files!=null){
                 for(MultipartFile file:files){
@@ -99,9 +104,9 @@ public class ChamadoService implements ChamadoInterface {
                         byte[] bytes = file.getBytes();
                         ImagensDTO imagensDTO = new ImagensDTO(nameFile);
                         Imagens imagens = modelMapper.map(imagensDTO,Imagens.class);
-                      for (Chamado chamdoe:chamado.getItens()){
-                          imagens.setChamado(chamdoe);
-                          chamdoe.setImagens(itens);
+                      for (Chamado c:chamado.getItens()){
+                          imagens.setChamado(c);
+                          c.setImagens(itens);
                           itens.add(imagens);
                       }
                         File path = new File(UPLOAD_DIR);
@@ -122,19 +127,7 @@ public class ChamadoService implements ChamadoInterface {
                return modelMapper.map(chamado, IssueDTO.class);
             } else {
                 Issue issueSalvo = hardwareRepository.save(chamado);
-                for (Chamado c:issueSalvo.getItens()){
-//                    botService.enviarNotificacaoChamado(c.getCardId(),chamado.getUsuario_logado(),chamado.getUsuarioid(),c.getId(),c.getDatacreate(),c.getTitulo());
-                    commetService.EnvioComentarios(c.getId(), "\n" +
-                            "✅ Sua solicitação foi recebida com sucesso!\n" +
-                            "\n" +
-                            "\n" +
-                            "\n" +
-                            "⛔Para solicitações que requerem aprovação do gestor, caso não sejam aprovadas em até 2 dias, o chamado será cancelado.\n" +
-                            "\n" +
-                            "\n" +
-                            "\n" +
-                            "\uD83D\uDCAC Caso precise adicionar informações após abrir o chamado, utilize o campo de comentários para entrar em contato com o nosso time de suporte.");
-                }
+                envioComentaiors.envio(issueSalvo);
                 return modelMapper.map(issueSalvo, IssueDTO.class);
             } }catch (IOException e){
             throw  new RuntimeException(e);
@@ -253,8 +246,7 @@ public class ChamadoService implements ChamadoInterface {
 
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         if(issue!=null){
-            validationsTec.Valid(issue,UsuarioLogado);
-            validationsTec.StatusvalidFechado(issue);
+            validaStatusFechadoELogado.forEach(e->e.valid(issue,UsuarioLogado));
             validationComponent.validation(issue);
             issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_TECNICO));
             issue.setHora_aceito(null);
@@ -279,8 +271,7 @@ public class ChamadoService implements ChamadoInterface {
     public ResponseEntity validaChamado(long id,String cardChamado,long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
         if(issue !=null){
-            validationsTec.Valid(issue,UsuarioLogado);
-            validationsTec.Status(issue);
+            validaStatusFechadoELogado.forEach(e->e.valid(issue,UsuarioLogado));
             issue.getItens().forEach(e->{
                         e.setData_chamdo_feito(LocalDateTime.now());
                         e.setStatus(Status.AGUARDANDO_VALIDACAO);
@@ -295,9 +286,7 @@ public class ChamadoService implements ChamadoInterface {
     // precisa ser feito validacao para o chamado nao ser aberto
     public ResponseEntity validaChamadoUSer(long id, String cardChamado,long UsuarioLogado) throws IOException {
         Issue issue = hardwareRepository.findOneByIdChamado(id,cardChamado);
-        System.out.println("meu id de usuario "+UsuarioLogado);
         Instant hora = Instant.now();
-        System.out.println(id);
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
         }
@@ -362,7 +351,6 @@ public class ChamadoService implements ChamadoInterface {
             issue.getItens().forEach(e->e.setStatus(Status.AGUARDANDO_APROVACAO));
             for (Chamado c:issue.getItens()){
                 commetService.EnvioComentarios(c.getId(),"O status do seu pedido foi alterado para Aguardando jira");
-
             }
             hardwareRepository.save(issue);
             return  ResponseEntity.ok().body(new MSG("status atualizado para aguardando aprovação"));

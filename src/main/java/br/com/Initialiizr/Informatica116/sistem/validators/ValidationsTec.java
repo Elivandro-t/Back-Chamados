@@ -78,17 +78,6 @@ public class ValidationsTec {
         Instant agora = Instant.now();
         return agora.isAfter(dataExpired());
     }
-//    private void atualizarStatus(Issue issue) {
-//        System.out.println("h " +Expired());
-//        if (Expired()) {
-//            issue.getItens().forEach(e->e.setStatus(Status.FECHADO));
-//            issue.getItens().forEach(e->e.setAtivo(false));
-//            issue.getItens().forEach(e->e.setAceito(false));
-//            issue.getItens().forEach(e->e.setClient_feito(true));
-//            issueResposoty.save(issue);
-//            System.out.println("Status atualizado para 'feito'.");
-//        }
-//    }
 public  void StatusJira(Issue issueDTO){
     var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
     for (Chamado c: issueDTO.getItens()){
@@ -104,7 +93,6 @@ public  void StatusJira(Issue issueDTO){
 }
 
     public  void Aprovador(Issue issueDTO){
-        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getStatus()== Status.AGUARDANDO_VALIDACAO){

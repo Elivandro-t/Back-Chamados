@@ -1,14 +1,13 @@
-package br.com.Initialiizr.Informatica116.sistem.validators.ChamadoValidator;
+package br.com.Initialiizr.Informatica116.sistem.validators.criacao;
 
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 
 @Component
-public class ValidationDiaValid {
-    public void  validation(Issue issue){
+public class ValidationDiaValid implements  CriacaoValidacao{
+    public void  valid(Issue issue){
         var horaCriacao = issue.getData_criacao();
         var HoraValid = horaCriacao.getDayOfWeek().equals(DayOfWeek.SUNDAY);
         var horaAntes = horaCriacao.getHour() < 8;

@@ -26,20 +26,13 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true)
     private long id;
-    @NotBlank
     private String name;
-    @NotBlank
     private  String lastname;
-    @NotBlank
     private String setor;
-    @NotBlank
     private String email;
-    @NotNull
     private int filial;
     private String contato;
-    @NotBlank
     private String password;
     private String codigo;
     private  int exp = 0;
@@ -48,8 +41,9 @@ public class User implements UserDetails {
     @JoinColumn(nullable = true)
     private String imagem;
     private boolean account_locked =false;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.LAZY)
     private List<Perfil> itens;
+
     public User(UserDTO user) {
         this.name =user.getName();
         this.lastname =user.getLastname();
@@ -57,7 +51,8 @@ public class User implements UserDetails {
         this.email = user.getEmail();
     }
    public  String criptografar(String user){
-      return this.password = new BCryptPasswordEncoder().encode(user);
+
+        return this.password = new BCryptPasswordEncoder().encode(user);
    }
     @Override
 public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -26,24 +26,24 @@ public class SecurityConfiguration {
         httpSecurity.csrf(e->e.disable())
                 .sessionManagement(e->e.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(e->e
-                                .requestMatchers(HttpMethod.GET,"*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"*").permitAll()
                         .requestMatchers( "/v3/api-docs/**","/swagger-ui.html","/swagger-ui/**").permitAll()
-                                .requestMatchers(HttpMethod.POST,"/login").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/foto/usuario/*").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sistemBotao/*").permitAll()
-                                .requestMatchers(HttpMethod.PUT,"/alterar/cod/*").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/Logos/*").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/foto/usuario/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/sistemBotao/*").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/alterar/cod/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/Logos/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/whats").permitAll()
                         .requestMatchers(HttpMethod.POST,"/varificacao/code").permitAll()
                         .requestMatchers(HttpMethod.PUT,"/alterar/passwd").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/user/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/user/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/refreshToken").permitAll()
                         .requestMatchers(HttpMethod.GET,"/imagens/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/lista/setor").permitAll()
                         .requestMatchers(HttpMethod.GET,"/send/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/registrar").permitAll()
                         .requestMatchers(HttpMethod.GET,"/relatorio").permitAll()
-                                .anyRequest().authenticated()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(filterValidation, UsernamePasswordAuthenticationFilter.class)
         ;
@@ -57,6 +57,7 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
+
         return new BCryptPasswordEncoder();
     }
 

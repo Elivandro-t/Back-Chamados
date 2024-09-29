@@ -1,4 +1,5 @@
 package br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE;
+import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,23 @@ public class Chamado extends Model {
     private List<Imagens> imagens;
     @ManyToOne(optional = false)
     private Issue issue;
+
+    public Chamado(Issue chamado) {
+        this.issue = chamado;
+        this.setStatus(Status.AGUARDANDO_TECNICO);
+         Datas(LocalDateTime.now());
+         DataCreate(LocalDateTime.now());
+         this.setAtivo(true);
+         this.setCardId("CARD-"+chamado.gerarCode());
+//        {
+//            e.setStatus(Status.AGUARDANDO_TECNICO);
+//            e.setIssue(chamado);
+//            e.Datas(LocalDateTime.now());
+//            e.DataCreate(LocalDateTime.now());
+//            e.setAtivo(true);
+//            e.setCardId("CARD-"+chamado.gerarCode());
+//        }
+    }
 
     //
 }

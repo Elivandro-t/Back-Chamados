@@ -1,4 +1,4 @@
-package br.com.Initialiizr.Informatica116.sistem.validators.ValidaSetor;
+package br.com.Initialiizr.Informatica116.sistem.validators.criacao;
 
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 @Component
-public class ValidaSetor {
+public class ValidaSetor implements CriacaoValidacao{
     @Autowired
     private SetorRepository setorRepository;
-    public void validaSetor(Issue s){
+    public void valid(Issue s){
         for (Chamado c: s.getItens()){
             Optional<Setor> setor  = setorRepository.findOneByName(c.getSetor());
             if(!setor.isPresent()){

@@ -1,6 +1,8 @@
 package br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,13 +16,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChamadoDTO {
-
     private long id;
+    @NotNull
     private long sistemaid;
     private String issuetype;
     private String cardId;
+    @NotBlank
     private String titulo;
+    @NotBlank
     private String setor;
+    @NotBlank
     private  String solicitacao;
     private String patrimonio;
     private String equipamento;
@@ -36,6 +41,7 @@ public class ChamadoDTO {
     private boolean ativo;
     private String descricao ;
     private String gmid;
+    @NotBlank
     private String usuario;
     private long tecnicoid ;
     private String cpf;
