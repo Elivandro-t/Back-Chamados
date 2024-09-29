@@ -395,7 +395,7 @@ public class ChamadoService implements ChamadoInterface {
     private void EnviarTextComentario(Issue issue,String status) {
         try {
             for (Chamado c : issue.getItens()) {
-                commetService.EnvioComentarios(c.getId(), "Seu chamado foi concluído com sucesso. Por favor, Por gentileza, valide sua solicitação para garantir que tudo esteja conforme o desejado. Caso não esteja de acordo ou precise de ajustes, você pode recusar a solicitação.\n" +
+                commetService.EnvioComentarios(c.getId(), "Seu chamado foi concluído com sucesso. Por favor, valide sua solicitação para garantir que tudo esteja conforme o desejado. Caso não esteja de acordo ou precise de ajustes, você pode recusar a solicitação.\n" +
                         "\n" +
                         "Se não houver uma resposta ou validação dentro do prazo de 2 dias, o chamado será fechado automaticamente.\n" +
                         "\n" +
