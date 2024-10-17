@@ -12,7 +12,7 @@
 //
 //@Configuration
 //public class Conectiondb {
-//
+////// metodo de configuracao de banco de dados
 //    @Bean
 //    public DataSource dataSource(){
 //        DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -22,8 +22,13 @@
 //        dataSource.setPassword("tgfhvbnm");
 //        return dataSource;
 //    }
-//
-//    public JpaVendorAdapter jpaVendorAdapter(){
+//   // O JpaVendorAdapter é uma interface usada pelo
+//   // Spring Data JPA para configurar detalhes específicos do
+//   // provedor JPA que você está utilizando. No seu caso, o provedor
+//   // JPA é o Hibernate (um dos implementadores mais comuns de JPA).
+//   // O adaptador permite que o Spring abstraia diferenças entre os provedores
+//   // JPA e configure opções específicas para o Hibernate.
+//   private JpaVendorAdapter jpaVendorAdapter(){
 //        HibernateJpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
 //        jpaVendorAdapter.setGenerateDdl(true);
 //        jpaVendorAdapter.setShowSql(true);
@@ -36,11 +41,13 @@
 //        entityManagerFactoryBean.setPackagesToScan("br.com.Initialiizr.Informatica116.domain");
 //        entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter());
 //        entityManagerFactoryBean.setJpaProperties(properties());
+//        entityManagerFactoryBean.setJpaProperties(properties());
 //        return entityManagerFactoryBean;
 //   }
-//   public Properties properties(){
+//   private Properties properties(){
 //        Properties properties = new Properties();
 //        properties.setProperty("spring.jpa.hibernate.ddl-auto","update");
+//        properties.setProperty("server.port","8080");
 //        return properties;
 //
 //   }

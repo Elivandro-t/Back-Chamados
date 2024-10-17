@@ -13,7 +13,7 @@ public class CorsConfigurations {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://suporteinformatic.com.br,http://suporteinformatic.com.br,http://192.168.88.70,http://localhost:4200")
+                        .allowedOrigins("https://suporteinformatic.com.br,http://suporteinformatic.com.br,http://192.168.88.70,http://localhost:4200,https://projeto-chamado-angular-k0b0wpvr8-elivandrots-projects.vercel.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true)
