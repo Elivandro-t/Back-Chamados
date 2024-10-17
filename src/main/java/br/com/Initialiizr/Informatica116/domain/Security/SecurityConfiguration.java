@@ -32,6 +32,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET,"/sistemBotao/*").permitAll()
                         .requestMatchers(HttpMethod.PUT,"/alterar/cod/*").permitAll()
                         .requestMatchers(HttpMethod.GET,"/Logos/*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/lista/botoes").permitAll()
                         .requestMatchers(HttpMethod.POST,"/whats").permitAll()
                         .requestMatchers(HttpMethod.POST,"/varificacao/code").permitAll()
                         .requestMatchers(HttpMethod.PUT,"/alterar/passwd").permitAll()
