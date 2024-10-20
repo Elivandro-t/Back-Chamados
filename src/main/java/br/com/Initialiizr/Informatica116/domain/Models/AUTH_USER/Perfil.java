@@ -26,6 +26,7 @@ public class Perfil implements GrantedAuthority {
     private User user;
     @Override
     public String getAuthority() {
+
         return this.getName();
     }
 }

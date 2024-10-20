@@ -197,7 +197,7 @@ public class UserService {
             userRepository.save(result);
             return ResponseEntity.ok(new Mensagem("codigo de verificação enviado ao email!"));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensagem("email não encontrado"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("email não encontrado");
     }
     private  String gerarCode(){
         return RandomStringUtils.randomAlphabetic(6).toUpperCase();
@@ -254,7 +254,10 @@ public class UserService {
     }
     public UserComment pegarUsuarioEmail(String email){
         var user =  userRepository.findByEmail(email);
-        return modelMapper.map(user,UserComment.class);
+        if(user!=null){
+            return modelMapper.map(user,UserComment.class);
+        }
+        throw  new RuntimeException("Email não encontrado");
     }
     public MSG removerPerfil(Delete email, long id){
         var user = userRepository.findByEmail(email.getEmail());
