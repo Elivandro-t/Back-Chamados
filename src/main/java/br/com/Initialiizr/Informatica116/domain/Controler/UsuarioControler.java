@@ -62,9 +62,14 @@ public class UsuarioControler {
     @PutMapping("foto/usuario/{id}")
     @Transactional
 
-    public ResponseEntity<MSG> image(@RequestParam("file") MultipartFile image, @PathVariable("id") long id) throws IOException {
-        var response = userService.image(image,id);
-        return ResponseEntity.ok(response);
+    public ResponseEntity image(@RequestParam("file") MultipartFile image, @PathVariable("id") long id) throws IOException {
+        try {
+            userService.image(image,id);
+            return ResponseEntity.noContent().build();
+        }catch (ValidationException e){
+          return ResponseEntity.badRequest().body("Erro ao enviar imagem");
+
+        }
     }
     @PutMapping("/usuario/update")
     @Transactional

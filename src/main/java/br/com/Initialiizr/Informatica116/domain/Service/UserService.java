@@ -85,7 +85,7 @@ public class UserService {
             List<Perfil> perfis = new ArrayList<>();
             password.validator(userDTO.getPassword());
             if(user.isPresent()){
-                throw new RuntimeException("usuario já registrado!");
+                throw new RuntimeException("Usuario já registrado!");
             }
                 var usuario = modelMapper.map(userDTO, User.class);
                 Perfil perfil = new Perfil();
@@ -99,7 +99,7 @@ public class UserService {
                 var registrado = userRepository.save(usuario);
                  modelMapper.map(registrado,UserDTO.class);
 
-                return new MsgRegistre("cadastrado com sucesso");
+                return new MsgRegistre("Cadastrado com sucesso");
 
     }
     public MsgToken Login(LoginDTo loginDTo){
@@ -111,7 +111,7 @@ public class UserService {
             return new MsgToken(tokenString,refreshToken.getRefreshtoken());
     }
     @Transactional
-    public MSG image(MultipartFile image, long id) throws IOException {
+    public void image(MultipartFile image, long id) throws IOException {
         byte[] bytes = image.getBytes();
         String imagensUsuario = "Logos";
         File file = new File(UPLOAD_DIR);
@@ -121,17 +121,12 @@ public class UserService {
             file.mkdir();
         }
         Files.write(Paths.get(names),bytes);
-        System.out.println("meu id "+id + "minha imagem "+imagem);
         var usuario = userRepository.findById(id);
         if(usuario.isPresent()){
             User user = usuario.get();
             user.setImagem(imagem);
             userRepository.save(user);
-            System.out.println("minha imagem "+imagem);
-            System.out.println("enviado com sucesso");
-            return  new MSG("enviado com sucesso");
         }
-        throw new RuntimeException("erro ao enviar imagem");
     }
 
     public MSG perfil(String email,String perfil) {
@@ -139,18 +134,18 @@ public class UserService {
         PerfilDTo perfilDTo = convertJson.convertJson(perfil,PerfilDTo.class);
         Perfil perfil1 = modelMapper.map(perfilDTo,Perfil.class);
         if(perfil1==null){
-           throw new RuntimeException("adicione um perfil");
+           throw new RuntimeException("Adicione um perfil");
         }
         for (Perfil perfils:user.getItens()){
             if(perfils.getName().equals(perfil1.getName())){
-                return new MSG("perfil já adicionado");
+                return new MSG("Perfil já adicionado");
             }
         }
         if(email!=null){
            user.getItens().add(perfil1);
            perfil1.setUser(user);
            userRepository.save(user);
-           return  new MSG("perfil adicionado");
+           return  new MSG("Perfil adicionado");
         }
         return null;
     }
@@ -159,7 +154,7 @@ public class UserService {
         if(user!=null){
             return  modelMapper.map(user,DetalheUsuario.class);
         }
-        throw new RuntimeException("sem usuario encontrado");
+        throw new RuntimeException("Sem usuario encontrado");
     }
 
     public ResponseEntity<Resource> ListaImagensId(String name){
@@ -183,7 +178,7 @@ public class UserService {
             User user = dadosUsaurio.get();
             user.criptografar(alterPassword.newPassword());
             userRepository.save(user);
-            return ResponseEntity.ok(new MensagemPd("senha alterada com sucesso!"));
+            return ResponseEntity.ok(new MensagemPd("Senha alterada com sucesso!"));
         }
         return null;
     }
@@ -195,9 +190,9 @@ public class UserService {
             emailSend.SendEmil(email,cod);
             result.setCodigo(cod);
             userRepository.save(result);
-            return ResponseEntity.ok(new Mensagem("codigo de verificação enviado ao email!"));
+            return ResponseEntity.ok(new Mensagem("Codigo de verificação enviado ao email!"));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensagem("email não encontrado"));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Mensagem("Erro na base de dados: Email não encontrado!"));
     }
     private  String gerarCode(){
         return RandomStringUtils.randomAlphabetic(6).toUpperCase();
@@ -210,7 +205,7 @@ public class UserService {
             user.incrementVerificationAttempts();
             if (user.getExp() >= 3) {
                 user.resetVerificationAttempts();
-                throw new RuntimeException("limite expirado!");
+                throw new RuntimeException("Limite expirado!");
             }
             userRepository.save(user);
            throw new RuntimeException("Código de verificação inválido.");
@@ -227,7 +222,7 @@ public class UserService {
             user.setAccount_locked(true);
             user.setCodigo(null);
             userRepository.save(user);
-            return ResponseEntity.ok(new MensagemPd("senha alterada com sucesso!"));
+            return ResponseEntity.ok(new MensagemPd("Senha alterada com sucesso!"));
         }
         return null;
     }
