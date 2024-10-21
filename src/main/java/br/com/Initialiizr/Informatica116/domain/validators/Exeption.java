@@ -18,10 +18,6 @@ public class Exeption {
     public  ResponseEntity validUser(BadCredentialsException e){
         return ResponseEntity.ok().body(new MSG("e-mail ou senha invalidos!"));
   }
-    @ResponseBody
-    @ExceptionHandler(BadRequestException.class)
-    public  ResponseEntity Status400(BadRequestException e){
-        return ResponseEntity.ok().body(e.getMessage());
-    }
+
 }
 
