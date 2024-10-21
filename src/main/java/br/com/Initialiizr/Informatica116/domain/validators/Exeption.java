@@ -21,7 +21,7 @@ public class Exeption {
     @ResponseBody
     @ExceptionHandler(BadRequestException.class)
     public  ResponseEntity Status400(BadRequestException e){
-        return ResponseEntity.ok().body("e-mail ou senha invalidos!");
+        return ResponseEntity.ok().body(e.getMessage());
     }
 }
 
