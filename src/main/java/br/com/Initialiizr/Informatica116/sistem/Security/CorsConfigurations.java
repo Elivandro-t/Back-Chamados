@@ -13,7 +13,7 @@ public class CorsConfigurations {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://suporteinformatic.com.br,http://192.168.88.70,http://localhost:4200,http://localhost:5173,,http://suporteinformatic-com-br.umbler.net")
+                        .allowedOrigins("https://suporteinformatic.com.br,http://192.168.88.70,http://localhost:4200,http://localhost:5173,http://suporteinformatic-com-br.umbler.net,https://agileservice.onrender.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true)
