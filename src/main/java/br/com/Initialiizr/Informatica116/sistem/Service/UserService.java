@@ -280,7 +280,7 @@ public class UserService {
                 userRepository.save(user); // Salva as alterações no usuário
             });
 
-            return perfil.isPresent() ? new MSG("Perfil removido com sucesso") : new MSG("Perfil não encontrado");
+            return perfil.isPresent() ? new MSG("Perfil removido com sucesso!") : new MSG("Perfil não encontrado");
         } else {
             throw new EntityNotFoundException("Usuário não encontrado");
         }
