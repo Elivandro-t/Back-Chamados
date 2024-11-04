@@ -33,14 +33,15 @@ public class ChamadoService2 {
     ValidationsTec validationsTec;
     @Autowired
     private UserRepository userRepository;
-    public Page<IssueDTO> listaValidados(Pageable page, long idUsuario){
-        var name = issueResposoty.FindAllByHardwareByStatusValidacao(page,idUsuario)
-                .map(e->modelMapper.map(e, IssueDTO.class));
-        return name;
-    }
-
+//    public Page<IssueDTO> listaValidados(Pageable page, long idUsuario){
+//        var name = issueResposoty.FindAllByHardwareByStatusValidacao(page,idUsuario)
+//                .map(e->modelMapper.map(e, IssueDTO.class));
+//        return name;
+//    }
+//
     public ResponseEntity validaChamadoRecusado(long id, String cardChamado, long UsuarioLogado){
-        Issue issue = issueResposoty.findOneByIdChamado(id,cardChamado);
+        var usuario = userRepository.getReferenceById(id);
+        Issue issue = issueResposoty.findOneByIdChamado(usuario,cardChamado);
         System.out.println(id);
         if(issue ==null){
             throw new RuntimeException("nada encontrado");
@@ -84,6 +85,7 @@ public class ChamadoService2 {
     }
 
     public  String RemoverChamado(long id){
+        System.out.println("meu id "+ id);
         try {
             var remove = issueResposoty.findOneById(id);
             if (remove != null) {

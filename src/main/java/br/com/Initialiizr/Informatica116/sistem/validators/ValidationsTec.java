@@ -36,10 +36,8 @@ public class ValidationsTec {
         }
     }
 
-    public  void Status(Issue issueDTO){
-        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
-        System.out.println(user.getId());
-        for (Chamado c: issueDTO.getItens()){
+    public  void Status(Issue issue){
+        for (Chamado c: issue.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getStatus()==Status.FEITO){
                 throw new RuntimeException("Erro ao atualizar status");
@@ -51,16 +49,18 @@ public class ValidationsTec {
         }
     }
 
-    public  void existeTecnico(Issue issueDTO, long id){
-        for (Chamado c: issueDTO.getItens()){
+    public  void existeTecnico(Issue issueDTO,String email, long id){
+        var usuario = userRepository.findByEmail(email);
+        Issue issue = modelMapper.map(issueDTO,Issue.class);
+        for (Chamado c: issue.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(issueDTO ==null){
                 throw new RuntimeException("Chamado fechado");
             }
-            if(chamado.getTecnicoid()==id){
+            if(chamado.getTecnicoid()==usuario.getId()){
                 throw new RuntimeException("Voce ja está de posse desse chamado");
             }
-            else if(issueDTO.getUsuarioid()==id){
+            else if(usuario.getId()==id){
                 throw new RuntimeException("Voce não pode aceitar seu propio chamado");
             }
 
@@ -90,7 +90,6 @@ public class ValidationsTec {
 //        }
 //    }
 public  void StatusJira(Issue issueDTO){
-    var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
     for (Chamado c: issueDTO.getItens()){
         Chamado chamado = modelMapper.map(c,Chamado.class);
         if(chamado.getStatus()== Status.AGUARDANDO_VALIDACAO){
@@ -104,7 +103,6 @@ public  void StatusJira(Issue issueDTO){
 }
 
     public  void Aprovador(Issue issueDTO){
-        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
         for (Chamado c: issueDTO.getItens()){
             Chamado chamado = modelMapper.map(c,Chamado.class);
             if(chamado.getStatus()== Status.AGUARDANDO_VALIDACAO){
@@ -130,10 +128,8 @@ public  void StatusJira(Issue issueDTO){
     }
 
     public  void StatusvalidFechado(Issue issueDTO) {
-        var user = userRepository.getReferenceById(issueDTO.getUsuarioid());
         for (Chamado c : issueDTO.getItens()) {
             Chamado chamado = modelMapper.map(c, Chamado.class);
-            System.out.println(user.getId());
             if (chamado.getStatus() == Status.FECHADO) {
                 throw new RuntimeException("Chamado está fechado");
             } else if (chamado.getStatus() == Status.RECUSADO) {

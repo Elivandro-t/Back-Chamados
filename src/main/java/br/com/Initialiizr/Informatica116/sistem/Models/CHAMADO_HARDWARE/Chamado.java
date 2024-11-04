@@ -22,6 +22,7 @@ public class Chamado extends Model {
     private String equipamento;
     private String sistem_erro;
     private String erro;
+    private long sistemaid;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "chamado")
     private List<Imagens> imagens;
     @ManyToOne(optional = false)

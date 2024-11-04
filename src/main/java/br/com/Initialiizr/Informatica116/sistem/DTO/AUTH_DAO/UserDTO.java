@@ -1,11 +1,14 @@
 package br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO;
 
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -27,4 +30,8 @@ public class UserDTO {
     @NotBlank
     private String password;
     private boolean accountLocked;
+
+    public UserDTO(Optional<User> usuario) {
+        this.setName(usuario.get().getName());
+    }
 }

@@ -12,5 +12,7 @@ public class UpdateChamado{
         String tecnico_responsavel;
         long tecnicoid;
         boolean done;
+         String emailUsuarioLogado;
+
 
 }

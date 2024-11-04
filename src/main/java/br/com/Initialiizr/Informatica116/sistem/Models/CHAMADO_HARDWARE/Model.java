@@ -23,20 +23,15 @@ public class Model {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private long sistemaid;
-    @NotBlank
     private  String solicitacao;
-    @NotBlank
     private String cardId;
     private String issuetype;
-    @NotBlank
     private String titulo;
-    @NotBlank
     private String setor;
     @Enumerated(EnumType.STRING)
     private Status status ;
     @Column(columnDefinition = "TEXT")
     private String descricao ;
-    @NotBlank
     private String usuario;
     private long tecnicoid ;
     private String tecnico_responsavel ;

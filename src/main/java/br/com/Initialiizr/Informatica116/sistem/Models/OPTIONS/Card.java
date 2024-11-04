@@ -17,9 +17,7 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long card_id;
-    @NotBlank
     private String titulo;
-    @NotBlank
     private String subtitulo;
     private String img;
 }

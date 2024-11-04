@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDetalheDTO;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.RelatorioDto;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.StatusOneDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
@@ -29,14 +30,14 @@ public class ControlerChamado {
     private ChamadoService2 service2;
 
     @RequestMapping(method = RequestMethod.POST,value = "chamado")
-    public ResponseEntity<IssueDTO> chamadoDT(@RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
+    public ResponseEntity<IssueDetalheDTO> chamadoDT(@RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
         var response = service.registrar(data,file);
         System.out.println("minhas request "+data.toString());
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/lista/{filial}")
-    public Page<IssueDTO> lista(Pageable page,
+    public Page<IssueDetalheDTO> lista(Pageable page,
                                 @RequestParam(name = "setor",required = false) String Setor,
                                 @RequestParam(name = "dataAntes",required = false) String dataAntes,
                                 @RequestParam(name = "dataDepois",required = false) String dataDepois,
@@ -69,11 +70,11 @@ public class ControlerChamado {
 
         return service.Relatorio(page,Setor,dataAntes,dataDepois,ativo);
     }
-    @GetMapping("/lista/aguardando/{id}")
-    public Page<IssueDTO> listaValidando(@PageableDefault Pageable pageable, @PathVariable long id){
-        System.out.println(id);
-        return service2.listaValidados(pageable,id);
-    }
+//    @GetMapping("/lista/aguardando/{id}")
+//    public Page<IssueDTO> listaValidando(@PageableDefault Pageable pageable, @PathVariable long id){
+//        System.out.println(id);
+//        return service2.listaValidados(pageable,id);
+//    }
 
     @GetMapping("/imagens/{img}")
     public ResponseEntity<Resource> pegarImg(@PathVariable String img){
@@ -81,7 +82,7 @@ public class ControlerChamado {
         return  response;
     }
     @GetMapping("/chamado/usuarioid/{id}")
-    public Page<IssueDTO> pegarChamdoID(@PathVariable long id, @PageableDefault(size = 10) Pageable page,@RequestParam(value = "dataAntes",required = false) String dataAntes,
+    public Page<IssueDetalheDTO> pegarChamdoID(@PathVariable long id, @PageableDefault(size = 10) Pageable page,@RequestParam(value = "dataAntes",required = false) String dataAntes,
                                         @RequestParam(value = "dataDepois",required = false) String dataDepois,@RequestParam(value = "descricao",required = false)  String descricao,@RequestParam(value = "ativo",required = false)  boolean ativo){
         var response = service.pegarChamadoId(id,page,dataAntes, dataDepois, descricao,ativo);
         return response;
@@ -103,7 +104,7 @@ public class ControlerChamado {
         return response;
     }
     @GetMapping("/chamado/card/{card}/{id}")
-    public IssueDTO exibiChamado(@PathVariable("card") String card, @PathVariable long id){
+    public IssueDetalheDTO exibiChamado(@PathVariable("card") String card, @PathVariable long id){
         var response = service.Card(card,id);
         return response;
     }
@@ -158,7 +159,7 @@ public class ControlerChamado {
 
     }
     @GetMapping("/setor/lista")
-    public  ResponseEntity<List<Issue>> setores(){
+    public  ResponseEntity<List<IssueDetalheDTO>> setores(){
           var result =  service.pegaStor();
        return ResponseEntity.ok(result);
     }

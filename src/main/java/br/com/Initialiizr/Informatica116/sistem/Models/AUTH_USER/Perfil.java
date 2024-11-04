@@ -18,7 +18,6 @@ public class Perfil implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank
     private String name;
     private boolean ativo;
     @ManyToOne(optional = false)

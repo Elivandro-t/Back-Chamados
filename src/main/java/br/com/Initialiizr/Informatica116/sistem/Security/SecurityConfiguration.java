@@ -2,6 +2,7 @@ package br.com.Initialiizr.Informatica116.sistem.Security;
 
 import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,6 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 //import org.telegram.telegrambots.meta.TelegramBotsApi;
 //import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 //import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
@@ -21,6 +25,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfiguration {
     @Autowired
     FilterValidation filterValidation;
+    @Value("${key}")
+    String key;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
         httpSecurity.csrf(e->e.disable())
@@ -31,6 +37,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST,"/login").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/foto/usuario/*").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/sistemBotao/*").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/lista/botoes").permitAll()
                                 .requestMatchers(HttpMethod.PUT,"/alterar/cod/*").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/Logos/*").permitAll()
                         .requestMatchers(HttpMethod.POST,"/whats").permitAll()
@@ -57,17 +64,17 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
+
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public BotService botService() throws TelegramApiException {
-//         var key = "7436839194:AAF8TeUL-xtQS_gkaLJvSW_03pJ5LPVPn8c";
-//         var key2 = "7194413702:AAEJ6mmnGBV9sapSSycxxyBdjRkR2gMHa88";
-//
-//        BotService botService = new BotService("agile_ti_bot",key2);
-//        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
-//        teleBots.registerBot(botService);
-//        return botService;
-//    }
+    @Bean
+    public BotService botService() throws TelegramApiException {
+
+
+        BotService botService = new BotService("agile_ti_bot",key);
+        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
+        teleBots.registerBot(botService);
+        return botService;
+    }
 }

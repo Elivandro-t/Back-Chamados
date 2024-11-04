@@ -19,4 +19,6 @@ Sistemas findAllByIdList(long id);
 
     @Query("select p from Sistemas p  where lower(p.name) like lower(concat('%', :name, '%'))")
     Sistemas findByNameContainingIgnoreCase(@Param("name") String name);
+
+    Sistemas findOneByName(String name);
 }

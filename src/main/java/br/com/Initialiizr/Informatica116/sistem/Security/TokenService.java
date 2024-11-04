@@ -1,5 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Security;
 
+import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.FuncoesDto;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Funcoes;
 import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Perfil;
 import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
 import com.auth0.jwt.JWT;
@@ -14,7 +16,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TokenService {
@@ -22,7 +26,16 @@ public class TokenService {
     private String namber;
     public String geratoken(User user, Collection<? extends GrantedAuthority> authorities){
         try {
-            List<String> perfil = user.getItens().stream().map(Perfil::getName).toList();
+            List<String> perfil = user.getRoles().stream().map(Perfil::getName).toList();// Ajuste conforme o método ou atributo correto de Funcoes
+            List<Map<String, Object>> map = user.getFuncoes().stream().filter(Funcoes::isAtivo).map(mapbay->{
+                Map<String, Object>  model = new HashMap<>();
+                model.put("id",mapbay.getSistemas().getId());
+                model.put("name",mapbay.getSistemas().getName());
+                model.put("titulo",mapbay.getSistemas().getTitulo());
+                model.put("imagem",mapbay.getSistemas().getImagem());
+                return model;
+
+            }).toList();
             var algorithm = Algorithm.HMAC256(namber);
             return JWT.create()
                     .withIssuer("17100150")
@@ -33,6 +46,7 @@ public class TokenService {
                     .withClaim("filial",user.getFilial())
                     .withClaim("perfil",perfil)
                     .withClaim("contato",user.getContato())
+                    .withClaim("itens",map)
                     .withClaim("imagem",user.getImagem())
                     .withExpiresAt(DataExpired())
                     .sign(algorithm);

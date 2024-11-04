@@ -12,14 +12,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetalheUsuario {
+public class DetalhesChamados {
     private long id;
     private String name;
     private  String lastname;
     private String setor;
     private int filial;
     private String email;
-    private String contato;
     private String imagem;
-    private List<FuncoesDto> funcoes;
+    private List<IssueDetalheDTO> solicitacoes;
 }

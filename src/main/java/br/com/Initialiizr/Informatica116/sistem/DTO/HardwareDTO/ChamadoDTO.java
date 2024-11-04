@@ -1,6 +1,8 @@
 package br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +19,13 @@ public class ChamadoDTO {
 
     private long id;
     private long sistemaid;
+    @NotBlank
     private String issuetype;
     private String cardId;
     private String titulo;
+    @NotBlank
     private String setor;
+    @NotBlank
     private  String solicitacao;
     private String patrimonio;
     private String equipamento;
@@ -41,6 +46,7 @@ public class ChamadoDTO {
     private String cpf;
     private String data_admin;
     private String data_nasc;
+    @NotBlank
     private  Integer filial;
     private String funcao;
     private String tecnico_responsavel;
@@ -52,7 +58,5 @@ public class ChamadoDTO {
     private String nomeDogestor;
     private String emailUsuario;
     private String data_fechado;
-
-
 
 }

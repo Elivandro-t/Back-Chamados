@@ -1,6 +1,10 @@
 package br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.UpdateChamado;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
+import br.com.Initialiizr.Informatica116.sistem.Models.COMENTARIOS.Comments;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Select;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Sistemas;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -26,24 +30,25 @@ public class Issue {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotNull
-    private long usuarioid;
-    @NotNull
-    private String usuario_logado;
-    @NotNull
-    private int filial;
     private  String contato;
-    @NotBlank
-    private String servico;
-//    @JsonDeserialize
-    private LocalDateTime hora_aceito;
-    private  LocalDateTime data_criacao;
+    @ManyToOne
+    private Select servico;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "issue")
     private Set<Chamado> itens = new HashSet<>();
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id")
+    private User usuario;
+    private LocalDateTime hora_aceito;
+    private  LocalDateTime data_criacao;
+    private int filial;
+    @ManyToOne
+    private  Comments comments;
+    private String issueType;
     public String gerarCode(){
         int codigobase = 4000;
             return String.valueOf(gerarrandom(codigobase));
     }
+
     private int gerarrandom(int numero){
         Random random = new Random();
         for(int i = 0; i <10;i++){
@@ -51,7 +56,6 @@ public class Issue {
         }
         return 0;
     }
-
     public void atualiza(UpdateChamado updateChamado) {
         this.getItens().forEach(e->e.setTecnicoid(updateChamado.getTecnicoid()));
         this.getItens().forEach(e->e.setTecnico_responsavel(updateChamado.getTecnico_responsavel()));

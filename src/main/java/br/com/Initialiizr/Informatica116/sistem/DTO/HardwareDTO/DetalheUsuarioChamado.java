@@ -1,6 +1,7 @@
-package br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO;
+package br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO;
 
-import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDetalheDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.FuncoesDto;
+import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DetalheUsuario {
+public class DetalheUsuarioChamado {
     private long id;
     private String name;
     private  String lastname;
@@ -21,5 +22,9 @@ public class DetalheUsuario {
     private String email;
     private String contato;
     private String imagem;
-    private List<FuncoesDto> funcoes;
+
+    public DetalheUsuarioChamado(User usuario) {
+        this.name = getName();
+        this.imagem = usuario.getImagem();
+    }
 }

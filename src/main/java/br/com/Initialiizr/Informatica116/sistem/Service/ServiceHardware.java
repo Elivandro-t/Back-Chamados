@@ -4,6 +4,7 @@ import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 
 import br.com.Initialiizr.Informatica116.sistem.Models.Status;
+import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,10 @@ public class ServiceHardware {
     @Value("${endpoint}")
     private String endpoint;
     @Autowired
-   ModelMapper modelMapper;
+    ModelMapper modelMapper;
+    @Autowired
+    UserRepository userRepository;
+
     public Issue Registro(IssueDTO issueDTO){
         Issue issue = modelMapper.map(issueDTO, Issue.class);
         issue.getItens().forEach(e->{
@@ -33,7 +37,6 @@ public class ServiceHardware {
             e.setAtivo(true);
             e.setCardId("CARD-"+ issue.gerarCode());
         });
-        issue.setServico("issue");
         return issue;
     }
 

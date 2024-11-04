@@ -51,6 +51,7 @@ public class UsuarioControler {
     @PostMapping("login")
     @Transactional
     public ResponseEntity login(@RequestBody LoginDTo userDTO){
+        System.out.println("meus dados "+userDTO);
        try{
            var response = userService.Login(userDTO);
            return ResponseEntity.ok(response);
@@ -61,7 +62,6 @@ public class UsuarioControler {
     }
     @PutMapping("foto/usuario/{id}")
     @Transactional
-
     public ResponseEntity<MSG> image(@RequestParam("file") MultipartFile image, @PathVariable("id") long id) throws IOException {
         var response = userService.image(image,id);
         return ResponseEntity.ok(response);
@@ -81,6 +81,11 @@ public class UsuarioControler {
     @GetMapping("/user/detalhes/{id}")
     public ResponseEntity<DetalheUsuario> detalheUsuario(@PathVariable long id){
         var user = userService.buscarUserId(id);
+        return ResponseEntity.ok(user);
+    }
+    @GetMapping("/user/chamado/{id}")
+    public ResponseEntity<DetalhesChamados> chamados(@PathVariable long id){
+        var user = userService.chamadosUsuarioID(id);
         return ResponseEntity.ok(user);
     }
     @GetMapping("/Logos/{img}")

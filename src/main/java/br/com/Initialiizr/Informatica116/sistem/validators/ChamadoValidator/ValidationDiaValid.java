@@ -12,8 +12,8 @@ public class ValidationDiaValid {
         var horaCriacao = issue.getData_criacao();
         var HoraValid = horaCriacao.getDayOfWeek().equals(DayOfWeek.SUNDAY);
         var horaAntes = horaCriacao.getHour() < 8;
-        var horaDePois = horaCriacao.getHour() >= 18;
-        if(HoraValid || horaAntes || horaDePois){
+        var horaDePois = horaCriacao.getHour() >= 19;
+        if( horaAntes || horaDePois || HoraValid){
             throw new RuntimeException("Fora do horário de atendimento, que é de segunda a sábado, das 08h às 18h.");
         }
     }

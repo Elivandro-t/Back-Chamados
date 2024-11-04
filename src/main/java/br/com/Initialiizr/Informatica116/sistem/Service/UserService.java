@@ -98,7 +98,7 @@ public class UserService {
                 perfil.setUser(usuario);
                 perfil.setAtivo(true);
                 perfis.add(perfil);
-                usuario.setItens(perfis);
+                usuario.setRoles(perfis);
                 usuario.setImagem(imgUser);
                 usuario.criptografar(userDTO.getPassword());
                 var registrado = userRepository.save(usuario);
@@ -119,8 +119,8 @@ public class UserService {
     public MSG image(MultipartFile image, long id) throws IOException {
         byte[] bytes = image.getBytes();
         String imagensUsuario = "Logos";
-        File file = new File(UPLOAD_DIR);
         String names =UPLOAD_DIR+"/"+image.getOriginalFilename();
+        File file = new File(UPLOAD_DIR);
         String imagem =endpoint+imagensUsuario+"/"+image.getOriginalFilename();
         if(!file.exists()){
             file.mkdir();
@@ -146,13 +146,13 @@ public class UserService {
         if(perfil1==null){
            throw new RuntimeException("adicione um perfil");
         }
-        for (Perfil perfils:user.getItens()){
+        for (Perfil perfils:user.getRoles()){
             if(perfils.getName().equals(perfil1.getName())){
                 return new MSG("perfil já adicionado");
             }
         }
         if(email!=null){
-           user.getItens().add(perfil1);
+           user.getRoles().add(perfil1);
            perfil1.setUser(user);
            userRepository.save(user);
            return  new MSG("perfil adicionado");
@@ -166,9 +166,17 @@ public class UserService {
         }
         throw new RuntimeException("sem usuario encontrado");
     }
+    public DetalhesChamados chamadosUsuarioID(long userId){
+        User user = userRepository.getReferenceById(userId);
+        if(user!=null){
+            return  modelMapper.map(user,DetalhesChamados.class);
+        }
+        throw new RuntimeException("sem usuario encontrado");
+    }
 
     public ResponseEntity<Resource> ListaImagensId(String name){
-        Path path = Paths.get(UPLOAD_DIR).resolve(name);
+//        Path path = Paths.get(UPLOAD_DIR).resolve(name);
+        Path path = Paths.get("Logos").resolve(name);
         try{
             Resource resource = new UrlResource(path.toUri());
             if(resource.exists()||resource.isReadable()){
@@ -264,7 +272,7 @@ public class UserService {
     public MSG removerPerfil(Delete email, long id){
         var user = userRepository.findByEmail(email.getEmail());
         if (user != null) {
-            var perfil = user.getItens().stream()
+            var perfil = user.getRoles().stream()
                     .filter(p -> p.getId() == id)
                     .findFirst();
 

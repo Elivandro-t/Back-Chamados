@@ -17,11 +17,8 @@ public class Select {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank
     private String name;
-    @NotBlank
     private String titulo;
-
     @ManyToOne(optional = false)
     private Sistemas sistema;
 

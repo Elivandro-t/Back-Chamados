@@ -16,11 +16,8 @@ public class Sistemas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank
     private String name;
-    @NotBlank
     private String titulo;
-    @NotBlank
     private String imagem;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "sistema")
     List<Select> options;

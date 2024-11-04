@@ -1,6 +1,8 @@
 package br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.UserDTO;
+import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Sistemas;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,30 +28,27 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", unique = true)
     private long id;
-    @NotBlank
     private String name;
-    @NotBlank
     private  String lastname;
-    @NotBlank
     private String setor;
-    @NotBlank
     private String email;
-    @NotNull
     private int filial;
     private String contato;
-    @NotBlank
     private String password;
-    private String codigo;
-    private  int exp = 0;
-    private  int counts = 0;
     private String refreshToken;
     @JoinColumn(nullable = true)
     private String imagem;
     private boolean account_locked =false;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.EAGER)
-    private List<Perfil> itens;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.LAZY)
+    private List<Perfil> roles;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "usuario")
+    private List<Issue>  itens;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "usuario")
+    private List<Funcoes> funcoes;
+    private String codigo;
+    private  int exp = 0;
+    private  int counts = 0;
     public User(UserDTO user) {
         this.name =user.getName();
         this.lastname =user.getLastname();
@@ -60,10 +59,10 @@ public class User implements UserDetails {
       return this.password = new BCryptPasswordEncoder().encode(user);
    }
     @Override
-public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        for(Perfil role:itens){
+        for(Perfil role:roles){
             if(role.getName().equals("admin")){
                  authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             }

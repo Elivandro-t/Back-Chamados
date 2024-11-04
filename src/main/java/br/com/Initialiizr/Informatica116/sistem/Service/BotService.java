@@ -22,14 +22,14 @@ public class BotService extends TelegramLongPollingBot{
          Message message = update.getMessage();
     }
     public void enviarNotificacaoChamado(String numeroChamado, String nomeUsuario,long UsuarioId,long idChamado,String data,String titulo) {
-        String mensagem = "🔴 Alerta Chamado Aberto 🔴\n\n";
-        mensagem += "Um novo chamado foi aberto pelo usuário *";
+        String mensagem = "🔴 Agile Service infor 🔴\n\n";
+        mensagem += "Chamado aberto pelo usuário *";
         mensagem += nomeUsuario + "*\n\n";
         mensagem += "Detalhes do Chamado:\n";
         mensagem += "- Número: " + numeroChamado + "\n";
         mensagem += "- Categoria: "+ titulo+"\n";
         mensagem += "- Data: "+data+"\n\n";
-        mensagem += "- Link: " + "https://suporteinformatic.com.br" + "/chamado/" + numeroChamado + "/" + UsuarioId + "/" + idChamado + "/admin" + "\n\n";
+        mensagem += "- Link: " + "https://agileservice.onrender.com" + "/chamado/" + numeroChamado + "/" + UsuarioId + "/" + idChamado + "/admin" + "\n\n";
         SendMessage message = new SendMessage();
         message.setChatId(key);
         message.setText(mensagem);
