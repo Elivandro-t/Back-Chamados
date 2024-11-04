@@ -47,7 +47,7 @@ RUN apt-get update && apt-get install -y \
     openjdk-17-jdk \
     maven
 
-WORKDIR /app
+WORKDIR /apps
 
 # Copie o pom.xml primeiro para aproveitar o cache do Docker
 COPY pom.xml .
@@ -62,13 +62,13 @@ RUN mvn clean package
 FROM openjdk:17-jdk-slim
 
 # Diretório de trabalho para a aplicação
-WORKDIR /app
+WORKDIR /apps
 
 # Copie o arquivo .jar do estágio de construção
-COPY --from=build /app/target/Informatica-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /apps/target/Informatica-0.0.1-SNAPSHOT.jar app.jar
 
 # Copie o diretório Logos do estágio de construção (se existir)
-COPY --from=build /app/Logos /app/Logos
+COPY --from=build /apps/Logos /apps/Logos
 
 # Expor a porta 8080 para acesso externo
 EXPOSE 8080
