@@ -48,7 +48,7 @@ public class SistemasService {
             );
             Optional optional = repository.findByName(sistemas.getName());
             if(optional.isPresent()){
-                throw new RuntimeException("ja contem um Registro");
+                throw new RuntimeException("ja contem um Registro!");
             };
             String name = endpoint+UPLOAD_DIR+"/"+file.getOriginalFilename();
             String imagem = UPLOAD_DIR+"/"+file.getOriginalFilename();
