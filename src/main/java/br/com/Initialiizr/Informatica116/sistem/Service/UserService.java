@@ -119,14 +119,13 @@ public class UserService {
     public MSG image(MultipartFile image, long id) throws IOException {
         byte[] bytes = image.getBytes();
         String imagensUsuario = "Logos";
-        String names =UPLOAD_DIR+"/"+image.getOriginalFilename();
         File file = new File(UPLOAD_DIR);
+        String names =UPLOAD_DIR+"/"+image.getOriginalFilename();
         String imagem =endpoint+imagensUsuario+"/"+image.getOriginalFilename();
         if(!file.exists()){
             file.mkdir();
         }
         Files.write(Paths.get(names),bytes);
-        System.out.println("meu id "+id + "minha imagem "+imagem);
         var usuario = userRepository.findById(id);
         if(usuario.isPresent()){
             User user = usuario.get();
@@ -175,8 +174,7 @@ public class UserService {
     }
 
     public ResponseEntity<Resource> ListaImagensId(String name){
-//        Path path = Paths.get(UPLOAD_DIR).resolve(name);
-        Path path = Paths.get("Logos").resolve(name);
+        Path path = Paths.get(UPLOAD_DIR).resolve(name);
         try{
             Resource resource = new UrlResource(path.toUri());
             if(resource.exists()||resource.isReadable()){
