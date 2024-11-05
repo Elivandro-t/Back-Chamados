@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -40,9 +41,7 @@ public class UsuarioControler {
     @PostMapping("registrar")
     @Transactional
     public MsgRegistre registrar(@RequestBody @Valid UserDTO userDTO){
-        var result = userService.registro(userDTO);
-        return result;
-
+        return userService.registro(userDTO);
     }
     @GetMapping("/user/{email}")
     public UserComment findOneByEmal(@PathVariable String email){
@@ -51,14 +50,9 @@ public class UsuarioControler {
     @PostMapping("login")
     @Transactional
     public ResponseEntity login(@RequestBody LoginDTo userDTO){
-        System.out.println("meus dados "+userDTO);
-       try{
-           var response = userService.Login(userDTO);
-           return ResponseEntity.ok(response);
-       }catch (ValidationException e){
-           return ResponseEntity.badRequest().body(new MsgRegistre(e.getMessage()));
 
-       }
+               return  userService.Login(userDTO);
+
     }
     @PutMapping("foto/usuario/{id}")
     @Transactional

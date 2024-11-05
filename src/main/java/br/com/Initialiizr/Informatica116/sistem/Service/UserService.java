@@ -20,11 +20,8 @@ import br.com.Initialiizr.Informatica116.sistem.validators.ValidatorEmail;
 import br.com.Initialiizr.Informatica116.sistem.validators.ValidatorPassword;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
-import jakarta.validation.ValidationException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.health.Status;
@@ -40,6 +37,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -78,7 +77,6 @@ public class UserService {
    private  AuthenticationManager authenticationManager;
     @Autowired
     private RefeshTokenService refeshTokenService;
-
     @Value("${endpoint}")
     private String endpoint;
     private String imgUser = "https://suporte-infor.onrender.com/Logos/perfil.png";
@@ -103,18 +101,49 @@ public class UserService {
                 usuario.criptografar(userDTO.getPassword());
                 var registrado = userRepository.save(usuario);
                  modelMapper.map(registrado,UserDTO.class);
-
-                return new MsgRegistre("cadastrado com sucesso");
+                 return new MsgRegistre("cadastrado com sucesso");
 
     }
-    public MsgToken Login(LoginDTo loginDTo){
+    @Transactional
+    public ResponseEntity Login(LoginDTo loginDTo){
+        try {
+         bloqueio(loginDTo.email(),loginDTo.password());
             var token = new UsernamePasswordAuthenticationToken(loginDTo.email(),loginDTo.password());
             var user = authenticationManager.authenticate(token);
             User user1 = (User) user.getPrincipal();
             RefreshToken refreshToken = refeshTokenService.registrarToken(user1.getId());
             var tokenString = tokenservice.geratoken((User) user.getPrincipal(),user.getAuthorities());
-            return new MsgToken(tokenString,refreshToken.getRefreshtoken());
+            var acess = new MsgToken(tokenString,refreshToken.getRefreshtoken());
+            return ResponseEntity.ok(acess);
+        }catch (BadCredentialsException e){
+           var usuario =  userRepository.findByEmail(loginDTo.email());
+          if(usuario.getCounts()>3){
+              usuario.setPassword("");
+              usuario.setAccount_locked(true);
+              userRepository.save(usuario);
+          }
+            return ResponseEntity.ok().body(new Mensagem("Email ou senha invalidos!"));
+        }
     }
+    public boolean bloqueio(String email, String pass) {
+        var user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new RuntimeException("Usuário não encontrado");
+        }
+        // Incrementa o contador antes de verificar a senha
+        if (!passwordEncoder.matches(pass, user.getPassword())) {
+                user.setCounts(user.incrementCount());
+                userRepository.save(user);
+                return true;
+        }else{
+            user.setCounts(0);
+            userRepository.save(user);
+        }
+        return false;
+    }
+
+
     @Transactional
     public MSG image(MultipartFile image, long id) throws IOException {
         byte[] bytes = image.getBytes();
@@ -163,7 +192,7 @@ public class UserService {
         if(user!=null){
             return  modelMapper.map(user,DetalheUsuario.class);
         }
-        throw new RuntimeException("sem usuario encontrado");
+        throw new RuntimeException("Sem usuario encontrado");
     }
     public DetalhesChamados chamadosUsuarioID(long userId){
         User user = userRepository.getReferenceById(userId);
@@ -221,7 +250,7 @@ public class UserService {
             user.incrementVerificationAttempts();
             if (user.getExp() >= 3) {
                 user.resetVerificationAttempts();
-                throw new RuntimeException("limite expirado!");
+                throw new RuntimeException("Limite expirado!");
             }
             userRepository.save(user);
            throw new RuntimeException("Código de verificação inválido.");
@@ -235,34 +264,15 @@ public class UserService {
         User user = userRepository.findByEmail(alterPassword.email());
         if(user!=null){
             user.criptografar(alterPassword.newPassword());
-            user.setAccount_locked(true);
-            user.setCodigo(null);
+            user.setAccount_locked(false);
+            user.setCounts(0);
+            user.setCodigo("");
             userRepository.save(user);
-            return ResponseEntity.ok(new MensagemPd("senha alterada com sucesso!"));
+            return ResponseEntity.ok(new MensagemPd("Senha alterada com sucesso!"));
         }
         return null;
     }
-    @Transactional
-    public void bloqueio(String email,String pass){
-        var user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new RuntimeException("Usuário não encontrado");
-        }
-        if (!passwordEncoder.matches(pass, user.getPassword())) {
-            user.incrementCount();
-            if (user.getCounts() >= 3) {
-                user.setPassword(null);
-                user.setAccount_locked(true); // Adicione um campo para indicar se o usuário está bloqueado
-                userRepository.save(user);
-                throw new RuntimeException("Usuário bloqueado!");
-            }
-            userRepository.save(user);
-            throw new RuntimeException("Email e senha inválidos");
-        }
 
-        user.setCounts(0); // Resetar o contador de tentativas de login
-        userRepository.save(user);
-    }
     public UserComment pegarUsuarioEmail(String email){
         var user =  userRepository.findByEmail(email);
         return modelMapper.map(user,UserComment.class);
@@ -286,7 +296,6 @@ public class UserService {
         }
 
     }
-
     public void updateUSer(UpdateUserDto update){
         var userResult = userRepository.getReferenceById(update.getId());
         userResult.setName(update.getName());

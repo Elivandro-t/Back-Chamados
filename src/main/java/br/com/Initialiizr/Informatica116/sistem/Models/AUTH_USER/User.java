@@ -2,10 +2,7 @@ package br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.UserDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
-import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Sistemas;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +22,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -39,7 +36,7 @@ public class User implements UserDetails {
     private String refreshToken;
     @JoinColumn(nullable = true)
     private String imagem;
-    private boolean account_locked =false;
+    private boolean account_locked;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.LAZY)
     private List<Perfil> roles;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "usuario")
@@ -69,6 +66,11 @@ public class User implements UserDetails {
         }
     return authorities;
 }
+   public void atualizaUsuario(String pass,boolean ativo,int number){
+        this.password = pass;
+        this.account_locked = ativo;
+        this.counts = number;
+   }
     @Override
     public String getUsername() {
         return this.name;
@@ -81,7 +83,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return !this.account_locked;
     }
 
     @Override
@@ -100,8 +102,8 @@ public class User implements UserDetails {
     public void resetVerificationAttempts() {
         this.exp = 0;
     }
-    public void incrementCount() {
-         this.counts++;
+    public int incrementCount() {
+        return  this.counts +1;
     }
     public void resetCount() {
         this.counts = 0;

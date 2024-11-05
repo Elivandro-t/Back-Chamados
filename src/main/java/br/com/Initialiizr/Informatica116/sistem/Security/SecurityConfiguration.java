@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Security;
 
+//import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
 import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,8 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class SecurityConfiguration {
     @Autowired
     FilterValidation filterValidation;
+    @Autowired
+    UserFilterConfiguration userActivityFilter;
     @Value("${key}")
     String key;
     @Bean
@@ -53,6 +56,8 @@ public class SecurityConfiguration {
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(filterValidation, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(userActivityFilter, UsernamePasswordAuthenticationFilter.class); // Adiciona o UserActivityFilter
+
         ;
         return httpSecurity.build();
     };
