@@ -190,7 +190,7 @@ public class ChamadoService {
     }
 
     // buscando todos os chamados por filiais
-    public Page<IssueDTO> ListarChamadosFiliais(Pageable page, String setor,
+    public Page<IssueDetalheDTO> ListarChamadosFiliais(Pageable page, String setor,
                                  String dataAntes, String dataDepois,
                                  boolean ativo) {
         String busca = setor != null ? setor : ""; // Define a busca como setor se não for nulo

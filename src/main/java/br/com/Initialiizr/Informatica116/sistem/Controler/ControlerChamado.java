@@ -52,7 +52,7 @@ public class ControlerChamado {
     }
     //Listando todo os dados do usuarios filiais retornado para o service |ListaChamadosFiliais
     @GetMapping("/lista/filiais/cds")
-    public Page<IssueDTO> listaChamadosFilias(Pageable page,
+    public Page<IssueDetalheDTO> listaChamadosFilias(Pageable page,
                                 @RequestParam(name = "setor",required = false) String Setor,
                                 @RequestParam(name = "dataAntes",required = false) String dataAntes,
                                 @RequestParam(name = "dataDepois",required = false) String dataDepois,
@@ -89,7 +89,7 @@ public class ControlerChamado {
     }
     // pegando chamado por id de usuario por filial
     @GetMapping("/chamado/tecnico/{id}")
-    public Page<IssueDTO> pegarChamdoTsc(Pageable page,
+    public Page<IssueDetalheDTO> pegarChamdoTsc(Pageable page,
                                          @PathVariable long id,
                                          @RequestParam(name = "setor",required = false) String Setor,
                                          @RequestParam(name = "dataAntes",required = false) String dataAntes,

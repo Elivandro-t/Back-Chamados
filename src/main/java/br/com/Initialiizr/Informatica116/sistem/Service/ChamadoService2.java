@@ -1,6 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Service;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDetalheDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.Status;
@@ -62,9 +63,9 @@ public class ChamadoService2 {
         return  ResponseEntity.ok().body(new MSG("status fechado"));
     }
 // Listando chamados atrelado ao tecnico
-    public Page<IssueDTO> ListarChamadosTecnico(Pageable page,long idTecnico, String setor,
-                                                String dataAntes, String dataDepois,
-                                                boolean ativo) {
+    public Page<IssueDetalheDTO> ListarChamadosTecnico(Pageable page, long idTecnico, String setor,
+                                                       String dataAntes, String dataDepois,
+                                                       boolean ativo) {
         String busca = setor != null ? setor : ""; // Define a busca como setor se não for nulo
         if(dataAntes!=null&&dataDepois!=null){
             return issueResposoty.findAllDataAntesAndDataDepoisByAtivoTrueAndFalseTec(page,dataAntes,dataDepois,idTecnico,ativo)
