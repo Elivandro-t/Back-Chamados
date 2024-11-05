@@ -196,15 +196,15 @@ public class ChamadoService {
         String busca = setor != null ? setor : ""; // Define a busca como setor se não for nulo
         if(dataAntes!=null&&dataDepois!=null){
             return hardwareRepository.findAllDataAntesAndDataDepoisByAtivoTrueAndFalse(page,dataAntes,dataDepois,ativo)
-                    .map(e->modelMapper.map(e, IssueDTO.class));
+                    .map(e->modelMapper.map(e, IssueDetalheDTO.class));
         }
         else if(setor!=null){
             return hardwareRepository.findAllBySetorContainingIgnoreCaseTrueAndFalse(page,busca,ativo)
-                    .map(e->modelMapper.map(e, IssueDTO.class));
+                    .map(e->modelMapper.map(e, IssueDetalheDTO.class));
         }
         else {
             var dados = hardwareRepository.findAllByAtivoTrueAndFalse(page,ativo)
-                    .map(e->modelMapper.map(e, IssueDTO.class));
+                    .map(e->modelMapper.map(e, IssueDetalheDTO.class));
             return  dados;
         }
 

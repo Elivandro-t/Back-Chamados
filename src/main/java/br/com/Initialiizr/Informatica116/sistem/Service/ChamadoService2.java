@@ -69,16 +69,16 @@ public class ChamadoService2 {
         String busca = setor != null ? setor : ""; // Define a busca como setor se não for nulo
         if(dataAntes!=null&&dataDepois!=null){
             return issueResposoty.findAllDataAntesAndDataDepoisByAtivoTrueAndFalseTec(page,dataAntes,dataDepois,idTecnico,ativo)
-                    .map(e->modelMapper.map(e, IssueDTO.class));
+                    .map(e->modelMapper.map(e, IssueDetalheDTO.class));
         }
         else if(setor!=null){
             return issueResposoty.findAllBySetorContainingIgnoreCaseTrueAndFalseAndTec(page,idTecnico,busca,ativo)
-                    .map(e->modelMapper.map(e, IssueDTO.class));
+                    .map(e->modelMapper.map(e, IssueDetalheDTO.class));
         }
         else {
 
             var dados = issueResposoty.findAllByAtivoTrueAndFalseAndTecnico(page,idTecnico,ativo)
-                    .map(e->modelMapper.map(e, IssueDTO.class));
+                    .map(e->modelMapper.map(e, IssueDetalheDTO.class));
 
             return  dados;
         }
