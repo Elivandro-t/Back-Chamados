@@ -61,7 +61,7 @@ public class ChamadoService {
     @Value("${endpoint}")
     private String endpoint;
     @Autowired
-    BotService botService;
+//    BotService botService;
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
     public ChamadoService(IssueResposoty issueResposoty){
         this.hardwareRepository = issueResposoty;
@@ -129,7 +129,7 @@ public class ChamadoService {
             } else {
                 Issue issueSalvo = hardwareRepository.save(chamado);
                 for (Chamado c:issueSalvo.getItens()){
-                    botService.enviarNotificacaoChamado(c.getCardId(),chamado.getUsuario().getName(),chamado.getUsuario().getId(),c.getId(),c.getDatacreate(),c.getTitulo());
+//                    botService.enviarNotificacaoChamado(c.getCardId(),chamado.getUsuario().getName(),chamado.getUsuario().getId(),c.getId(),c.getDatacreate(),c.getTitulo());
                     commetService.EnvioComentarios(c.getId(), "\n" +
                             "✅ Sua solicitação foi recebida com sucesso!\n" +
                             "\n" +

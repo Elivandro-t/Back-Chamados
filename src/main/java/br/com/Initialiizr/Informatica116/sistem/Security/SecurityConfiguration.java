@@ -1,7 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Security;
 
 //import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
-import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
+//import br.com.Initialiizr.Informatica116.sistem.Service.BotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -53,6 +53,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET,"/send/*").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST,"/registrar").permitAll()
                         .requestMatchers(HttpMethod.GET,"/relatorio").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/send/zap").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(filterValidation, UsernamePasswordAuthenticationFilter.class)
@@ -73,13 +74,13 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public BotService botService() throws TelegramApiException {
-
-
-        BotService botService = new BotService("agile_ti_bot",key);
-        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
-        teleBots.registerBot(botService);
-        return botService;
-    }
+//    @Bean
+//    public BotService botService() throws TelegramApiException {
+//
+//
+//        BotService botService = new BotService("agile_ti_bot",key);
+//        var teleBots =new TelegramBotsApi(DefaultBotSession.class);
+//        teleBots.registerBot(botService);
+//        return botService;
+//    }
 }

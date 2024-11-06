@@ -16,7 +16,6 @@ public class ControlerApi {
     @Autowired
     ApiService api;
     @PostMapping()
-    @Transactional
     public ResponseEntity<?> apiZap(@RequestBody Api api1) throws IOException, InterruptedException {
         return api.sendApi(api1);
     }
