@@ -2,6 +2,7 @@ package br.com.Initialiizr.Informatica116.sistem.Service;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.COMENTARIOS_DTO.CommentsDTO;
 import br.com.Initialiizr.Informatica116.sistem.DTO.COMENTARIOS_DTO.CommentsIMGDTO;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.Api.Api;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.ImagensDTO;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;

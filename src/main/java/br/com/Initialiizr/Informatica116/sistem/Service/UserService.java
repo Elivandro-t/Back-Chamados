@@ -2,6 +2,7 @@ package br.com.Initialiizr.Informatica116.sistem.Service;
 
 import br.com.Initialiizr.Informatica116.sistem.Controler.ControlerEmail;
 import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.*;
+import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.Api.Api;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.Delete;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.MsgToken;
 import br.com.Initialiizr.Informatica116.sistem.DTO.MESAGENS.Mensagem;
@@ -76,6 +77,8 @@ public class UserService {
     @Autowired
    private  AuthenticationManager authenticationManager;
     @Autowired
+   private ApiService apiService;
+    @Autowired
     private RefeshTokenService refeshTokenService;
     @Value("${endpoint}")
     private String endpoint;
@@ -104,6 +107,7 @@ public class UserService {
                  return new MsgRegistre("cadastrado com sucesso");
 
     }
+
     @Transactional
     public ResponseEntity Login(LoginDTo loginDTo){
         try {
@@ -114,6 +118,7 @@ public class UserService {
             RefreshToken refreshToken = refeshTokenService.registrarToken(user1.getId());
             var tokenString = tokenservice.geratoken((User) user.getPrincipal(),user.getAuthorities());
             var acess = new MsgToken(tokenString,refreshToken.getRefreshtoken());
+            alerta(user1);
             return ResponseEntity.ok(acess);
         }catch (BadCredentialsException e){
            var usuario =  userRepository.findByEmail(loginDTo.email());
@@ -123,6 +128,10 @@ public class UserService {
               userRepository.save(usuario);
           }
             return ResponseEntity.ok().body(new Mensagem("Email ou senha invalidos!"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
     public boolean bloqueio(String email, String pass) {
@@ -303,5 +312,24 @@ public class UserService {
         userResult.setContato(update.getContato());
         userResult.setFilial(update.getFilial());
         userRepository.save(userResult);
+    }
+    public void alerta(User user) throws IOException, InterruptedException {
+        String msg = "*Mensagem Automática de Segurança*\n" +
+                "\n" +
+                "Prezado(a) "+user.getName()+" "+user.getLastname()+",\n" +
+                "\n" +
+                "Detectamos um novo acesso em sua conta na *Agile Service*.\n" +
+                "\n" +
+                "Caso esta ação tenha sido realizada por você, desconsidere esta mensagem. No entanto, se você não reconhece este login, recomendamos que altere sua senha imediatamente para assegurar a proteção de sua conta.\n" +
+                "\n" +
+                "Para assistência adicional, entre em contato com nossa equipe de suporte.\n" +
+                "\n" +
+                "Atenciosamente,  \n" +
+                "*Equipe de Suporte Técnico*  \n" +
+                "Agile Serve\n";
+       if(user.getContato()!=null){
+           Api api = new Api("55"+user.getContato(),msg);
+           apiService.sendApi(api);
+       }
     }
 }
