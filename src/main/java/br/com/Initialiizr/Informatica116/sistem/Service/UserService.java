@@ -325,8 +325,7 @@ public class UserService {
                 "Para assistência adicional, entre em contato com nossa equipe de suporte.\n" +
                 "\n" +
                 "Atenciosamente,  \n" +
-                "*Equipe de Suporte Técnico*  \n" +
-                "Agile Serve\n";
+                "*Equipe de Suporte TI*  \n";
        if(user.getContato()!=null){
            Api api = new Api("55"+user.getContato(),msg);
            apiService.sendApi(api);
