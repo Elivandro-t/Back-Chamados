@@ -88,13 +88,13 @@ public class StatusFechado {
     }
     private void zap(Issue name,Chamado c) throws IOException, InterruptedException {
        if (name.getContato()!=null){
-           String msg = "Olá," + name.getUsuario().getName()+"! \uD83D\uDC4B\n" +
+           String msg = "Olá, " + name.getUsuario().getName()+"! \uD83D\uDC4B\n" +
                    "\n" +
-                   "Esta é uma resposta automática. Devido à falta de validação, o status do seu chamado **"+c.getCardId()+"** foi alterado para **fechado** após o período de 2 dias.\n" +
+                   "Esta é uma resposta automática. Devido à falta de validação, o status do seu chamado foi alterado para **fechado** após o período de 2 dias.\n" +
                    "\n" +
                    "Detalhes do Chamado:\n" +
                    "Card: "+"**"+c.getCardId()+"**"+"\n" +
-                   "Data: "+"**"+c.getData_chamdo_feito()+"**"+"\n"  +
+                   "Data: "+"**"+c.getData()+"**"+"\n"  +
                    "Técnico Responsável: "+"**"+c.getTecnico_responsavel()+"**"+"\n" +
                    "\n" +
                    "Caso o problema não tenha sido resolvido, pedimos que abra uma nova solicitação.\n" +
