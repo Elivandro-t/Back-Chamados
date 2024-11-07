@@ -8,8 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Api {
    private String number;
    private String textMessage;
+
+   public Api(String numero,String txt){
+      this.number = numero;
+      this.textMessage = txt;
+   }
 }
