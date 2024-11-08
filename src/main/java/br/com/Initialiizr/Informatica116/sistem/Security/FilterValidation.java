@@ -1,5 +1,6 @@
 package br.com.Initialiizr.Informatica116.sistem.Security;
 
+import br.com.Initialiizr.Informatica116.sistem.Service.UserActivityService;
 import br.com.Initialiizr.Informatica116.sistem.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
@@ -15,7 +17,8 @@ import java.io.IOException;
 public class FilterValidation extends OncePerRequestFilter {
     @Autowired
     private UserRepository repository;
-    //co
+    @Autowired
+    private UserActivityService userActivityService;
     @Autowired
     TokenService tokenservice;
     @Override
@@ -28,6 +31,12 @@ public class FilterValidation extends OncePerRequestFilter {
         var auth = new UsernamePasswordAuthenticationToken(authservice,null,usuario.getAuthorities());
          SecurityContextHolder.getContext().setAuthentication(auth);
      }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String username = authentication.getName();
+            System.out.println("meu nome e"+username);
+            userActivityService.updateLastActivity(username);
+        }
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Allow-Methods",

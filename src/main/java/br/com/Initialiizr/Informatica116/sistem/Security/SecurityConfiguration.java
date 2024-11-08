@@ -26,8 +26,8 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 public class SecurityConfiguration {
     @Autowired
     FilterValidation filterValidation;
-    @Autowired
-    UserFilterConfiguration userActivityFilter;
+//    @Autowired
+//    UserFilterConfiguration userActivityFilter;
     @Value("${key}")
     String key;
     @Bean
@@ -57,7 +57,6 @@ public class SecurityConfiguration {
                                 .anyRequest().authenticated()
                 )
                 .addFilterBefore(filterValidation, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(userActivityFilter, UsernamePasswordAuthenticationFilter.class); // Adiciona o UserActivityFilter
 
         ;
         return httpSecurity.build();
