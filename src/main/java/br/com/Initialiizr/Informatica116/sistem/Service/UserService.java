@@ -108,17 +108,16 @@ public class UserService {
 
     }
 
-    @Transactional
     public ResponseEntity Login(LoginDTo loginDTo){
         try {
          bloqueio(loginDTo.email(),loginDTo.password());
             var token = new UsernamePasswordAuthenticationToken(loginDTo.email(),loginDTo.password());
             var user = authenticationManager.authenticate(token);
             User user1 = (User) user.getPrincipal();
+            alerta(user1);
             RefreshToken refreshToken = refeshTokenService.registrarToken(user1.getId());
             var tokenString = tokenservice.geratoken((User) user.getPrincipal(),user.getAuthorities());
             var acess = new MsgToken(tokenString,refreshToken.getRefreshtoken());
-            alerta(user1);
             return ResponseEntity.ok(acess);
         }catch (BadCredentialsException e){
            var usuario =  userRepository.findByEmail(loginDTo.email());
@@ -208,7 +207,7 @@ public class UserService {
         if(user!=null){
             return  modelMapper.map(user,DetalhesChamados.class);
         }
-        throw new RuntimeException("sem usuario encontrado");
+        throw new RuntimeException("Sem usuario encontrado");
     }
 
     public ResponseEntity<Resource> ListaImagensId(String name){
