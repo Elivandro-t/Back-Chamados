@@ -4,6 +4,7 @@ import br.com.Initialiizr.Informatica116.sistem.DTO.AUTH_DAO.FuncoesDto;
 import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Funcoes;
 import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.Perfil;
 import br.com.Initialiizr.Informatica116.sistem.Models.AUTH_USER.User;
+import br.com.Initialiizr.Informatica116.sistem.Models.OPTIONS.Select;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -15,10 +16,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
@@ -33,9 +32,21 @@ public class TokenService {
                 model.put("name",mapbay.getSistemas().getName());
                 model.put("titulo",mapbay.getSistemas().getTitulo());
                 model.put("imagem",mapbay.getSistemas().getImagem());
+                List<Map<String, Object>> options =  mapbay.getSistemas().getOptions().stream().map(e->{
+                    Map<String, Object>  ops = new HashMap<>();
+                    ops.put("id",e.getId());
+                    ops.put("name",e.getName());
+                    ops.put("titulo",e.getTitulo());
+
+                            return ops;
+                        }
+                ).toList();
+                                model.put("data", options);
                 return model;
 
+
             }).toList();
+
             var algorithm = Algorithm.HMAC256(namber);
             return JWT.create()
                     .withIssuer("17100150")

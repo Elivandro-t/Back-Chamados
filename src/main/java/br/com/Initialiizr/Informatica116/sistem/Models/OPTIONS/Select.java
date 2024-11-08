@@ -22,4 +22,9 @@ public class Select {
     @ManyToOne(optional = false)
     private Sistemas sistema;
 
+    public Select(Select e) {
+        this.id = e.getId();
+        this.name = e.name;
+        this.titulo = e.getTitulo();
+    }
 }
