@@ -26,13 +26,13 @@ public class UserActivityService {
 
         // Tenta encontrar a atividade do usuário
         UserActive userActivity = userActivityRepository.findByUserName(username);
-        if (userActivity != null) {
+        if (userActivity != null && userActivity.isOnlineUsuario()) {
             // Atualiza a data da última atividade
-            userActivity.setTimestamp(now);
-            userActivity.setOnlineUsuario(true);
+             userActivity.savaDadosUsuario(now,true);
             userActivityRepository.save(userActivity);
+
         } else {
-            userActivity = new UserActive(username, now,false,getWife());
+            userActivity = new UserActive(username, now,true,"");
             userActivityRepository.save(userActivity);
         }
      }
@@ -49,22 +49,6 @@ public class UserActivityService {
            return new UserActiveDTO(false,LocalDateTime.now());
 
     }
-    private String getWife() throws SocketException {
-        Enumeration<NetworkInterface> networkInterface = NetworkInterface.getNetworkInterfaces();
-        while (networkInterface.hasMoreElements()){
-            NetworkInterface net = networkInterface.nextElement();
-            if(net.isUp() && !net.isLoopback()&&!net.isVirtual()){
-                    Enumeration<InetAddress> inetAddress = net.getInetAddresses();
-                    while (inetAddress.hasMoreElements()) {
-                        InetAddress inet = inetAddress.nextElement();
-                        if (inet instanceof java.net.Inet4Address) {
-                            return inet.getHostAddress();
-                        }
-                    }
 
-            }
-        }
-        return "Ip desconhecido";
-    }
 }
 //lastActivity != null && lastActivity.isAfter(LocalDateTime.now().minusMinutes(5));
