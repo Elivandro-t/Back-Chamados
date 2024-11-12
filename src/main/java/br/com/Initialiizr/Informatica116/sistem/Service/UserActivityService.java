@@ -26,7 +26,7 @@ public class UserActivityService {
 
         // Tenta encontrar a atividade do usuário
         UserActive userActivity = userActivityRepository.findByUserName(username);
-        if (userActivity != null && userActivity.isOnlineUsuario()) {
+        if (userActivity != null) {
             // Atualiza a data da última atividade
              userActivity.savaDadosUsuario(now,true);
             userActivityRepository.save(userActivity);
