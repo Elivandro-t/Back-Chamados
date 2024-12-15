@@ -1,7 +1,7 @@
 package br.com.Initialiizr.Informatica116.sistem.Controler;
 
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.Api.Api;
-import br.com.Initialiizr.Informatica116.sistem.Service.ApiService;
+//import br.com.Initialiizr.Informatica116.sistem.Service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +13,11 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/send/zap")
 public class ControlerApi {
-    @Autowired
-    ApiService api;
-    @PostMapping()
-    public ResponseEntity<?> apiZap(@RequestBody Api api1) throws IOException, InterruptedException {
-        return api.sendApi(api1);
-    }
+//    @Autowired
+//    ApiService api;
+//    @PostMapping()
+//    public ResponseEntity<?> apiZap(@RequestBody Api api1) throws IOException, InterruptedException {
+//        return api.sendApi(api1);
+//    }
 }
 

@@ -76,8 +76,8 @@ public class UserService {
     TokenService tokenservice;
     @Autowired
    private  AuthenticationManager authenticationManager;
-    @Autowired
-   private ApiService apiService;
+//    @Autowired
+//   private ApiService apiService;
     @Autowired
     private RefeshTokenService refeshTokenService;
     @Value("${endpoint}")
@@ -327,7 +327,7 @@ public class UserService {
                 "*Equipe de Suporte TI*  \n";
        if(user.getContato()!=null){
            Api api = new Api("55"+user.getContato(),msg);
-           apiService.sendApi(api);
+//           apiService.sendApi(api);
        }
     }
 }

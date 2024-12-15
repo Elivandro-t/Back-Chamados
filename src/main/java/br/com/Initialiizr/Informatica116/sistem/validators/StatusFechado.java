@@ -4,7 +4,7 @@ import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.Api.Api;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Chamado;
 import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.Models.Status;
-import br.com.Initialiizr.Informatica116.sistem.Service.ApiService;
+//import br.com.Initialiizr.Informatica116.sistem.Service.ApiService;
 import br.com.Initialiizr.Informatica116.sistem.Service.CommetService;
 import br.com.Initialiizr.Informatica116.sistem.repository.IssueResposoty;
 import com.google.gson.JsonObject;
@@ -29,8 +29,8 @@ public class StatusFechado {
     private IssueResposoty chamadoRepository;
     @Autowired
     private CommetService commetService;
-    @Autowired
-    private ApiService apiService;
+//    @Autowired
+//    private ApiService apiService;
     JSONObject items = new JSONObject();
     JSONObject jsonObject = new JSONObject();
     @Scheduled(cron = "0 0/1 * * * *")
@@ -102,7 +102,7 @@ public class StatusFechado {
                    "Atenciosamente,  \n" +
                    "Suporte TI ⚙\uFE0F\n";
            Api api = new Api("55"+name.getContato(),msg);
-           apiService.sendApi(api);
+//           apiService.sendApi(api);
        }
 
     }
