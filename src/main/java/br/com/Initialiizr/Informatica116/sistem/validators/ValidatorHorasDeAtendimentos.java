@@ -19,9 +19,8 @@ public class ValidatorHorasDeAtendimentos {
     public void  horasDeAtendimento(ComprasEServicos chamadoDTO){
         var dataChamado = chamadoDTO.getHora_aceito();
         boolean domingo = dataChamado.getDayOfWeek().equals(DayOfWeek.SUNDAY);
-        var dataAbertura = dataChamado.getHour() <=8;
-        var finalAbertura = dataChamado.getHour() >= 18;
-        System.out.println("data em hora "+dataChamado.getHour());
+        var dataAbertura = dataChamado.getHour() <=7;
+        var finalAbertura = dataChamado.getHour() >= 23;
         if(domingo || dataAbertura || finalAbertura){
             throw new RuntimeException("Fora do horario de atendimento!");
         }
@@ -30,8 +29,8 @@ public class ValidatorHorasDeAtendimentos {
     public void  validaHoraDiaFechado(){
         var dataChamado = LocalDateTime.now();
         boolean domingo = dataChamado.getDayOfWeek().equals(DayOfWeek.SUNDAY);
-        var dataAbertura = dataChamado.getHour() <=8;
-        var finalAbertura = dataChamado.getHour() >= 18;
+        var dataAbertura = dataChamado.getHour() <=7;
+        var finalAbertura = dataChamado.getHour() >= 23;
         if(domingo || dataAbertura || finalAbertura){
             throw new RuntimeException("Fora do horario de atendimento!");
         }
