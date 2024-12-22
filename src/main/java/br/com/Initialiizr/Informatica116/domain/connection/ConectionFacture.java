@@ -20,10 +20,12 @@ public class ConectionFacture {
     private String password;
     @Value("${usuario}")
     private String usuario;
+    @Value("${db}")
+    private String  db;
     @Bean
     public DataSource connection(){
            HikariDataSource dataSource = new HikariDataSource();
-           dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/postgres");
+           dataSource.setJdbcUrl(db);
            dataSource.setUsername(usuario);
            dataSource.setPassword(password);
            dataSource.setDriverClassName("org.postgresql.Driver");
