@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 public class ValidationDiaValid {
     public void  validation(Issue issue){
         var horaCriacao = issue.getData_criacao();
-        var HoraValid = horaCriacao.getDayOfWeek().equals(DayOfWeek.SUNDAY);
+//        var HoraValid = horaCriacao.getDayOfWeek().equals(DayOfWeek.SUNDAY);
         var horaAntes = horaCriacao.getHour() < 7;
         var horaDePois = horaCriacao.getHour() >= 23;
-        if( horaAntes || horaDePois || HoraValid){
-            throw new RuntimeException("Fora do horário de atendimento, que é de segunda a sábado, das 07h às 23h.");
+        if( horaAntes || horaDePois){
+            throw new RuntimeException("Fora do horário de atendimento, das 07h às 23h.");
         }
     }
 }
