@@ -50,7 +50,6 @@ public class UsuarioControler {
     @PostMapping("login")
     @Transactional
     public ResponseEntity login(@RequestBody LoginDTo userDTO){
-
                return  userService.Login(userDTO);
 
     }

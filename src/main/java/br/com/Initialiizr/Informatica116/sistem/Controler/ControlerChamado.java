@@ -7,19 +7,23 @@ import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService2;
+import br.com.Initialiizr.Informatica116.sistem.configuration.ThreadsConfigurations;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
+import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping
@@ -28,7 +32,6 @@ public class ControlerChamado {
     private ChamadoService service;
     @Autowired
     private ChamadoService2 service2;
-
     @RequestMapping(method = RequestMethod.POST,value = "chamado")
     public ResponseEntity<IssueDetalheDTO> chamadoDT(@RequestParam ("data") String data, @RequestParam(value = "file",required = false) MultipartFile[] file){
         var response = service.registrar(data,file);
@@ -38,12 +41,11 @@ public class ControlerChamado {
 
     @GetMapping("/lista/{filial}")
     public Page<IssueDetalheDTO> lista(Pageable page,
-                                @RequestParam(name = "setor",required = false) String Setor,
-                                @RequestParam(name = "dataAntes",required = false) String dataAntes,
-                                @RequestParam(name = "dataDepois",required = false) String dataDepois,
-                                @RequestParam(name = "ativo",required = false) boolean ativo,
-                                @PathVariable int filial){
-
+                                                         @RequestParam(name = "setor",required = false) String Setor,
+                                                         @RequestParam(name = "dataAntes",required = false) String dataAntes,
+                                                         @RequestParam(name = "dataDepois",required = false) String dataDepois,
+                                                         @RequestParam(name = "ativo",required = false) boolean ativo,
+                                                         @PathVariable int filial){
         return service.Listar(page,Setor,dataAntes,dataDepois,filial,ativo);
     }
     @RequestMapping(method = RequestMethod.POST,value = "/whats")

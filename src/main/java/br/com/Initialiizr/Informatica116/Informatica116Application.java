@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableCaching
 @SpringBootApplication
-//@EnableDiscoveryClient
 public class Informatica116Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Informatica116Application.class, args);

@@ -82,7 +82,7 @@ public class UserService {
     private RefeshTokenService refeshTokenService;
     @Value("${endpoint}")
     private String endpoint;
-    private String imgUser = "https://suporte-infor.onrender.com/Logos/perfil.png";
+    private String imgUser = "https://back-chamados.onrender.com/Logos/perfil.png";
     private static final String UPLOAD_DIR = "/var/lib/data/Logos";
 
     public MsgRegistre registro(UserDTO userDTO){

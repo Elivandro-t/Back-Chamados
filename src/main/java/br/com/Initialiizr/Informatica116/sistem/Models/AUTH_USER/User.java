@@ -60,7 +60,7 @@ public class User implements UserDetails{
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         for(Perfil role:roles){
-            if(role.getName().equals("admin")){
+            if(role.getName().equals("suporte")){
                  authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
             }
         }
