@@ -7,7 +7,6 @@ import br.com.Initialiizr.Informatica116.sistem.Models.CHAMADO_HARDWARE.Issue;
 import br.com.Initialiizr.Informatica116.sistem.DTO.HardwareDTO.IssueDTO;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService;
 import br.com.Initialiizr.Informatica116.sistem.Service.ChamadoService2;
-import br.com.Initialiizr.Informatica116.sistem.configuration.ThreadsConfigurations;
 import br.com.Initialiizr.Informatica116.sistem.validators.MSG;
 import org.hibernate.annotations.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
